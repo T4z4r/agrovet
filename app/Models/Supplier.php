@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Supplier extends Model
 {
-    //
+    protected $fillable = ['name', 'contact_person', 'phone', 'email', 'address'];
+    public function stockTransactions()
+    {
+        return $this->hasMany(StockTransaction::class);
+    }
 }
