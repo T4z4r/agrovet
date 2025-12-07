@@ -8,35 +8,54 @@ class SupplierController extends Controller
 {
     public function index()
     {
-        return Supplier::orderBy('name')->get();
+        return response()->json([
+            'success' => true,
+            'data' => Supplier::orderBy('name')->get(),
+            'message' => 'Suppliers retrieved successfully'
+        ]);
     }
 
     public function store(Request $r)
     {
-        return Supplier::create($r->validate([
-            'name'=>'required',
-            'contact_person'=>'nullable',
-            'phone'=>'nullable',
-            'email'=>'nullable|email',
-            'address'=>'nullable'
-        ]));
+        return response()->json([
+            'success' => true,
+            'data' => Supplier::create($r->validate([
+                'name'=>'required',
+                'contact_person'=>'nullable',
+                'phone'=>'nullable',
+                'email'=>'nullable|email',
+                'address'=>'nullable'
+            ])),
+            'message' => 'Supplier created successfully'
+        ]);
     }
 
     public function show($id)
     {
-        return Supplier::findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => Supplier::findOrFail($id),
+            'message' => 'Supplier retrieved successfully'
+        ]);
     }
 
     public function update(Request $r, $id)
     {
         $s = Supplier::findOrFail($id);
         $s->update($r->all());
-        return $s;
+        return response()->json([
+            'success' => true,
+            'data' => $s,
+            'message' => 'Supplier updated successfully'
+        ]);
     }
 
     public function destroy($id)
     {
         Supplier::findOrFail($id)->delete();
-        return ['message'=>'Supplier deleted'];
+        return response()->json([
+            'success' => true,
+            'message' => 'Supplier deleted successfully'
+        ]);
     }
 }

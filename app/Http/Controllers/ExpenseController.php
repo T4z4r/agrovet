@@ -8,7 +8,11 @@ class ExpenseController extends Controller
 {
     public function index()
     {
-        return Expense::with('user')->orderBy('date','desc')->get();
+        return response()->json([
+            'success' => true,
+            'data' => Expense::with('user')->orderBy('date','desc')->get(),
+            'message' => 'Expenses retrieved successfully'
+        ]);
     }
 
     public function store(Request $r)
@@ -21,24 +25,39 @@ class ExpenseController extends Controller
         ]);
 
         $data['recorded_by'] = $r->user()->id;
-        return Expense::create($data);
+        return response()->json([
+            'success' => true,
+            'data' => Expense::create($data),
+            'message' => 'Expense created successfully'
+        ]);
     }
 
     public function show($id)
     {
-        return Expense::with('user')->findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => Expense::with('user')->findOrFail($id),
+            'message' => 'Expense retrieved successfully'
+        ]);
     }
 
     public function update(Request $r, $id)
     {
         $expense = Expense::findOrFail($id);
         $expense->update($r->all());
-        return $expense;
+        return response()->json([
+            'success' => true,
+            'data' => $expense,
+            'message' => 'Expense updated successfully'
+        ]);
     }
 
     public function destroy($id)
     {
         Expense::findOrFail($id)->delete();
-        return ['message'=>'Expense deleted'];
+        return response()->json([
+            'success' => true,
+            'message' => 'Expense deleted successfully'
+        ]);
     }
 }

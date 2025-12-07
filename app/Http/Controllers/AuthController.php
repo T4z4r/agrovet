@@ -20,8 +20,12 @@ class AuthController extends Controller
         $user = User::create($data);
 
         return response()->json([
-            'user' => $user,
-            'token' => $user->createToken('agrovet')->plainTextToken
+            'success' => true,
+            'data' => [
+                'user' => $user,
+                'token' => $user->createToken('agrovet')->plainTextToken
+            ],
+            'message' => 'User registered successfully'
         ]);
     }
 
@@ -33,24 +37,38 @@ class AuthController extends Controller
         ]);
 
         if (!Auth::attempt($creds)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid credentials'
+            ], 401);
         }
 
         $user = Auth::user();
         return response()->json([
-            'user' => $user,
-            'token' => $user->createToken('agrovet')->plainTextToken
+            'success' => true,
+            'data' => [
+                'user' => $user,
+                'token' => $user->createToken('agrovet')->plainTextToken
+            ],
+            'message' => 'User logged in successfully'
         ]);
     }
 
     public function me(Request $r)
     {
-        return response()->json($r->user());
+        return response()->json([
+            'success' => true,
+            'data' => $r->user(),
+            'message' => 'User data retrieved successfully'
+        ]);
     }
 
     public function logout(Request $r)
     {
         $r->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Logged out']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Logged out successfully'
+        ]);
     }
 }

@@ -9,8 +9,12 @@ class StockTransactionController extends Controller
 {
     public function index()
     {
-        return StockTransaction::with(['product','supplier','user'])
-            ->orderBy('date','desc')->get();
+        return response()->json([
+            'success' => true,
+            'data' => StockTransaction::with(['product','supplier','user'])
+                ->orderBy('date','desc')->get(),
+            'message' => 'Stock transactions retrieved successfully'
+        ]);
     }
 
     public function store(Request $r)
@@ -37,17 +41,28 @@ class StockTransactionController extends Controller
 
         $product->save();
 
-        return $tx;
+        return response()->json([
+            'success' => true,
+            'data' => $tx,
+            'message' => 'Stock transaction created successfully'
+        ]);
     }
 
     public function show($id)
     {
-        return StockTransaction::with(['product','supplier','user'])->findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => StockTransaction::with(['product','supplier','user'])->findOrFail($id),
+            'message' => 'Stock transaction retrieved successfully'
+        ]);
     }
 
     public function destroy($id)
     {
         StockTransaction::findOrFail($id)->delete();
-        return ['message'=>'Record deleted'];
+        return response()->json([
+            'success' => true,
+            'message' => 'Stock transaction deleted successfully'
+        ]);
     }
 }

@@ -13,7 +13,11 @@ class SaleController extends Controller
 {
     public function index()
     {
-        return Sale::with('items.product', 'seller')->latest()->get();
+        return response()->json([
+            'success' => true,
+            'data' => Sale::with('items.product', 'seller')->latest()->get(),
+            'message' => 'Sales retrieved successfully'
+        ]);
     }
 
     public function store(Request $r)
@@ -52,7 +56,10 @@ class SaleController extends Controller
 
                 $p = Product::find($item['product_id']);
                 if ($p->stock < $item['quantity']) {
-                    abort(422, 'Insufficient stock for ' . $p->name);
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Insufficient stock for ' . $p->name
+                    ], 422);
                 }
 
                 $p->stock -= $item['quantity'];
@@ -62,13 +69,21 @@ class SaleController extends Controller
             $sale->total = $grand_total;
             $sale->save();
 
-            return $sale->load('items.product');
+            return response()->json([
+                'success' => true,
+                'data' => $sale->load('items.product'),
+                'message' => 'Sale created successfully'
+            ]);
         });
     }
 
     public function show($id)
     {
-        return Sale::with('items.product', 'seller')->findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => Sale::with('items.product', 'seller')->findOrFail($id),
+            'message' => 'Sale retrieved successfully'
+        ]);
     }
 
     public function receipt($id)

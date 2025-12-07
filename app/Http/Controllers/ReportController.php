@@ -13,16 +13,20 @@ class ReportController extends Controller
 {
     public function daily($date)
     {
-        return [
-            'sales' => Sale::with('items.product', 'seller')
-                ->where('sale_date', $date)->get(),
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'sales' => Sale::with('items.product', 'seller')
+                    ->where('sale_date', $date)->get(),
 
-            'total_sales' => Sale::where('sale_date', $date)->sum('total'),
+                'total_sales' => Sale::where('sale_date', $date)->sum('total'),
 
-            'expenses' => Expense::where('date', $date)->get(),
+                'expenses' => Expense::where('date', $date)->get(),
 
-            'total_expenses' => Expense::where('date', $date)->sum('amount')
-        ];
+                'total_expenses' => Expense::where('date', $date)->sum('amount')
+            ],
+            'message' => 'Daily report retrieved successfully'
+        ]);
     }
 
     public function profit($start, $end)
@@ -36,21 +40,29 @@ class ReportController extends Controller
             return $item->product->cost_price * $item->quantity;
         });
 
-        return [
-            'revenue' => $total_revenue,
-            'cost'    => $total_cost,
-            'profit'  => $total_revenue - $total_cost,
-        ];
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'revenue' => $total_revenue,
+                'cost'    => $total_cost,
+                'profit'  => $total_revenue - $total_cost,
+            ],
+            'message' => 'Profit report retrieved successfully'
+        ]);
     }
 
     public function dashboard()
     {
-        return [
-            'total_products'  => Product::count(),
-            'total_sales'     => Sale::sum('total'),
-            'total_expenses'  => Expense::sum('amount'),
-            'today_sales'     => Sale::whereDate('sale_date', today())->sum('total'),
-            'stock_value'     => Product::sum(DB::raw('cost_price * stock')),
-        ];
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'total_products'  => Product::count(),
+                'total_sales'     => Sale::sum('total'),
+                'total_expenses'  => Expense::sum('amount'),
+                'today_sales'     => Sale::whereDate('sale_date', today())->sum('total'),
+                'stock_value'     => Product::sum(DB::raw('cost_price * stock')),
+            ],
+            'message' => 'Dashboard data retrieved successfully'
+        ]);
     }
 }
