@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -65,7 +66,11 @@ class AuthController extends Controller
 
     public function logout(Request $r)
     {
-        $r->user()->currentAccessToken()->delete();
+        /** @var PersonalAccessToken|null $token */
+        $token = $r->user()->currentAccessToken();
+        if ($token) {
+            $token->delete();
+        }
         return response()->json([
             'success' => true,
             'message' => 'Logged out successfully'
