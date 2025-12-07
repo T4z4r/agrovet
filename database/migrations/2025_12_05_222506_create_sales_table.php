@@ -9,15 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('sale_items', function (Blueprint $table) {
+        Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sale_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->integer('quantity');
-            $table->decimal('price', 12, 2);
-            $table->decimal('subtotal', 12, 2);
+            $table->foreignId('seller_id')->constrained('users')->onDelete('cascade');
+            $table->date('sale_date');
+            $table->decimal('total', 12, 2);
             $table->timestamps();
         });
     }
