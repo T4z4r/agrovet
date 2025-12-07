@@ -14,10 +14,11 @@ use App\Http\Controllers\ReportController;
 | Auth
 |--------------------------------------------------------------------------
 */
+
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function() {
+Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
@@ -51,6 +52,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('sales', [SaleController::class, 'store']);
     Route::get('sales', [SaleController::class, 'index']);
     Route::get('sales/{id}', [SaleController::class, 'show']);
+    Route::get('sales/{id}/receipt', [SaleController::class, 'receipt']);
 
     /*
     |--------------------------------------------------------------------------
@@ -65,4 +67,7 @@ Route::middleware('auth:sanctum')->group(function() {
     |--------------------------------------------------------------------------
     */
     Route::get('reports/daily/{date}', [ReportController::class, 'daily']);
+    Route::get('reports/profit/{start}/{end}', [ReportController::class, 'profit']);
+    Route::get('reports/dashboard', [ReportController::class, 'dashboard']);
+
 });
