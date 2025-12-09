@@ -111,6 +111,7 @@ All API requests require authentication except for registration and login. Use t
   {
     "name": "string",
     "unit": "string",
+    "category": "string",
     "stock": "integer",
     "cost_price": "integer",
     "selling_price": "integer"

@@ -20,6 +20,7 @@ class ProductController extends Controller
         $data = $r->validate([
             'name'=>'required',
             'unit'=>'required',
+            'category'=>'required',
             'stock'=>'required|integer|min:0',
             'cost_price'=>'required|integer|min:0',
             'selling_price'=>'required|integer|min:0'
