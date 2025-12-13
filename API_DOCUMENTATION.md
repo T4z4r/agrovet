@@ -13,11 +13,11 @@ All API requests require authentication except for registration and login. Use t
 - **Request Body**:
   ```json
   {
-    "name": "string",
-    "email": "string",
-    "password": "string",
-    "password_confirmation": "string",
-    "role": "admin|owner|seller"
+    "name": "string (required)",
+    "email": "string (required, unique)",
+    "password": "string (required, confirmed)",
+    "password_confirmation": "string (required)",
+    "role": "admin|owner|seller (required)"
   }
   ```
 - **Response**:
@@ -39,8 +39,8 @@ All API requests require authentication except for registration and login. Use t
 - **Request Body**:
   ```json
   {
-    "email": "string",
-    "password": "string"
+    "email": "string (required)",
+    "password": "string (required)"
   }
   ```
 - **Success Response**:
@@ -109,12 +109,12 @@ All API requests require authentication except for registration and login. Use t
 - **Request Body**:
   ```json
   {
-    "name": "string",
-    "unit": "string",
-    "category": "string",
-    "stock": "integer",
-    "cost_price": "integer",
-    "selling_price": "integer"
+    "name": "string (required)",
+    "unit": "string (required)",
+    "category": "string (required)",
+    "stock": "integer (required, min:0)",
+    "cost_price": "integer (required, min:0)",
+    "selling_price": "integer (required, min:0)"
   }
   ```
 - **Response**:
@@ -187,10 +187,10 @@ All API requests require authentication except for registration and login. Use t
 - **Request Body**:
   ```json
   {
-    "name": "string",
+    "name": "string (required)",
     "contact_person": "string (optional)",
     "phone": "string (optional)",
-    "email": "string (optional)",
+    "email": "string (optional, email)",
     "address": "string (optional)"
   }
   ```
@@ -264,11 +264,11 @@ All API requests require authentication except for registration and login. Use t
 - **Request Body**:
   ```json
   {
-    "product_id": "integer",
-    "type": "stock_in|stock_out|damage|return",
-    "quantity": "integer",
-    "supplier_id": "integer (optional)",
-    "date": "date",
+    "product_id": "integer (required, exists:products)",
+    "type": "stock_in|stock_out|damage|return (required)",
+    "quantity": "integer (required, min:1)",
+    "supplier_id": "integer (optional, exists:suppliers)",
+    "date": "date (required, YYYY-MM-DD)",
     "remarks": "string (optional)"
   }
   ```
@@ -328,15 +328,12 @@ All API requests require authentication except for registration and login. Use t
 - **Request Body**:
   ```json
   {
-    "seller_id": "integer",
-    "sale_date": "date",
-    "items": [
-      {
-        "product_id": "integer",
-        "quantity": "integer",
-        "price": "integer"
-      }
-    ]
+    "seller_id": "integer (required, exists:users)",
+    "sale_date": "date (required, YYYY-MM-DD)",
+    "items": "array (required, min:1)",
+    "items.*.product_id": "integer (required, exists:products)",
+    "items.*.quantity": "integer (required, min:1)",
+    "items.*.price": "integer (required, min:0)"
   }
   ```
 - **Success Response**:
@@ -396,10 +393,10 @@ All API requests require authentication except for registration and login. Use t
 - **Request Body**:
   ```json
   {
-    "category": "string",
-    "amount": "integer",
+    "category": "string (required)",
+    "amount": "integer (required, min:0)",
     "description": "string (optional)",
-    "date": "date"
+    "date": "date (required, YYYY-MM-DD)"
   }
   ```
 - **Response**:
@@ -455,7 +452,7 @@ All API requests require authentication except for registration and login. Use t
 ### Daily Report
 - **Method**: GET
 - **Endpoint**: `/api/reports/daily/{date}`
-- **Description**: Get daily sales and expenses report
+- **Description**: Get daily sales and expenses report for the specified date (YYYY-MM-DD)
 - **Response**:
   ```json
   {
@@ -473,7 +470,7 @@ All API requests require authentication except for registration and login. Use t
 ### Profit Report
 - **Method**: GET
 - **Endpoint**: `/api/reports/profit/{start}/{end}`
-- **Description**: Get profit report between dates
+- **Description**: Get profit report between start and end dates (YYYY-MM-DD/YYYY-MM-DD) based on sale creation dates
 - **Response**:
   ```json
   {
