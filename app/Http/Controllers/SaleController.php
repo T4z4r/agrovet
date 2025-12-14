@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\SaleItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class SaleController extends Controller
 {
@@ -23,7 +24,7 @@ class SaleController extends Controller
     public function store(Request $r)
     {
         $data = $r->validate([
-            'seller_id' => 'required|exists:users,id',
+            // 'seller_id' => 'required|exists:users,id',
             'sale_date' => 'required|date',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
@@ -34,7 +35,7 @@ class SaleController extends Controller
         return DB::transaction(function () use ($data) {
 
             $sale = Sale::create([
-                'seller_id' => $data['seller_id'],
+                'seller_id' => Auth::user()->id,
                 'sale_date' => $data['sale_date'],
                 'total' => 0
             ]);
