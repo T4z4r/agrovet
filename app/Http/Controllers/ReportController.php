@@ -6,9 +6,10 @@ use App\Models\Sale;
 use App\Models\Expense;
 use App\Models\Product;
 use App\Models\SaleItem;
-use App\Models\StockTransaction;
 use Illuminate\Http\Request;
+use App\Models\StockTransaction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -73,7 +74,7 @@ class ReportController extends Controller
         $date = $date ?? today()->toDateString();
 
         $sales = Sale::with('items.product')
-            ->where('seller_id', $user->id)
+            ->where('seller_id', Auth::user()->id)
             ->where('sale_date', $date)
             ->get();
 
