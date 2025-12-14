@@ -8,6 +8,7 @@ use App\Http\Controllers\StockTransactionController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,5 +70,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('reports/daily/{date}', [ReportController::class, 'daily']);
     Route::get('reports/profit/{start}/{end}', [ReportController::class, 'profit']);
     Route::get('reports/dashboard', [ReportController::class, 'dashboard']);
+    Route::get('reports/seller/day-summary/{date?}', [ReportController::class, 'sellerDaySummary']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sellers (Owner only)
+    |--------------------------------------------------------------------------
+    */
+    Route::apiResource('sellers', UserController::class);
+    Route::patch('sellers/{id}/block', [UserController::class, 'block']);
+    Route::get('sellers/{id}/report', [UserController::class, 'sellerReport']);
 
 });

@@ -503,6 +503,135 @@ All API requests require authentication except for registration and login. Use t
   }
   ```
 
+### Seller Day Summary
+- **Method**: GET
+- **Endpoint**: `/api/reports/seller/day-summary/{date?}`
+- **Description**: Get summary of authenticated seller's activities for the specified date (YYYY-MM-DD). If no date is provided, defaults to today.
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {
+      "date": "string (YYYY-MM-DD)",
+      "sales": [...],
+      "total_sales": "integer",
+      "expenses": [...],
+      "total_expenses": "integer",
+      "stock_transactions": [...]
+    },
+    "message": "Seller day summary retrieved successfully"
+  }
+  ```
+
+## Sellers (Owner Only)
+
+### List Sellers
+- **Method**: GET
+- **Endpoint**: `/api/sellers`
+- **Description**: Get all sellers (owner only)
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": [...],
+    "message": "Sellers retrieved successfully"
+  }
+  ```
+
+### Create Seller
+- **Method**: POST
+- **Endpoint**: `/api/sellers`
+- **Description**: Create a new seller (owner only)
+- **Request Body**:
+  ```json
+  {
+    "name": "string (required)",
+    "email": "string (required, unique)",
+    "password": "string (required, min:6, confirmed)",
+    "password_confirmation": "string (required)"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {...},
+    "message": "Seller created successfully"
+  }
+  ```
+
+### Get Seller
+- **Method**: GET
+- **Endpoint**: `/api/sellers/{id}`
+- **Description**: Get a specific seller (owner only)
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {...},
+    "message": "Seller retrieved successfully"
+  }
+  ```
+
+### Update Seller
+- **Method**: PUT
+- **Endpoint**: `/api/sellers/{id}`
+- **Description**: Update a seller (owner only)
+- **Request Body**: Same as create, all fields optional
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {...},
+    "message": "Seller updated successfully"
+  }
+  ```
+
+### Delete Seller
+- **Method**: DELETE
+- **Endpoint**: `/api/sellers/{id}`
+- **Description**: Delete a seller (owner only)
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Seller deleted successfully"
+  }
+  ```
+
+### Block/Unblock Seller
+- **Method**: PATCH
+- **Endpoint**: `/api/sellers/{id}/block`
+- **Description**: Toggle block status of a seller (owner only)
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {...},
+    "message": "Seller blocked/unblocked successfully"
+  }
+  ```
+
+### Seller Report
+- **Method**: GET
+- **Endpoint**: `/api/sellers/{id}/report?start=YYYY-MM-DD&end=YYYY-MM-DD`
+- **Description**: Get comprehensive report for a specific seller (owner only). Optional start and end dates for filtering.
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {
+      "seller": {...},
+      "sales": [...],
+      "total_sales": "integer",
+      "expenses": [...],
+      "total_expenses": "integer",
+      "stock_transactions": [...]
+    },
+    "message": "Seller report retrieved successfully"
+  }
+  ```
+
 ## Error Handling
 
 All API responses follow a consistent format. Successful responses include:

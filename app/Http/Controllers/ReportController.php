@@ -6,6 +6,7 @@ use App\Models\Sale;
 use App\Models\Expense;
 use App\Models\Product;
 use App\Models\SaleItem;
+use App\Models\StockTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -63,6 +64,43 @@ class ReportController extends Controller
                 'stock_value'     => Product::sum(DB::raw('cost_price * stock')),
             ],
             'message' => 'Dashboard data retrieved successfully'
+        ]);
+    }
+
+    public function sellerDaySummary(Request $request, $date = null)
+    {
+        $user = $request->user();
+        $date = $date ?? today()->toDateString();
+
+        $sales = Sale::with('items.product')
+            ->where('seller_id', $user->id)
+            ->where('sale_date', $date)
+            ->get();
+
+        $totalSales = $sales->sum('total');
+
+        $expenses = Expense::where('recorded_by', $user->id)
+            ->where('date', $date)
+            ->get();
+
+        $totalExpenses = $expenses->sum('amount');
+
+        $stockTransactions = StockTransaction::with('product', 'supplier')
+            ->where('recorded_by', $user->id)
+            ->where('date', $date)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'date' => $date,
+                'sales' => $sales,
+                'total_sales' => $totalSales,
+                'expenses' => $expenses,
+                'total_expenses' => $totalExpenses,
+                'stock_transactions' => $stockTransactions,
+            ],
+            'message' => 'Seller day summary retrieved successfully'
         ]);
     }
 }
