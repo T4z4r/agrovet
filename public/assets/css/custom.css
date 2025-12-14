@@ -162,3 +162,53 @@
 
 }
 
+/* Hover styles */
+
+.btn-primary:hover {
+
+  background-color: #1e4d1f !important;
+
+  border-color: #1e4d1f !important;
+
+}
+
+.btn-secondary:hover {
+
+  background-color: #5a0f1a !important;
+
+  border-color: #5a0f1a !important;
+
+}
+
+.btn-dark:hover {
+
+  background-color: #1a1a1a !important;
+
+  border-color: #1a1a1a !important;
+
+}
+
+.btn-info:hover {
+
+  background-color: #1e4d1f !important;
+
+  border-color: #1e4d1f !important;
+
+}
+
+.btn-danger:hover {
+
+  background-color: #5a0f1a !important;
+
+  border-color: #5a0f1a !important;
+
+}
+
+/* Logo size */
+
+.app-brand.demo .app-brand-logo.demo img {
+
+  height: 40px !important;
+
+}
+
