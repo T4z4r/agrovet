@@ -9,6 +9,10 @@ class Sale extends Model
         'seller_id','total','sale_date'
     ];
 
+    protected $casts = [
+        'sale_date' => 'date',
+    ];
+
     public function seller()
     {
         return $this->belongsTo(User::class, 'seller_id');
