@@ -70,7 +70,7 @@ class ReportController extends Controller
 
     public function sellerDaySummary(Request $request, $date = null)
     {
-        $user = $request->user();
+        $user = Auth::user();
         $date = $date ?? today()->toDateString();
 
         $sales = Sale::with('items.product')
