@@ -10,7 +10,7 @@
                 <h5 class="mb-0">Create Product</h5>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ route('products.store') }}">
+                <form method="POST" action="{{ route('web.products.store') }}">
                     @csrf
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Create</button>
-                    <a href="{{ route('products.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('web.products.index') }}" class="btn btn-secondary">Cancel</a>
                 </form>
             </div>
         </div>

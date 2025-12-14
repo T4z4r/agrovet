@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Products</h5>
-                <a href="{{ route('products.create') }}" class="btn btn-primary">Add Product</a>
+                <a href="{{ route('web.products.create') }}" class="btn btn-primary">Add Product</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -34,9 +34,9 @@
                                 <td>{{ $product->cost_price }}</td>
                                 <td>{{ $product->selling_price }}</td>
                                 <td>
-                                    <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-info">View</a>
-                                    <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-warning">Edit</a>
-                                    <form method="POST" action="{{ route('products.destroy', $product) }}" class="d-inline">
+                                    <a href="{{ route('web.products.show', $product) }}" class="btn btn-sm btn-info">View</a>
+                                    <a href="{{ route('web.products.edit', $product) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <form method="POST" action="{{ route('web.products.destroy', $product) }}" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>

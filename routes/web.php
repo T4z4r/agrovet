@@ -38,34 +38,42 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [WebAuthController::class, 'dashboard'])->name('dashboard');
 
+    // Language switch
+    Route::get('/lang/{locale}', function ($locale) {
+        if (in_array($locale, ['en', 'sw'])) {
+            session(['locale' => $locale]);
+        }
+        return redirect()->back();
+    })->name('lang.switch');
+
     // Products
-    Route::resource('products', WebProductController::class);
+    Route::resource('products', WebProductController::class)->names('web.products');
 
     // Suppliers
-    Route::resource('suppliers', WebSupplierController::class);
+    Route::resource('suppliers', WebSupplierController::class)->names('web.suppliers');
 
     // Users (Sellers)
-    Route::resource('users', WebUserController::class)->parameters(['users' => 'user']);
+    Route::resource('users', WebUserController::class)->parameters(['users' => 'user'])->names('web.users');
 
     // Shops
-    Route::resource('shops', WebShopController::class);
+    Route::resource('shops', WebShopController::class)->names('web.shops');
 
     // Sales
-    Route::resource('sales', WebSaleController::class)->except(['edit', 'update']);
+    Route::resource('sales', WebSaleController::class)->except(['edit', 'update'])->names('web.sales');
 
     // Expenses
-    Route::resource('expenses', WebExpenseController::class);
+    Route::resource('expenses', WebExpenseController::class)->names('web.expenses');
 
     // Stock Transactions
-    Route::resource('stock-transactions', WebStockTransactionController::class)->parameters(['stock-transactions' => 'stockTransaction']);
+    Route::resource('stock-transactions', WebStockTransactionController::class)->parameters(['stock-transactions' => 'stockTransaction'])->names('web.stock-transactions');
 
     // Supplier Debts
-    Route::resource('supplier-debts', WebSupplierDebtController::class)->parameters(['supplier-debts' => 'supplierDebt']);
+    Route::resource('supplier-debts', WebSupplierDebtController::class)->parameters(['supplier-debts' => 'supplierDebt'])->names('web.supplier-debts');
 
     // Reports
-    Route::get('reports', [WebReportController::class, 'index'])->name('reports.index');
-    Route::get('reports/daily/{date}', [WebReportController::class, 'daily'])->name('reports.daily');
-    Route::get('reports/profit/{start}/{end}', [WebReportController::class, 'profit'])->name('reports.profit');
-    Route::get('reports/dashboard', [WebReportController::class, 'dashboard'])->name('reports.dashboard');
-    Route::get('reports/seller/day-summary/{date?}', [WebReportController::class, 'sellerDaySummary'])->name('reports.seller.day-summary');
+    Route::get('reports', [WebReportController::class, 'index'])->name('web.reports.index');
+    Route::get('reports/daily/{date}', [WebReportController::class, 'daily'])->name('web.reports.daily');
+    Route::get('reports/profit/{start}/{end}', [WebReportController::class, 'profit'])->name('web.reports.profit');
+    Route::get('reports/dashboard', [WebReportController::class, 'dashboard'])->name('web.reports.dashboard');
+    Route::get('reports/seller/day-summary/{date?}', [WebReportController::class, 'sellerDaySummary'])->name('web.reports.seller.day-summary');
 });
