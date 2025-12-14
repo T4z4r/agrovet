@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card bg-warning text-white">
+                        <div class="card bg-secondary text-white">
                             <div class="card-body text-center">
                                 <h5>Total Cost</h5>
                                 <h3>{{ $total_cost }}</h3>
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card {{ $profit >= 0 ? 'bg-success' : 'bg-danger' }} text-white">
+                        <div class="card {{ $profit >= 0 ? 'bg-primary' : 'bg-secondary' }} text-white">
                             <div class="card-body text-center">
                                 <h5>Profit</h5>
                                 <h3>{{ $profit }}</h3>

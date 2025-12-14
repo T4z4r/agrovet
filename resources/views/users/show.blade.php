@@ -23,9 +23,9 @@
                     <div class="col-md-6">
                         <strong>Status:</strong>
                         @if($user->is_active)
-                            <span class="badge bg-success">Active</span>
+                            <span class="badge bg-primary">Active</span>
                         @else
-                            <span class="badge bg-danger">Inactive</span>
+                            <span class="badge bg-secondary">Inactive</span>
                         @endif
                     </div>
                     <div class="col-md-6">

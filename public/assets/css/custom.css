@@ -36,6 +36,13 @@
 
 }
 
+.btn-info
+{
+   background-color: #266a29 !important;
+
+  border-color: #266a29 !important; 
+}
+
 .bg-secondary {
 
   background-color: #741222 !important;
@@ -54,6 +61,12 @@
 
   border-color: #741222 !important;
 
+}
+
+.btn-danger{
+     background-color: #741222 !important;
+
+  border-color: #741222 !important;
 }
 
 .bg-dark {

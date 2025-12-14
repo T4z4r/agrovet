@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="col-md-3 mb-4">
-                        <div class="card bg-success text-white">
+                        <div class="card bg-primary text-white">
                             <div class="card-body text-center">
                                 <i class="bx bx-money bx-lg mb-2"></i>
                                 <h5>Total Sales</h5>
@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div class="col-md-3 mb-4">
-                        <div class="card bg-danger text-white">
+                        <div class="card bg-secondary text-white">
                             <div class="card-body text-center">
                                 <i class="bx bx-trending-down bx-lg mb-2"></i>
                                 <h5>Total Expenses</h5>
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="col-md-3 mb-4">
-                        <div class="card bg-info text-white">
+                        <div class="card bg-primary text-white">
                             <div class="card-body text-center">
                                 <i class="bx bx-calendar bx-lg mb-2"></i>
                                 <h5>Today Sales</h5>

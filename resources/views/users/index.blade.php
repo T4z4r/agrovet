@@ -30,9 +30,9 @@
                                 <td>{{ $user->role }}</td>
                                 <td>
                                     @if($user->is_active)
-                                        <span class="badge bg-success">Active</span>
+                                        <span class="badge bg-primary">Active</span>
                                     @else
-                                        <span class="badge bg-danger">Inactive</span>
+                                        <span class="badge bg-secondary">Inactive</span>
                                     @endif
                                 </td>
                                 <td>

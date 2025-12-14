@@ -13,14 +13,14 @@
             <div class="card-body">
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <div class="card bg-success text-white">
+                        <div class="card bg-primary text-white">
                             <div class="card-body">
                                 <h5>Total Sales: {{ $total_sales }}</h5>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card bg-danger text-white">
+                        <div class="card bg-secondary text-white">
                             <div class="card-body">
                                 <h5>Total Expenses: {{ $total_expenses }}</h5>
                             </div>
