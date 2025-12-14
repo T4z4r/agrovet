@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
 
     // Sales
     Route::resource('sales', WebSaleController::class)->except(['edit', 'update'])->names('web.sales');
+    Route::get('sales/{sale}/receipt', [WebSaleController::class, 'receipt'])->name('web.sales.receipt');
 
     // Expenses
     Route::resource('expenses', WebExpenseController::class)->names('web.expenses');
