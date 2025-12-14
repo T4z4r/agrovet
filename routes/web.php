@@ -12,7 +12,7 @@ use App\Http\Controllers\WebStockTransactionController;
 use App\Http\Controllers\WebSupplierDebtController;
 use App\Http\Controllers\WebReportController;
 
-/*
+/*p
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -54,6 +54,8 @@ Route::middleware('auth')->group(function () {
 
     // Users (Sellers)
     Route::resource('users', WebUserController::class)->parameters(['users' => 'user'])->names('web.users');
+    Route::patch('users/{user}/block', [WebUserController::class, 'block'])->name('web.users.block');
+    Route::get('users/{user}/seller-report', [WebUserController::class, 'sellerReport'])->name('web.users.sellerReport');
 
     // Shops
     Route::resource('shops', WebShopController::class)->names('web.shops');
