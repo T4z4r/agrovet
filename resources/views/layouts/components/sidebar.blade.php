@@ -99,12 +99,12 @@
               <ul class="menu-sub">
                 <li class="menu-item">
                   <a href="{{ route('lang.switch', 'en') }}" class="menu-link">
-                    <div>EN - English</div>
+                    <div>{{ __('EN - English') }}</div>
                   </a>
                 </li>
                 <li class="menu-item">
                   <a href="{{ route('lang.switch', 'sw') }}" class="menu-link">
-                    <div>SW - Swahili</div>
+                    <div>{{ __('SW - Swahili') }}</div>
                   </a>
                 </li>
               </ul>
