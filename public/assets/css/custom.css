@@ -1,0 +1,15 @@
+:root {
+
+  --bs-primary: #266a29 !important;
+
+  --bs-secondary: #741222 !important;
+
+  --bs-dark: #2b2b2b !important;
+
+  --bs-primary-rgb: 38, 106, 41 !important;
+
+  --bs-secondary-rgb: 116, 18, 34 !important;
+
+  --bs-dark-rgb: 43, 43, 43 !important;
+
+}
