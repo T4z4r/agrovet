@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Product;
+use App\Models\Sale;
+use App\Models\Expense;
 
 class WebAuthController extends Controller
 {
@@ -63,6 +67,25 @@ class WebAuthController extends Controller
 
     public function dashboard()
     {
-        return view('dashboard');
+        $data = [
+            'total_products'  => Product::count(),
+            'total_sales'     => Sale::sum('total'),
+            'total_expenses'  => Expense::sum('amount'),
+            'today_sales'     => Sale::whereDate('sale_date', today())->sum('total'),
+            'stock_value'     => Product::sum(DB::raw('cost_price * stock')),
+        ];
+
+        // Data for charts - last 30 days
+        $dates = [];
+        $salesData = [];
+        $expensesData = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $date = now()->subDays($i)->toDateString();
+            $dates[] = now()->subDays($i)->format('M d');
+            $salesData[] = Sale::whereDate('sale_date', $date)->sum('total');
+            $expensesData[] = Expense::whereDate('date', $date)->sum('amount');
+        }
+
+        return view('dashboard', compact('data', 'dates', 'salesData', 'expensesData'));
     }
 }
