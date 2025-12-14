@@ -115,13 +115,6 @@
               </a>
             </li>
 
-            <!-- Supplier Debts -->
-            <li class="menu-item {{ request()->routeIs('web.supplier-debts.*') ? 'active' : '' }}">
-              <a href="{{ route('web.supplier-debts.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-credit-card"></i>
-                <div>{{ __('Supplier Debts') }}</div>
-              </a>
-            </li>
 
             <!-- Reports -->
             <li class="menu-item {{ request()->routeIs('web.reports.*') ? 'active' : '' }}">
