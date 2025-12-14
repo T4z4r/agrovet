@@ -72,8 +72,8 @@ Route::middleware('auth')->group(function () {
 
     // Reports
     Route::get('reports', [WebReportController::class, 'index'])->name('web.reports.index');
-    Route::get('reports/daily/{date}', [WebReportController::class, 'daily'])->name('web.reports.daily');
-    Route::get('reports/profit/{start}/{end}', [WebReportController::class, 'profit'])->name('web.reports.profit');
+    Route::get('reports/daily', [WebReportController::class, 'daily'])->name('web.reports.daily');
+    Route::get('reports/profit', [WebReportController::class, 'profit'])->name('web.reports.profit');
     Route::get('reports/dashboard', [WebReportController::class, 'dashboard'])->name('web.reports.dashboard');
-    Route::get('reports/seller/day-summary/{date?}', [WebReportController::class, 'sellerDaySummary'])->name('web.reports.seller.day-summary');
+    Route::get('reports/seller/day-summary', [WebReportController::class, 'sellerDaySummary'])->name('web.reports.seller.day-summary');
 });

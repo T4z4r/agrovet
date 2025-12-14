@@ -18,8 +18,10 @@ class WebReportController extends Controller
         return view('reports.index');
     }
 
-    public function daily($date)
+    public function daily(Request $request)
     {
+        $date = $request->get('date', date('Y-m-d'));
+
         $sales = Sale::with('items.product', 'seller')
             ->where('sale_date', $date)->get();
 
@@ -32,8 +34,11 @@ class WebReportController extends Controller
         return view('reports.daily', compact('sales', 'total_sales', 'expenses', 'total_expenses', 'date'));
     }
 
-    public function profit($start, $end)
+    public function profit(Request $request)
     {
+        $start = $request->get('start', date('Y-m-d', strtotime('-30 days')));
+        $end = $request->get('end', date('Y-m-d'));
+
         $sales = SaleItem::whereBetween('created_at', [$start, $end])
             ->with('product')
             ->get();
@@ -61,10 +66,10 @@ class WebReportController extends Controller
         return view('reports.dashboard', compact('data'));
     }
 
-    public function sellerDaySummary($date = null)
+    public function sellerDaySummary(Request $request)
     {
         $user = Auth::user();
-        $date = $date ?? today()->toDateString();
+        $date = $request->get('date', today()->toDateString());
 
         $sales = Sale::with('items.product')
             ->where('seller_id', Auth::user()->id)
