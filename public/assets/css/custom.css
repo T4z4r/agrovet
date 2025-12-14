@@ -36,11 +36,10 @@
 
 }
 
-.btn-info
-{
-   background-color: #266a29 !important;
+.btn-info {
+  background-color: #266a29 !important;
 
-  border-color: #266a29 !important; 
+  border-color: #266a29 !important;
 }
 
 .bg-secondary {
@@ -63,8 +62,8 @@
 
 }
 
-.btn-danger{
-     background-color: #741222 !important;
+.btn-danger {
+  background-color: #741222 !important;
 
   border-color: #741222 !important;
 }
@@ -212,3 +211,10 @@
 
 }
 
+.bg-menu-theme .menu-inner > .menu-item.active:before{
+    background: #741222 !important;
+}
+
+.layout-menu-toggle {
+    background: #266a29 !important;
+}
