@@ -3,11 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WebProductController;
 use App\Http\Controllers\WebSupplierController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
-});
+Route::get('/', fn() => Auth::check() ? redirect()->route('dashboard') : redirect()->route('login'));
 
 Route::get('/dashboard', function () {
     return view('dashboard');
