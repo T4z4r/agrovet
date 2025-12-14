@@ -1,63 +1,66 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create Product') }}
-        </h2>
-    </x-slot>
+@extends('layouts.master')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <form method="POST" action="{{ route('products.store') }}">
-                        @csrf
-                        <div class="mb-4">
-                            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                            <input type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="name" name="name" required>
+@section('title', 'Create Product')
+
+@section('content')
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Create Product</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ route('products.store') }}">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                             @error('name')
-                                <div class="text-red-600 text-sm">{{ $message }}</div>
+                                <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="mb-4">
-                            <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-                            <input type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="category" name="category" required>
+                        <div class="col-md-6 mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <input type="text" class="form-control" id="category" name="category" value="{{ old('category') }}" required>
                             @error('category')
-                                <div class="text-red-600 text-sm">{{ $message }}</div>
+                                <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="mb-4">
-                            <label for="unit" class="block text-sm font-medium text-gray-700">Unit</label>
-                            <input type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="unit" name="unit" required>
+                        <div class="col-md-6 mb-3">
+                            <label for="unit" class="form-label">Unit</label>
+                            <input type="text" class="form-control" id="unit" name="unit" value="{{ old('unit') }}" required>
                             @error('unit')
-                                <div class="text-red-600 text-sm">{{ $message }}</div>
+                                <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="mb-4">
-                            <label for="stock" class="block text-sm font-medium text-gray-700">Stock</label>
-                            <input type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="stock" name="stock" required min="0">
+                        <div class="col-md-6 mb-3">
+                            <label for="stock" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="stock" name="stock" value="{{ old('stock') }}" required min="0">
                             @error('stock')
-                                <div class="text-red-600 text-sm">{{ $message }}</div>
+                                <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="mb-4">
-                            <label for="cost_price" class="block text-sm font-medium text-gray-700">Cost Price</label>
-                            <input type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="cost_price" name="cost_price" required min="0">
+                        <div class="col-md-6 mb-3">
+                            <label for="cost_price" class="form-label">Cost Price</label>
+                            <input type="number" class="form-control" id="cost_price" name="cost_price" value="{{ old('cost_price') }}" required min="0" step="0.01">
                             @error('cost_price')
-                                <div class="text-red-600 text-sm">{{ $message }}</div>
+                                <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="mb-4">
-                            <label for="selling_price" class="block text-sm font-medium text-gray-700">Selling Price</label>
-                            <input type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="selling_price" name="selling_price" required min="0">
+                        <div class="col-md-6 mb-3">
+                            <label for="selling_price" class="form-label">Selling Price</label>
+                            <input type="number" class="form-control" id="selling_price" name="selling_price" value="{{ old('selling_price') }}" required min="0" step="0.01">
                             @error('selling_price')
-                                <div class="text-red-600 text-sm">{{ $message }}</div>
+                                <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
-                        <a href="{{ route('products.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2">Cancel</a>
-                    </form>
-                </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <a href="{{ route('products.index') }}" class="btn btn-secondary">Cancel</a>
+                </form>
             </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

@@ -74,7 +74,80 @@
                 <div>{{ __('Dashboard') }}</div>
               </a>
             </li>
-          
+
+            <!-- Products -->
+            <li class="menu-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
+              <a href="{{ route('products.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-package"></i>
+                <div>{{ __('Products') }}</div>
+              </a>
+            </li>
+
+            <!-- Suppliers -->
+            <li class="menu-item {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
+              <a href="{{ route('suppliers.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-truck"></i>
+                <div>{{ __('Suppliers') }}</div>
+              </a>
+            </li>
+
+            <!-- Sales -->
+            <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
+              <a href="{{ route('sales.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-shopping-bag"></i>
+                <div>{{ __('Sales') }}</div>
+              </a>
+            </li>
+
+            <!-- Expenses -->
+            <li class="menu-item {{ request()->routeIs('expenses.*') ? 'active' : '' }}">
+              <a href="{{ route('expenses.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-money"></i>
+                <div>{{ __('Expenses') }}</div>
+              </a>
+            </li>
+
+            <!-- Stock Transactions -->
+            <li class="menu-item {{ request()->routeIs('stock-transactions.*') ? 'active' : '' }}">
+              <a href="{{ route('stock-transactions.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-transfer"></i>
+                <div>{{ __('Stock Transactions') }}</div>
+              </a>
+            </li>
+
+            <!-- Supplier Debts -->
+            <li class="menu-item {{ request()->routeIs('supplier-debts.*') ? 'active' : '' }}">
+              <a href="{{ route('supplier-debts.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-credit-card"></i>
+                <div>{{ __('Supplier Debts') }}</div>
+              </a>
+            </li>
+
+            <!-- Reports -->
+            <li class="menu-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+              <a href="{{ route('reports.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-bar-chart"></i>
+                <div>{{ __('Reports') }}</div>
+              </a>
+            </li>
+
+            @if(auth()->user()->role === 'owner')
+            <!-- Users -->
+            <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+              <a href="{{ route('users.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div>{{ __('Users') }}</div>
+              </a>
+            </li>
+
+            <!-- Shops -->
+            <li class="menu-item {{ request()->routeIs('shops.*') ? 'active' : '' }}">
+              <a href="{{ route('shops.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-store"></i>
+                <div>{{ __('Shops') }}</div>
+              </a>
+            </li>
+            @endif
 
             <!-- Language Switcher -->
             <li class="menu-item">
