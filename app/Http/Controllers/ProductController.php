@@ -23,7 +23,8 @@ class ProductController extends Controller
             'category'=>'required',
             'stock'=>'required|min:0',
             'cost_price'=>'required|min:0',
-            'selling_price'=>'required|min:0'
+            'selling_price'=>'required|min:0',
+            'minimum_quantity'=>'nullable|numeric|min:0'
         ]);
 
         return response()->json([

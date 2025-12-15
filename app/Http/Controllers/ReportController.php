@@ -63,6 +63,7 @@ class ReportController extends Controller
                 'total_expenses'  => Expense::sum('amount'),
                 'today_sales'     => Sale::whereDate('sale_date', today())->sum('total'),
                 'stock_value'     => Product::sum(DB::raw('cost_price * stock')),
+                'low_stock_products' => Product::whereRaw('stock <= minimum_quantity')->get(),
             ],
             'message' => 'Dashboard data retrieved successfully'
         ]);
