@@ -13,7 +13,7 @@ class Expense extends Model
         return $this->belongsTo(Shop::class);
     }
 
-    public function recordedBy()
+    public function user()
     {
         return $this->belongsTo(User::class, 'recorded_by');
     }
