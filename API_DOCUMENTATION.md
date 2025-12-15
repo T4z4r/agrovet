@@ -113,8 +113,9 @@ All API requests require authentication except for registration and login. Use t
     "unit": "string (required)",
     "category": "string (required)",
     "stock": "integer (required, min:0)",
-    "cost_price": "integer (required, min:0)",
-    "selling_price": "integer (required, min:0)"
+    "cost_price": "numeric (required, min:0)",
+    "selling_price": "numeric (required, min:0)",
+    "minimum_quantity": "numeric (optional, min:0)"
   }
   ```
 - **Response**:
@@ -333,7 +334,7 @@ All API requests require authentication except for registration and login. Use t
     "items": "array (required, min:1)",
     "items.*.product_id": "integer (required, exists:products)",
     "items.*.quantity": "integer (required, min:1)",
-    "items.*.price": "integer (required, min:0)"
+    "items.*.price": "numeric (required, min:0)"
   }
   ```
 - **Success Response**:
@@ -394,7 +395,7 @@ All API requests require authentication except for registration and login. Use t
   ```json
   {
     "category": "string (required)",
-    "amount": "integer (required, min:0)",
+    "amount": "numeric (required, min:0)",
     "description": "string (optional)",
     "date": "date (required, YYYY-MM-DD)"
   }
@@ -459,9 +460,9 @@ All API requests require authentication except for registration and login. Use t
     "success": true,
     "data": {
       "sales": [...],
-      "total_sales": "integer",
+      "total_sales": "numeric",
       "expenses": [...],
-      "total_expenses": "integer"
+      "total_expenses": "numeric"
     },
     "message": "Daily report retrieved successfully"
   }
@@ -476,9 +477,9 @@ All API requests require authentication except for registration and login. Use t
   {
     "success": true,
     "data": {
-      "revenue": "integer",
-      "cost": "integer",
-      "profit": "integer"
+      "revenue": "numeric",
+      "cost": "numeric",
+      "profit": "numeric"
     },
     "message": "Profit report retrieved successfully"
   }
@@ -494,10 +495,11 @@ All API requests require authentication except for registration and login. Use t
     "success": true,
     "data": {
       "total_products": "integer",
-      "total_sales": "integer",
-      "total_expenses": "integer",
-      "today_sales": "integer",
-      "stock_value": "integer"
+      "total_sales": "numeric",
+      "total_expenses": "numeric",
+      "today_sales": "numeric",
+      "stock_value": "numeric",
+      "low_stock_products": [...]
     },
     "message": "Dashboard data retrieved successfully"
   }
@@ -514,9 +516,9 @@ All API requests require authentication except for registration and login. Use t
     "data": {
       "date": "string (YYYY-MM-DD)",
       "sales": [...],
-      "total_sales": "integer",
+      "total_sales": "numeric",
       "expenses": [...],
-      "total_expenses": "integer",
+      "total_expenses": "numeric",
       "stock_transactions": [...]
     },
     "message": "Seller day summary retrieved successfully"
@@ -623,9 +625,9 @@ All API requests require authentication except for registration and login. Use t
     "data": {
       "seller": {...},
       "sales": [...],
-      "total_sales": "integer",
+      "total_sales": "numeric",
       "expenses": [...],
-      "total_expenses": "integer",
+      "total_expenses": "numeric",
       "stock_transactions": [...]
     },
     "message": "Seller report retrieved successfully"
