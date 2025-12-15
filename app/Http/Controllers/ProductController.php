@@ -21,7 +21,7 @@ class ProductController extends Controller
             'name'=>'required',
             'unit'=>'required',
             'category'=>'required',
-            'stock'=>'required|integer|min:0',
+            'stock'=>'required|min:0',
             'cost_price'=>'required|min:0',
             'selling_price'=>'required|min:0'
         ]);
