@@ -499,7 +499,7 @@ All API requests require authentication except for registration and login. Use t
       "total_expenses": "numeric",
       "today_sales": "numeric",
       "stock_value": "numeric",
-      "low_stock_products": [...]
+      "low_stock_products_count": "integer"
     },
     "message": "Dashboard data retrieved successfully"
   }
