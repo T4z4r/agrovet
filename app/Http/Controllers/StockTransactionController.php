@@ -29,17 +29,24 @@ class StockTransactionController extends Controller
         ]);
 
         $data['recorded_by'] = $r->user()->id;
-        $tx = StockTransaction::create($data);
 
         $product = Product::find($data['product_id']);
 
         if ($data['type'] === 'stock_in' || $data['type'] === 'return') {
             $product->stock += $data['quantity'];
         } else {
+            if ($product->stock < $data['quantity']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Insufficient stock'
+                ], 400);
+            }
             $product->stock -= $data['quantity'];
         }
 
         $product->save();
+
+        $tx = StockTransaction::create($data);
 
         return response()->json([
             'success' => true,

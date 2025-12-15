@@ -26,7 +26,7 @@ class WebStockTransactionController extends Controller
     {
         $data = $request->validate([
             'product_id' => 'required|exists:products,id',
-            'type' => 'required|in:in,out,damage,return',
+            'type' => 'required|in:stock_in,stock_out,damage,return',
             'quantity' => 'required|integer|min:1',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'date' => 'required|date',
@@ -37,9 +37,9 @@ class WebStockTransactionController extends Controller
 
         // Update product stock
         $product = Product::find($data['product_id']);
-        if ($data['type'] === 'in') {
+        if ($data['type'] === 'stock_in' || $data['type'] === 'return') {
             $product->stock += $data['quantity'];
-        } elseif ($data['type'] === 'out' || $data['type'] === 'damage') {
+        } else {
             if ($product->stock < $data['quantity']) {
                 return back()->withErrors(['quantity' => 'Insufficient stock']);
             }

@@ -30,8 +30,8 @@
                             <label for="type" class="form-label">Type</label>
                             <select class="form-control" id="type" name="type" required>
                                 <option value="">Select Type</option>
-                                <option value="in" {{ $transaction->type == 'in' ? 'selected' : '' }}>Stock In</option>
-                                <option value="out" {{ $transaction->type == 'out' ? 'selected' : '' }}>Stock Out</option>
+                                <option value="stock_in" {{ $transaction->type == 'stock_in' ? 'selected' : '' }}>Stock In</option>
+                                <option value="stock_out" {{ $transaction->type == 'stock_out' ? 'selected' : '' }}>Stock Out</option>
                                 <option value="damage" {{ $transaction->type == 'damage' ? 'selected' : '' }}>Damage</option>
                                 <option value="return" {{ $transaction->type == 'return' ? 'selected' : '' }}>Return</option>
                             </select>

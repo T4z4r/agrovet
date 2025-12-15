@@ -29,8 +29,8 @@
                             <label for="type" class="form-label">Type</label>
                             <select class="form-control" id="type" name="type" required>
                                 <option value="">Select Type</option>
-                                <option value="in">Stock In</option>
-                                <option value="out">Stock Out</option>
+                                <option value="stock_in">Stock In</option>
+                                <option value="stock_out">Stock Out</option>
                                 <option value="damage">Damage</option>
                                 <option value="return">Return</option>
                             </select>
