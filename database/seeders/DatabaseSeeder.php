@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\AboutSeeder;
+use Database\Seeders\ContactSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
@@ -25,6 +27,8 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(UserSeeder::class);
         $this->call(ProductSeeder::class);
+        $this->call(AboutSeeder::class);
+        $this->call(ContactSeeder::class);
 
     }
 }

@@ -9,6 +9,16 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ContactController;
+
+/*
+|--------------------------------------------------------------------------
+| Public
+|--------------------------------------------------------------------------
+*/
+Route::get('about', [AboutController::class, 'index']);
+Route::get('contacts', [ContactController::class, 'index']);
 
 /*
 |--------------------------------------------------------------------------

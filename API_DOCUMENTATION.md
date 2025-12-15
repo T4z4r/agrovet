@@ -2,6 +2,49 @@
 
 This document describes the API endpoints for the AgroVet application.
 
+## Public Endpoints
+
+### Get About Information
+- **Method**: GET
+- **Endpoint**: `/api/about`
+- **Description**: Get application about information
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {
+      "id": 1,
+      "title": "About AgroVet",
+      "content": "...",
+      "created_at": "...",
+      "updated_at": "..."
+    },
+    "message": "About retrieved successfully"
+  }
+  ```
+
+### Get Contacts
+- **Method**: GET
+- **Endpoint**: `/api/contacts`
+- **Description**: Get application contact information
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "id": 1,
+        "type": "phone",
+        "value": "+254 700 123 456",
+        "created_at": "...",
+        "updated_at": "..."
+      },
+      ...
+    ],
+    "message": "Contacts retrieved successfully"
+  }
+  ```
+
 ## Authentication
 
 All API requests require authentication except for registration and login. Use the `Authorization: Bearer <token>` header for authenticated requests.
