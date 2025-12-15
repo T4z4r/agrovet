@@ -36,17 +36,17 @@
         <div class="card bg-primary text-white">
             <div class="card-body text-center">
                 <i class="bx bx-package bx-lg mb-2"></i>
-                <h5 class="text-light">Total Products</h5>
-                <h3 class="text-light"> {{ $data['total_products'] }}</h3>
+                <h5 class="text-white">Total Products</h5>
+                <h3 class="text-white"> {{ $data['total_products'] }}</h3>
             </div>
         </div>
     </div>
     <div class="col-md-3 mb-4">
-        <div class="card bg-success text-white">
+        <div class="card bg-primary text-white">
             <div class="card-body text-center">
                 <i class="bx bx-money bx-lg mb-2"></i>
-                <h5>Total Sales</h5>
-                <h3>{{ number_format($data['total_sales'], 2) }}</h3>
+                <h5 class="text-white">Total Sales</h5>
+                <h3 class="text-white">{{ number_format($data['total_sales'], 2) }}</h3>
             </div>
         </div>
     </div>
@@ -54,17 +54,17 @@
         <div class="card bg-danger text-white">
             <div class="card-body text-center">
                 <i class="bx bx-trending-down bx-lg mb-2"></i>
-                <h5 class="text-light">Total Expenses</h5>
-                <h3 class="text-light">{{ number_format($data['total_expenses'], 2) }}</h3>
+                <h5 class="text-white">Total Expenses</h5>
+                <h3 class="text-white">{{ number_format($data['total_expenses'], 2) }}</h3>
             </div>
         </div>
     </div>
     <div class="col-md-3 mb-4">
-        <div class="card bg-info text-white">
+        <div class="card bg-primary text-white">
             <div class="card-body text-center">
                 <i class="bx bx-calendar bx-lg mb-2"></i>
-                <h5 class="text-light">Today Sales</h5>
-                <h3 class="text-light">{{ number_format($data['today_sales'], 2) }}</h3>
+                <h5 class="text-white">Today Sales</h5>
+                <h3 class="text-white">{{ number_format($data['today_sales'], 2) }}</h3>
             </div>
         </div>
     </div>
