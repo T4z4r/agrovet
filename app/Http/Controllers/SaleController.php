@@ -7,6 +7,7 @@ use App\Models\Sale;
 use App\Models\Product;
 use App\Models\SaleItem;
 use Illuminate\Http\Request;
+use App\Models\StockTransaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,6 +66,16 @@ class SaleController extends Controller
 
                 $p->stock -= $item['quantity'];
                 $p->save();
+
+                StockTransaction::create([
+                    'product_id' => $item['product_id'],
+                    'type' => 'stock_out',
+                    'quantity' => $item['quantity'],
+                    'supplier_id' => null,
+                    'recorded_by' => Auth::user()->id,
+                    'date' => $data['sale_date'],
+                    'remarks' => 'Sold in sale #' . $sale->id
+                ]);
             }
 
             $sale->total = $grand_total;

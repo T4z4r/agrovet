@@ -66,7 +66,24 @@ class StockTransactionController extends Controller
 
     public function destroy($id)
     {
-        StockTransaction::findOrFail($id)->delete();
+        $tx = StockTransaction::findOrFail($id);
+        $product = $tx->product;
+
+        if ($tx->type === 'stock_in' || $tx->type === 'return') {
+            if ($product->stock < $tx->quantity) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cannot delete transaction: insufficient stock'
+                ], 400);
+            }
+            $product->stock -= $tx->quantity;
+        } else {
+            $product->stock += $tx->quantity;
+        }
+
+        $product->save();
+        $tx->delete();
+
         return response()->json([
             'success' => true,
             'message' => 'Stock transaction deleted successfully'
