@@ -75,7 +75,21 @@ class WebStockTransactionController extends Controller
 
     public function destroy($id)
     {
-        StockTransaction::findOrFail($id)->delete();
+        $tx = StockTransaction::findOrFail($id);
+        $product = $tx->product;
+
+        if ($tx->type === 'stock_in' || $tx->type === 'return') {
+            if ($product->stock < $tx->quantity) {
+                return back()->withErrors(['message' => 'Cannot delete transaction: insufficient stock']);
+            }
+            $product->stock -= $tx->quantity;
+        } else {
+            $product->stock += $tx->quantity;
+        }
+
+        $product->save();
+        $tx->delete();
+
         return redirect()->route('stock-transactions.index')->with('success', 'Stock transaction deleted successfully');
     }
 }

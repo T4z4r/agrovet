@@ -6,6 +6,7 @@ use PDF;
 use App\Models\Sale;
 use App\Models\Product;
 use App\Models\SaleItem;
+use App\Models\StockTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
