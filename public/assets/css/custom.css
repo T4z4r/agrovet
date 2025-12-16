@@ -218,3 +218,12 @@
 .layout-menu-toggle {
     background: #266a29 !important;
 }
+
+
+/* Active pagination styles */
+a.page-link {
+    border-color: #266a29 !important;
+    background-color: #266a29 !important;
+    color: #fff;
+    box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+}

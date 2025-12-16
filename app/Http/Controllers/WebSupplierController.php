@@ -7,8 +7,15 @@ use Illuminate\Http\Request;
 
 class WebSupplierController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $suppliers = Supplier::orderBy('name')->get();
+            return response()->json([
+                'data' => $suppliers
+            ]);
+        }
+
         $suppliers = Supplier::orderBy('name')->get();
         return view('suppliers.index', compact('suppliers'));
     }

@@ -7,8 +7,15 @@ use Illuminate\Http\Request;
 
 class WebProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $products = Product::orderBy('name')->get();
+            return response()->json([
+                'data' => $products
+            ]);
+        }
+
         $products = Product::orderBy('name')->get();
         return view('products.index', compact('products'));
     }

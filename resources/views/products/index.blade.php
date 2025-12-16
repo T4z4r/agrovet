@@ -10,45 +10,89 @@
                 <h5 class="mb-0">Products</h5>
                 <a href="{{ route('web.products.create') }}" class="btn btn-primary">Add Product</a>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Category</th>
-                                <th>Unit</th>
-                                <th>Stock</th>
-                                <th>Cost Price</th>
-                                <th>Selling Price</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($products as $product)
-                            <tr>
-                                <td>{{ $product->name }}</td>
-                                <td>{{ $product->category }}</td>
-                                <td>{{ $product->unit }}</td>
-                                <td>{{ $product->stock }}</td>
-                                <td>{{ $product->cost_price }}</td>
-                                <td>{{ $product->selling_price }}</td>
-                                <td>
-                                    <a href="{{ route('web.products.show', $product) }}" class="btn btn-sm btn-info">View</a>
-                                    <a href="{{ route('web.products.edit', $product) }}" class="btn btn-sm btn-warning">Edit</a>
-                                    <form method="POST" action="{{ route('web.products.destroy', $product) }}" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+            <div class="card-datatable text-nowrap">
+                <table class="dt-column-search table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Unit</th>
+                            <th>Stock</th>
+                            <th>Cost Price</th>
+                            <th>Selling Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Unit</th>
+                            <th>Stock</th>
+                            <th>Cost Price</th>
+                            <th>Selling Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    $('.dt-column-search').DataTable({
+        ajax: {
+            url: '{{ route("web.products.index") }}',
+            type: 'GET',
+            dataSrc: 'data'
+        },
+        columns: [
+            { data: 'name' },
+            { data: 'category' },
+            { data: 'unit' },
+            { data: 'stock' },
+            { data: 'cost_price' },
+            { data: 'selling_price' },
+            {
+                data: 'id',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    return `
+                        <a href="{{ url('products') }}/${data}" class="btn btn-sm btn-info">View</a>
+                        <a href="{{ url('products') }}/${data}/edit" class="btn btn-sm btn-warning">Edit</a>
+                        <form method="POST" action="{{ url('products') }}/${data}" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    `;
+                }
+            }
+        ],
+        orderCellsTop: true,
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+        initComplete: function() {
+            // Setup - add a text input to each footer cell
+            this.api().columns().every(function() {
+                var column = this;
+                var title = column.header().textContent;
+
+                // Skip the Actions column
+                if (title === 'Actions') return;
+
+                $('input', column.footer()).on('keyup change', function() {
+                    if (column.search() !== this.value) {
+                        column.search(this.value).draw();
+                    }
+                });
+            });
+        }
+    });
+});
+</script>
 @endsection

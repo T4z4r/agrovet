@@ -13,8 +13,15 @@ use Illuminate\Support\Facades\Auth;
 
 class WebSaleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $sales = Sale::with('seller')->latest()->get();
+            return response()->json([
+                'data' => $sales
+            ]);
+        }
+
         $sales = Sale::with('items.product', 'seller')->latest()->get();
         return view('sales.index', compact('sales'));
     }

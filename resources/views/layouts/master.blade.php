@@ -43,6 +43,9 @@
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
 
     <!-- Page CSS -->
 
@@ -236,6 +239,9 @@
     <!-- endbuild -->
 
     <!-- Vendors JS -->
+    <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/flatpickr/flatpickr.js') }}"></script>
 
     <!-- Main JS -->
     <script src="{{  asset('assets/js/main.js')  }}"></script>
