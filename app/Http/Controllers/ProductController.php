@@ -36,9 +36,10 @@ class ProductController extends Controller
 
     public function show($id)
     {
+        $product = Product::with('stockTransactions.supplier', 'stockTransactions.user')->findOrFail($id);
         return response()->json([
             'success' => true,
-            'data' => Product::findOrFail($id),
+            'data' => $product,
             'message' => 'Product retrieved successfully'
         ]);
     }
