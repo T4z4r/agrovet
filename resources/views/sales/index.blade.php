@@ -91,16 +91,6 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th></th>
-                            <th>ID</th>
-                            <th>Seller</th>
-                            <th>Total</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>

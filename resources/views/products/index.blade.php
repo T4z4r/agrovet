@@ -75,23 +75,7 @@ $(document).ready(function() {
             }
         ],
         orderCellsTop: true,
-        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-        initComplete: function() {
-            // Setup - add a text input to each footer cell
-            this.api().columns().every(function() {
-                var column = this;
-                var title = column.header().textContent;
-
-                // Skip the Actions column
-                if (title === 'Actions') return;
-
-                $('input', column.footer()).on('keyup change', function() {
-                    if (column.search() !== this.value) {
-                        column.search(this.value).draw();
-                    }
-                });
-            });
-        }
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>'
     });
 });
 </script>
