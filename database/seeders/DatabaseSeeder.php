@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Database\Seeders\ProductSeeder;
+use Database\Seeders\KedrikProductSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\AboutSeeder;
 use Database\Seeders\ContactSeeder;
@@ -27,6 +28,7 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(UserSeeder::class);
         $this->call(ProductSeeder::class);
+        $this->call(KedrikProductSeeder::class);
         $this->call(AboutSeeder::class);
         $this->call(ContactSeeder::class);
 
