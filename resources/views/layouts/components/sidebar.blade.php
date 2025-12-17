@@ -88,6 +88,14 @@
                 <div>{{ __('Shops') }}</div>
               </a>
             </li>
+
+            <!-- Admin -->
+            <li class="menu-item {{ request()->routeIs('web.admin.*') ? 'active' : '' }}">
+              <a href="{{ route('web.admin.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-data"></i>
+                <div>{{ __('Database Admin') }}</div>
+              </a>
+            </li>
             @endif
 
             <!-- Language Switcher -->

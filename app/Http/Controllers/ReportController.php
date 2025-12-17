@@ -62,7 +62,7 @@ class ReportController extends Controller
                 'total_products'  => Product::count(),
                 'total_sales'     => Sale::sum('total'),
                 'total_expenses'  => Expense::sum('amount'),
-                'today_sales'     => Sale::whereDate('sale_date', today())->sum('total'),
+                'today_sales'     => Sale::where('sale_date', today())->sum('total'),
                 'stock_value'     => Product::sum(DB::raw('cost_price * stock')),
                 'low_stock_products_count' => Product::whereRaw('stock <= minimum_quantity')->count(),
             ],

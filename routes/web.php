@@ -11,6 +11,7 @@ use App\Http\Controllers\WebExpenseController;
 use App\Http\Controllers\WebStockTransactionController;
 use App\Http\Controllers\WebSupplierDebtController;
 use App\Http\Controllers\WebReportController;
+use App\Http\Controllers\WebAdminController;
 
 /*p
 |--------------------------------------------------------------------------
@@ -79,4 +80,8 @@ Route::middleware('auth')->group(function () {
     Route::get('reports/profit', [WebReportController::class, 'profit'])->name('web.reports.profit');
     Route::get('reports/dashboard', [WebReportController::class, 'dashboard'])->name('web.reports.dashboard');
     Route::get('reports/seller/day-summary', [WebReportController::class, 'sellerDaySummary'])->name('web.reports.seller.day-summary');
+
+    // Admin
+    Route::get('admin', [WebAdminController::class, 'index'])->name('web.admin.index');
+    Route::post('admin/clear/{table}', [WebAdminController::class, 'clear'])->name('web.admin.clear');
 });
