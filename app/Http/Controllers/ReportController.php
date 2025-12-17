@@ -106,4 +106,19 @@ class ReportController extends Controller
             'message' => 'Seller day summary retrieved successfully'
         ]);
     }
+
+    public function dailyPdf($date)
+    {
+        $sales = Sale::with('items.product', 'seller')
+            ->where('sale_date', $date)->get();
+
+        $total_sales = Sale::where('sale_date', $date)->sum('total');
+
+        $expenses = Expense::where('date', $date)->get();
+
+        $total_expenses = Expense::where('date', $date)->sum('amount');
+
+        $pdf = PDF::loadView('pdf.daily-report', compact('sales', 'total_sales', 'expenses', 'total_expenses', 'date'));
+        return $pdf->download("daily_report_{$date}.pdf");
+    }
 }
