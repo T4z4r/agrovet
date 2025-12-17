@@ -98,7 +98,7 @@
     <div class="container">
         <div class="header">
             <img src="{{ public_path('assets/img/logo.png') }}" alt="Agrovet Logo">
-            <h1>Agrovet</h1>
+            <h1>Kendrick Agrovet</h1>
             <p>Quality Agricultural Products</p>
             <p>Receipt</p>
         </div>
