@@ -9,9 +9,9 @@ class Sale extends Model
         'seller_id','total','sale_date'
     ];
 
-    // protected $casts = [
-    //     'sale_date' => 'date',
-    // ];
+    protected $casts = [
+        'sale_date' => 'date',
+    ];
 
     public function seller()
     {
