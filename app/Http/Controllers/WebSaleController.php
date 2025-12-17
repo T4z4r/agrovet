@@ -10,16 +10,13 @@ use App\Models\StockTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-
 
 class WebSaleController extends Controller
 {
     public function index(Request $request)
     {
 
-$test = Sale::where('sale_date', Carbon::today()->toDateString())->sum('total');
-        dd($test);
+
         if ($request->ajax()) {
             $sales = Sale::with('seller')->latest()->get();
             return response()->json([
