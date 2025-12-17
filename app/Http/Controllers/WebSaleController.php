@@ -16,7 +16,7 @@ class WebSaleController extends Controller
     public function index(Request $request)
     {
 
-        $test= Sale::where('sale_date', today())->sum('total');
+$test = Sale::whereDate('sale_date', Carbon::today())->sum('total');
         dd($test);
         if ($request->ajax()) {
             $sales = Sale::with('seller')->latest()->get();
