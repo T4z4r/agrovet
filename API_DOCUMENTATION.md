@@ -532,6 +532,12 @@ All API requests require authentication except for registration and login. Use t
   }
   ```
 
+### Daily Report PDF
+- **Method**: GET
+- **Endpoint**: `/api/reports/daily/{date}/pdf`
+- **Description**: Download PDF report of daily sales and expenses for the specified date (YYYY-MM-DD)
+- **Response**: PDF file
+
 ### Profit Report
 - **Method**: GET
 - **Endpoint**: `/api/reports/profit/{start}/{end}`

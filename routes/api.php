@@ -79,6 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('reports/daily/{date}', [ReportController::class, 'daily']);
+    Route::get('reports/daily/{date}/pdf', [ReportController::class, 'dailyPdf']);
     Route::get('reports/profit/{start}/{end}', [ReportController::class, 'profit']);
     Route::get('reports/dashboard', [ReportController::class, 'dashboard']);
     Route::get('reports/seller/day-summary/{date?}', [ReportController::class, 'sellerDaySummary']);

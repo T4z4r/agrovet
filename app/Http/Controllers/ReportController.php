@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\StockTransaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use PDF;
 
 class ReportController extends Controller
 {
