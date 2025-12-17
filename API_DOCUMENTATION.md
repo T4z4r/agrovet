@@ -158,7 +158,8 @@ All API requests require authentication except for registration and login. Use t
     "stock": "integer (required, min:0)",
     "cost_price": "numeric (required, min:0)",
     "selling_price": "numeric (required, min:0)",
-    "minimum_quantity": "numeric (optional, min:0)"
+    "minimum_quantity": "numeric (optional, min:0)",
+    "barcode": "string (optional)"
   }
   ```
 - **Response**:
