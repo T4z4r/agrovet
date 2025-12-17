@@ -210,6 +210,26 @@ All API requests require authentication except for registration and login. Use t
   }
   ```
 
+### Get Product by Barcode
+- **Method**: GET
+- **Endpoint**: `/api/products/barcode/{barcode}`
+- **Description**: Get a product by its barcode
+- **Success Response**:
+  ```json
+  {
+    "success": true,
+    "data": {...},
+    "message": "Product retrieved successfully"
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "success": false,
+    "message": "Product not found"
+  }
+  ```
+
 ## Suppliers
 
 ### List Suppliers

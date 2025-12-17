@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::apiResource('products', ProductController::class);
+    Route::get('products/barcode/{barcode}', [ProductController::class, 'getByBarcode']);
 
     /*
     |--------------------------------------------------------------------------

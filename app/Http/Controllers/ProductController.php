@@ -64,4 +64,22 @@ class ProductController extends Controller
             'message' => 'Product deleted successfully'
         ]);
     }
+
+    public function getByBarcode($barcode)
+    {
+        $product = Product::where('barcode', $barcode)->first();
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $product,
+            'message' => 'Product retrieved successfully'
+        ]);
+    }
 }
