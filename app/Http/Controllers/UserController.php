@@ -37,7 +37,6 @@ class UserController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|in:seller' // Only allow creating sellers
         ]);
 
         $data['password'] = Hash::make($data['password']);
