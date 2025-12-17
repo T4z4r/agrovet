@@ -15,7 +15,12 @@ class WebAdminController extends Controller
         }
 
         // Get list of tables, excluding system tables
-        $allTables = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
+        $tablesResult = DB::select('SHOW TABLES');
+        $dbName = DB::getDatabaseName();
+        $allTables = array_map(function($t) use ($dbName) {
+            return $t->{'Tables_in_' . $dbName};
+        }, $tablesResult);
+
         $systemTables = ['migrations', 'cache', 'jobs', 'personal_access_tokens', 'failed_jobs', 'password_resets', 'sessions'];
         $tables = array_diff($allTables, $systemTables);
 
@@ -38,7 +43,12 @@ class WebAdminController extends Controller
         }
 
         // Validate table exists
-        $allTables = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
+        $tablesResult = DB::select('SHOW TABLES');
+        $dbName = DB::getDatabaseName();
+        $allTables = array_map(function($t) use ($dbName) {
+            return $t->{'Tables_in_' . $dbName};
+        }, $tablesResult);
+
         if (!in_array($table, $allTables)) {
             return redirect()->route('web.admin.index')->with('error', 'Table not found');
         }
