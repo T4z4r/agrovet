@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Product;
+use App\Models\StockTransaction;
 
 class KedrikProductSeeder extends Seeder
 {
@@ -129,7 +130,7 @@ class KedrikProductSeeder extends Seeder
         ];
 
         foreach ($products as $p) {
-            Product::updateOrCreate([
+            $product = Product::updateOrCreate([
                 'name' => $p[0],
                 'unit' => $p[1],
             ], [
@@ -138,6 +139,20 @@ class KedrikProductSeeder extends Seeder
                 'selling_price' => $p[4],
                 'category'      => $p[5],
             ]);
+
+            // Create stock transaction if stock > 0
+            if ($p[2] > 0) {
+                StockTransaction::updateOrCreate([
+                    'product_id' => $product->id,
+                    'type' => 'stock_in',
+                    'quantity' => $p[2],
+                    'remarks' => 'Initial stock from seeder'
+                ], [
+                    'supplier_id' => null,
+                    'recorded_by' => 1, // Assume user ID 1 is admin
+                    'date' => now()->toDateString(),
+                ]);
+            }
         }
     }
 }
