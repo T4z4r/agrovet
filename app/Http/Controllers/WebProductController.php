@@ -63,7 +63,19 @@ class WebProductController extends Controller
 
     public function destroy($id)
     {
-        Product::findOrFail($id)->delete();
+        $product = Product::findOrFail($id);
+
+        // Check if product is linked to sales
+        if ($product->saleItems()->exists()) {
+            return redirect()->route('products.index')->with('error', 'Cannot delete product that has been sold');
+        }
+
+        // Check if product has stock transactions
+        if ($product->stockTransactions()->exists()) {
+            return redirect()->route('products.index')->with('error', 'Cannot delete product that has stock transactions');
+        }
+
+        $product->delete();
         return redirect()->route('products.index')->with('success', 'Product deleted successfully');
     }
 }
