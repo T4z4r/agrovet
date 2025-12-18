@@ -105,4 +105,37 @@ class SaleController extends Controller
         $pdf = PDF::loadView('pdf.receipt', compact('sale'));
         return $pdf->download("receipt_{$sale->id}.pdf");
     }
+
+    public function destroy($id)
+    {
+        if (!in_array(auth()->user()->role, ['admin', 'owner'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
+        $sale = Sale::with('items.product')->findOrFail($id);
+
+        return DB::transaction(function () use ($sale) {
+            // Restore stock
+            foreach ($sale->items as $item) {
+                $item->product->stock += $item->quantity;
+                $item->product->save();
+
+                // Also, perhaps add a stock transaction for stock_in or something, but maybe not necessary for delete.
+            }
+
+            // Delete sale items
+            $sale->items()->delete();
+
+            // Delete sale
+            $sale->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Sale deleted successfully'
+            ]);
+        });
+    }
 }

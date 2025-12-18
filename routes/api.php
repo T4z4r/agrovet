@@ -61,9 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     | Sales (multi item)
     |--------------------------------------------------------------------------
     */
-    Route::post('sales', [SaleController::class, 'store']);
-    Route::get('sales', [SaleController::class, 'index']);
-    Route::get('sales/{id}', [SaleController::class, 'show']);
+    Route::apiResource('sales', SaleController::class)->except(['update']);
     Route::get('sales/{id}/receipt', [SaleController::class, 'receipt']);
 
     /*
