@@ -2,7 +2,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\StockTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -28,9 +30,24 @@ class ProductController extends Controller
             'barcode'=>'nullable|string'
         ]);
 
+        $product = Product::create($data);
+
+        // Create stock transaction if initial stock > 0
+        if ($data['stock'] > 0) {
+            StockTransaction::create([
+                'product_id' => $product->id,
+                'type' => 'stock_in',
+                'quantity' => $data['stock'],
+                'supplier_id' => null,
+                'recorded_by' => Auth::id(),
+                'date' => now()->toDateString(),
+                'remarks' => 'Initial stock on product creation'
+            ]);
+        }
+
         return response()->json([
             'success' => true,
-            'data' => Product::create($data),
+            'data' => $product,
             'message' => 'Product created successfully'
         ]);
     }
@@ -48,7 +65,25 @@ class ProductController extends Controller
     public function update(Request $r, $id)
     {
         $p = Product::findOrFail($id);
+        $oldStock = $p->stock;
+
         $p->update($r->all());
+        $newStock = $p->stock;
+
+        // Create stock transaction if stock changed
+        $stockDifference = $newStock - $oldStock;
+        if ($stockDifference != 0) {
+            StockTransaction::create([
+                'product_id' => $p->id,
+                'type' => $stockDifference > 0 ? 'stock_in' : 'stock_out',
+                'quantity' => abs($stockDifference),
+                'supplier_id' => null,
+                'recorded_by' => Auth::id(),
+                'date' => now()->toDateString(),
+                'remarks' => 'Stock adjustment on product update'
+            ]);
+        }
+
         return response()->json([
             'success' => true,
             'data' => $p,

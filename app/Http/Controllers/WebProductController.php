@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\StockTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WebProductController extends Controller
 {
@@ -37,7 +39,20 @@ class WebProductController extends Controller
             'barcode' => 'nullable|string'
         ]);
 
-        Product::create($data);
+        $product = Product::create($data);
+
+        // Create stock transaction if initial stock > 0
+        if ($data['stock'] > 0) {
+            StockTransaction::create([
+                'product_id' => $product->id,
+                'type' => 'stock_in',
+                'quantity' => $data['stock'],
+                'supplier_id' => null,
+                'recorded_by' => Auth::id(),
+                'date' => now()->toDateString(),
+                'remarks' => 'Initial stock on product creation'
+            ]);
+        }
 
         return redirect()->route('products.index')->with('success', 'Product created successfully');
     }
@@ -57,7 +72,25 @@ class WebProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
+        $oldStock = $product->stock;
+
         $product->update($request->all());
+        $newStock = $product->stock;
+
+        // Create stock transaction if stock changed
+        $stockDifference = $newStock - $oldStock;
+        if ($stockDifference != 0) {
+            StockTransaction::create([
+                'product_id' => $product->id,
+                'type' => $stockDifference > 0 ? 'stock_in' : 'stock_out',
+                'quantity' => abs($stockDifference),
+                'supplier_id' => null,
+                'recorded_by' => Auth::id(),
+                'date' => now()->toDateString(),
+                'remarks' => 'Stock adjustment on product update'
+            ]);
+        }
+
         return redirect()->route('products.index')->with('success', 'Product updated successfully');
     }
 
