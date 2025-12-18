@@ -58,7 +58,25 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        Product::findOrFail($id)->delete();
+        $product = Product::findOrFail($id);
+
+        // Check if product is linked to sales
+        if ($product->saleItems()->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cannot delete product that has been sold'
+            ], 422);
+        }
+
+        // Check if product has stock transactions
+        if ($product->stockTransactions()->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cannot delete product that has stock transactions'
+            ], 422);
+        }
+
+        $product->delete();
         return response()->json([
             'success' => true,
             'message' => 'Product deleted successfully'
