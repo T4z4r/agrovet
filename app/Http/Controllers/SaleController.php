@@ -118,12 +118,20 @@ class SaleController extends Controller
         $sale = Sale::with('items.product')->findOrFail($id);
 
         return DB::transaction(function () use ($sale) {
-            // Restore stock
+            // Restore stock and create stock transactions
             foreach ($sale->items as $item) {
                 $item->product->stock += $item->quantity;
                 $item->product->save();
 
-                // Also, perhaps add a stock transaction for stock_in or something, but maybe not necessary for delete.
+                StockTransaction::create([
+                    'product_id' => $item->product_id,
+                    'type' => 'stock_in',
+                    'quantity' => $item->quantity,
+                    'supplier_id' => null,
+                    'recorded_by' => auth()->id(),
+                    'date' => $sale->sale_date,
+                    'remarks' => 'Restored from deleted sale #' . $sale->id
+                ]);
             }
 
             // Delete sale items
