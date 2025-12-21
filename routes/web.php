@@ -12,6 +12,7 @@ use App\Http\Controllers\WebStockTransactionController;
 use App\Http\Controllers\WebSupplierDebtController;
 use App\Http\Controllers\WebReportController;
 use App\Http\Controllers\WebAdminController;
+use App\Http\Controllers\WebBrandController;
 
 /*p
 |--------------------------------------------------------------------------
