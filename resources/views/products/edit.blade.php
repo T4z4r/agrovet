@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.master')
 
 @section('title', 'Edit Product')
 
 @section('content')
 <h1>Edit Product</h1>
-<form method="POST" action="{{ route('products.update', $product) }}">
+<form method="POST" action="{{ route('web.products.update', $product) }}">
     @csrf
     @method('PUT')
     <div class="mb-3">
@@ -50,6 +50,6 @@
         @enderror
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
-    <a href="{{ route('products.index') }}" class="btn btn-secondary">Cancel</a>
+    <a href="{{ route('web.products.index') }}" class="btn btn-secondary">Cancel</a>
 </form>
 @endsection

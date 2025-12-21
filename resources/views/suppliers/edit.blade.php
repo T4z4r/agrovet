@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.master')
 
 @section('title', 'Edit Supplier')
 
 @section('content')
 <h1>Edit Supplier</h1>
-<form method="POST" action="{{ route('suppliers.update', $supplier) }}">
+<form method="POST" action="{{ route('web.suppliers.update', $supplier) }}">
     @csrf
     @method('PUT')
     <div class="mb-3">
@@ -24,6 +24,6 @@
         <textarea class="form-control" id="address" name="address">{{ $supplier->address }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
-    <a href="{{ route('suppliers.index') }}" class="btn btn-secondary">Cancel</a>
+    <a href="{{ route('web.suppliers.index') }}" class="btn btn-secondary">Cancel</a>
 </form>
 @endsection
