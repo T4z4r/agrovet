@@ -7,6 +7,6 @@
 <p><strong>Phone:</strong> {{ $supplier->phone }}</p>
 <p><strong>Email:</strong> {{ $supplier->email }}</p>
 <p><strong>Address:</strong> {{ $supplier->address }}</p>
-<a href="{{ route('suppliers.index') }}" class="btn btn-secondary">Back</a>
-<a href="{{ route('suppliers.edit', $supplier) }}" class="btn btn-warning">Edit</a>
+<a href="{{ route('web.suppliers.index') }}" class="btn btn-secondary">Back</a>
+<a href="{{ route('web.suppliers.edit', $supplier) }}" class="btn btn-warning">Edit</a>
 @endsection
