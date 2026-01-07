@@ -230,3 +230,18 @@ a.page-link {
     color: #72140c;
     box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
 }
+
+/* Active pagination link */
+.page-item.active .page-link {
+    background-color: #72140c !important;
+    border-color: #72140c !important;
+    color: white !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(114, 20, 12, 0.4) !important;
+}
+
+/* Hover for active pagination */
+.page-item.active .page-link:hover {
+    background-color: #851b2d !important;
+    border-color: #851b2d !important;
+    color: white !important;
+}

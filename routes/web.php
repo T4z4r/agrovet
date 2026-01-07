@@ -16,6 +16,8 @@ use App\Http\Controllers\WebBrandController;
 use App\Http\Controllers\WebPermissionController;
 use App\Http\Controllers\WebPosController;
 use App\Http\Controllers\WebRoleController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 
 /*p
 |--------------------------------------------------------------------------
@@ -42,6 +44,14 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [WebAuthController::class, 'dashboard'])->name('dashboard');
+
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Settings
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
 
     // Language switch
     Route::get('/lang/{locale}', function ($locale) {

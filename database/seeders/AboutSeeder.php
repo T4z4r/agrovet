@@ -14,8 +14,8 @@ class AboutSeeder extends Seeder
     public function run(): void
     {
         About::create([
-            'title' => 'About AgroVet',
-            'content' => 'AgroVet is a comprehensive livestock and agricultural management system designed to streamline operations for farmers and veterinarians. Our platform helps manage products, sales, expenses, and stock levels efficiently.'
+            'title' => 'About Apex',
+            'content' => 'Apex is a comprehensive livestock and agricultural management system designed to streamline operations for farmers and veterinarians. Our platform helps manage products, sales, expenses, and stock levels efficiently.'
         ]);
     }
 }

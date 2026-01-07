@@ -156,7 +156,7 @@
            @endcan
 
            <!-- Language Switcher -->
-           <li class="menu-item">
+           {{-- <li class="menu-item">
                <a href="javascript:void(0);" class="menu-link menu-toggle">
                    <i class="menu-icon tf-icons bx bx-globe"></i>
                    <div>{{ strtoupper(app()->getLocale()) }}</div>
@@ -173,6 +173,6 @@
                        </a>
                    </li>
                </ul>
-           </li>
+           </li> --}}
        </ul>
    </aside>
