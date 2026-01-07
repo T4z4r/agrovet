@@ -49,8 +49,9 @@ class WebAuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'role' => 'seller' // default role
         ]);
+
+        $user->assignRole('seller'); // default role
 
         Auth::login($user);
 
@@ -67,7 +68,7 @@ class WebAuthController extends Controller
 
     public function dashboard()
     {
-        if (auth()->user()->role === 'seller') {
+        if (auth()->user()->hasRole('seller')) {
             return redirect()->route('web.pos.index');
         }
 

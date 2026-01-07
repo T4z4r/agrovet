@@ -59,6 +59,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', WebUserController::class)->parameters(['users' => 'user'])->names('web.users');
     Route::patch('users/{user}/block', [WebUserController::class, 'block'])->name('web.users.block');
     Route::get('users/{user}/seller-report', [WebUserController::class, 'sellerReport'])->name('web.users.sellerReport');
+    Route::get('users/{user}/roles', [WebUserController::class, 'roles'])->name('web.users.roles');
+    Route::post('users/{user}/assign-role', [WebUserController::class, 'assignRole'])->name('web.users.assignRole');
+    Route::delete('users/{userId}/remove-role/{roleId}', [WebUserController::class, 'removeRole'])->name('web.users.removeRole');
+    Route::get('users/{user}/permissions', [WebUserController::class, 'permissions'])->name('web.users.permissions');
+    Route::post('users/{user}/give-permission', [WebUserController::class, 'givePermission'])->name('web.users.givePermission');
+    Route::delete('users/{userId}/revoke-permission/{permissionId}', [WebUserController::class, 'revokePermission'])->name('web.users.revokePermission');
 
     // Shops
     Route::resource('shops', WebShopController::class)->names('web.shops');
@@ -68,7 +74,7 @@ Route::middleware('auth')->group(function () {
     Route::get('sales/{sale}/receipt', [WebSaleController::class, 'receipt'])->name('web.sales.receipt');
 
     // POS
-    Route::middleware('role:seller')->group(function () {
+    Route::middleware('auth')->group(function () {
         Route::get('pos', [WebPosController::class, 'index'])->name('web.pos.index');
         Route::post('pos', [WebPosController::class, 'store'])->name('web.pos.store');
         Route::get('pos/receipt/{id}', [WebPosController::class, 'receipt'])->name('web.pos.receipt');

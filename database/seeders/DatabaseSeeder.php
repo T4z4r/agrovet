@@ -9,6 +9,7 @@ use Database\Seeders\KedrikProductSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\AboutSeeder;
 use Database\Seeders\ContactSeeder;
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        $this->call(RolePermissionSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(KedrikProductSeeder::class);

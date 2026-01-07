@@ -17,7 +17,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Role</th>
+                                <th>Roles</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -27,7 +27,7 @@
                             <tr>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->role }}</td>
+                                <td>{{ $user->roles->pluck('name')->join(', ') }}</td>
                                 <td>
                                     @if($user->is_active)
                                         <span class="badge bg-primary">Active</span>
@@ -38,6 +38,8 @@
                                 <td>
                                     <a href="{{ route('web.users.show', $user) }}" class="btn btn-sm btn-info">View</a>
                                     <a href="{{ route('web.users.edit', $user) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="{{ route('web.users.roles', $user) }}" class="btn btn-sm btn-primary">Roles</a>
+                                    <a href="{{ route('web.users.permissions', $user) }}" class="btn btn-sm btn-secondary">Permissions</a>
                                     <form method="POST" action="{{ route('web.users.block', $user) }}" class="d-inline">
                                         @csrf
                                         @method('PATCH')

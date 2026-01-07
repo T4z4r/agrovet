@@ -8,22 +8,26 @@ use App\Models\Expense;
 use App\Models\StockTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class WebUserController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->role !== 'owner') {
+        if (!auth()->user()->hasRole('owner')) {
             abort(403, 'Unauthorized');
         }
 
-        $users = User::where('role', 'seller')->get();
+        $users = User::whereDoesntHave('roles', function($q) {
+            $q->where('name', 'owner');
+        })->get();
         return view('users.index', compact('users'));
     }
 
     public function create()
     {
-        if (auth()->user()->role !== 'owner') {
+        if (!auth()->user()->hasRole('owner')) {
             abort(403, 'Unauthorized');
         }
 
@@ -32,7 +36,7 @@ class WebUserController extends Controller
 
     public function store(Request $request)
     {
-        if (auth()->user()->role !== 'owner') {
+        if (!auth()->user()->hasRole('owner')) {
             abort(403, 'Unauthorized');
         }
 
@@ -43,7 +47,6 @@ class WebUserController extends Controller
         ]);
 
         $data['password'] = Hash::make($data['password']);
-        $data['role'] = 'seller';
 
         User::create($data);
 
@@ -52,31 +55,31 @@ class WebUserController extends Controller
 
     public function show($id)
     {
-        if (auth()->user()->role !== 'owner') {
+        if (!auth()->user()->hasRole('owner')) {
             abort(403, 'Unauthorized');
         }
 
-        $user = User::where('role', 'seller')->findOrFail($id);
+        $user = User::findOrFail($id);
         return view('users.show', compact('user'));
     }
 
     public function edit($id)
     {
-        if (auth()->user()->role !== 'owner') {
+        if (!auth()->user()->hasRole('owner')) {
             abort(403, 'Unauthorized');
         }
 
-        $user = User::where('role', 'seller')->findOrFail($id);
+        $user = User::findOrFail($id);
         return view('users.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
     {
-        if (auth()->user()->role !== 'owner') {
+        if (!auth()->user()->hasRole('owner')) {
             abort(403, 'Unauthorized');
         }
 
-        $user = User::where('role', 'seller')->findOrFail($id);
+        $user = User::findOrFail($id);
 
         $data = $request->validate([
             'name' => 'sometimes|string',
@@ -95,21 +98,21 @@ class WebUserController extends Controller
 
     public function destroy($id)
     {
-        if (auth()->user()->role !== 'owner') {
+        if (!auth()->user()->hasRole('owner')) {
             abort(403, 'Unauthorized');
         }
 
-        User::where('role', 'seller')->findOrFail($id)->delete();
+        User::findOrFail($id)->delete();
         return redirect()->route('users.index')->with('success', 'User deleted successfully');
     }
 
     public function block($id)
     {
-        if (auth()->user()->role !== 'owner') {
+        if (!auth()->user()->hasRole('owner')) {
             abort(403, 'Unauthorized');
         }
 
-        $user = User::where('role', 'seller')->findOrFail($id);
+        $user = User::findOrFail($id);
         $user->update(['is_active' => !$user->is_active]);
 
         $status = $user->is_active ? 'unblocked' : 'blocked';
@@ -119,11 +122,11 @@ class WebUserController extends Controller
 
     public function sellerReport($id)
     {
-        if (auth()->user()->role !== 'owner') {
+        if (!auth()->user()->hasRole('owner')) {
             abort(403, 'Unauthorized');
         }
 
-        $user = User::where('role', 'seller')->findOrFail($id);
+        $user = User::findOrFail($id);
 
         $start = request('start');
         $end = request('end');
@@ -153,5 +156,79 @@ class WebUserController extends Controller
             ->get();
 
         return view('users.report', compact('user', 'sales', 'totalSales', 'expenses', 'totalExpenses', 'stockTransactions'));
+    }
+
+    public function roles($id)
+    {
+        if (!auth()->user()->hasRole('owner')) {
+            abort(403, 'Unauthorized');
+        }
+
+        $user = User::findOrFail($id);
+        $roles = Role::all();
+        return view('users.roles', compact('user', 'roles'));
+    }
+
+    public function assignRole(Request $request, $id)
+    {
+        if (!auth()->user()->hasRole('owner')) {
+            abort(403, 'Unauthorized');
+        }
+
+        $user = User::findOrFail($id);
+        $role = Role::findByName($request->role);
+        $user->assignRole($role);
+
+        return redirect()->back()->with('success', 'Role assigned successfully');
+    }
+
+    public function removeRole($userId, $roleId)
+    {
+        if (!auth()->user()->hasRole('owner')) {
+            abort(403, 'Unauthorized');
+        }
+
+        $user = User::findOrFail($userId);
+        $role = Role::findOrFail($roleId);
+        $user->removeRole($role);
+
+        return redirect()->back()->with('success', 'Role removed successfully');
+    }
+
+    public function permissions($id)
+    {
+        if (!auth()->user()->hasRole('owner')) {
+            abort(403, 'Unauthorized');
+        }
+
+        $user = User::findOrFail($id);
+        $permissions = Permission::all();
+        return view('users.permissions', compact('user', 'permissions'));
+    }
+
+    public function givePermission(Request $request, $id)
+    {
+        if (!auth()->user()->hasRole('owner')) {
+            abort(403, 'Unauthorized');
+        }
+
+        $user = User::findOrFail($id);
+        $permission = Permission::findByName($request->permission);
+        $user->givePermissionTo($permission);
+
+        return redirect()->back()->with('success', 'Permission granted successfully');
+    }
+
+    public function revokePermission($userId, $permissionId)
+    {
+        if (!auth()->user()->hasRole('owner')) {
+            abort(403, 'Unauthorized');
+        }
+
+        $user = User::findOrFail($userId);
+        $permission = Permission::findOrFail($permissionId);
+        $user->revokePermissionTo($permission);
+
+        return redirect()->back()->with('success', 'Permission revoked successfully');
     }
 }

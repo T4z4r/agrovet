@@ -16,34 +16,34 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
-        User::firstOrCreate(
-            ['email' => 'admin@example.com'],
-            [
-                'name' => 'Admin User',
-                'role' => 'admin',
-                'password' => Hash::make('password'),
-            ]
-        );
-
         // Create owner user
-        User::firstOrCreate(
+        $owner = User::firstOrCreate(
             ['email' => 'owner@example.com'],
             [
                 'name' => 'Shop Owner',
-                'role' => 'owner',
                 'password' => Hash::make('password'),
             ]
         );
+        $owner->assignRole('owner');
 
         // Create seller user
-        User::firstOrCreate(
+        $seller = User::firstOrCreate(
             ['email' => 'seller@example.com'],
             [
                 'name' => 'Seller User',
-                'role' => 'seller',
                 'password' => Hash::make('password'),
             ]
         );
+        $seller->assignRole('seller');
+
+        // Create manager user
+        $manager = User::firstOrCreate(
+            ['email' => 'manager@example.com'],
+            [
+                'name' => 'Manager User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $manager->assignRole('manager');
     }
 }

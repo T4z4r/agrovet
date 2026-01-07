@@ -51,7 +51,7 @@
             <!-- POS -->
             <li class="menu-item {{ request()->routeIs('web.pos.*') ? 'active' : '' }}">
               <a href="{{ route('web.pos.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-computer"></i>
+                <i class="menu-icon tf-icons bx bx-calculator"></i>
                 <div>{{ __('POS') }}</div>
               </a>
             </li>
