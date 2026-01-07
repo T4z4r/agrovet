@@ -80,7 +80,7 @@
                 </a>
               </div>
               <!-- /Logo -->
-              <h4 class="mb-2 text-center">{{ __('Welcome to Agrovet! 👋') }}</h4>
+              <h4 class="mb-2 text-center">{{ __('Welcome to Apex! 👋') }}</h4>
 
               <!-- Session Status -->
               @if (session('status'))

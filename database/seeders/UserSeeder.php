@@ -16,6 +16,16 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create superadmin user
+        $superadmin = User::firstOrCreate(
+            ['email' => 'superadmin@example.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $superadmin->assignRole('superadmin');
+
         // Create owner user
         $owner = User::firstOrCreate(
             ['email' => 'owner@example.com'],

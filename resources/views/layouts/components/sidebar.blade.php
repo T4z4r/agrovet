@@ -4,7 +4,7 @@
               <span class="app-brand-logo demo">
                 <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" style="height: 25px; width: auto;">
               </span>
-              <span class="app-brand-text demo menu-text fw-bolder ms-2">{{ config('app.name', 'Agrovet') }}</span>
+              <span class="app-brand-text demo menu-text fw-bolder ms-2">{{ config('app.name', 'Apex') }}</span>
             </a>
 
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
@@ -47,7 +47,7 @@
               </a>
             </li>
 
-            @if(auth()->user()->role === 'seller')
+            @if(auth()->user()->hasRole('seller'))
             <!-- POS -->
             <li class="menu-item {{ request()->routeIs('web.pos.*') ? 'active' : '' }}">
               <a href="{{ route('web.pos.index') }}" class="menu-link">
@@ -82,13 +82,37 @@
               </a>
             </li>
 
-            @if(auth()->user()->role === 'owner')
-            <!-- Users -->
-            <li class="menu-item {{ request()->routeIs('web.users.*') ? 'active' : '' }}">
-              <a href="{{ route('web.users.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user"></i>
-                <div>{{ __('Users') }}</div>
+            @if(auth()->user()->hasAnyRole(['owner', 'superadmin']))
+            <!-- User Management -->
+            <li class="menu-item {{ request()->routeIs('web.users.*') ? 'active open' : '' }}">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-user-check"></i>
+                <div>{{ __('User Management') }}</div>
               </a>
+              <ul class="menu-sub">
+                <li class="menu-item {{ request()->routeIs('web.users.index', 'web.users.show', 'web.users.edit') ? 'active' : '' }}">
+                  <a href="{{ route('web.users.index') }}" class="menu-link">
+                    <div>{{ __('Users') }}</div>
+                  </a>
+                </li>
+                <li class="menu-item {{ request()->routeIs('web.users.roles', 'web.users.permissions') ? 'active' : '' }}">
+                  <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <div>{{ __('Roles & Permissions') }}</div>
+                  </a>
+                  <ul class="menu-sub">
+                    <li class="menu-item {{ request()->routeIs('web.roles.*') ? 'active' : '' }}">
+                      <a href="{{ route('web.roles.index') }}" class="menu-link">
+                        <div>{{ __('Roles') }}</div>
+                      </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('web.permissions.*') ? 'active' : '' }}">
+                      <a href="{{ route('web.permissions.index') }}" class="menu-link">
+                        <div>{{ __('Permissions') }}</div>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
             </li>
 
             <!-- Shops -->

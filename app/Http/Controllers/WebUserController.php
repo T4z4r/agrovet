@@ -15,7 +15,7 @@ class WebUserController extends Controller
 {
     public function index()
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -27,7 +27,7 @@ class WebUserController extends Controller
 
     public function create()
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -36,7 +36,7 @@ class WebUserController extends Controller
 
     public function store(Request $request)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -55,7 +55,7 @@ class WebUserController extends Controller
 
     public function show($id)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -65,7 +65,7 @@ class WebUserController extends Controller
 
     public function edit($id)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -75,7 +75,7 @@ class WebUserController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -98,7 +98,7 @@ class WebUserController extends Controller
 
     public function destroy($id)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -108,7 +108,7 @@ class WebUserController extends Controller
 
     public function block($id)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -122,7 +122,7 @@ class WebUserController extends Controller
 
     public function sellerReport($id)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -160,7 +160,7 @@ class WebUserController extends Controller
 
     public function roles($id)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -171,7 +171,7 @@ class WebUserController extends Controller
 
     public function assignRole(Request $request, $id)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -184,7 +184,7 @@ class WebUserController extends Controller
 
     public function removeRole($userId, $roleId)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -197,7 +197,7 @@ class WebUserController extends Controller
 
     public function permissions($id)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -208,7 +208,7 @@ class WebUserController extends Controller
 
     public function givePermission(Request $request, $id)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -221,7 +221,7 @@ class WebUserController extends Controller
 
     public function revokePermission($userId, $permissionId)
     {
-        if (!auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasAnyRole(['owner', 'superadmin'])) {
             abort(403, 'Unauthorized');
         }
 

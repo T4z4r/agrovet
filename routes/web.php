@@ -13,7 +13,9 @@ use App\Http\Controllers\WebSupplierDebtController;
 use App\Http\Controllers\WebReportController;
 use App\Http\Controllers\WebAdminController;
 use App\Http\Controllers\WebBrandController;
+use App\Http\Controllers\WebPermissionController;
 use App\Http\Controllers\WebPosController;
+use App\Http\Controllers\WebRoleController;
 
 /*p
 |--------------------------------------------------------------------------
@@ -65,6 +67,12 @@ Route::middleware('auth')->group(function () {
     Route::get('users/{user}/permissions', [WebUserController::class, 'permissions'])->name('web.users.permissions');
     Route::post('users/{user}/give-permission', [WebUserController::class, 'givePermission'])->name('web.users.givePermission');
     Route::delete('users/{userId}/revoke-permission/{permissionId}', [WebUserController::class, 'revokePermission'])->name('web.users.revokePermission');
+
+    // Roles Management
+    Route::resource('roles', WebRoleController::class)->parameters(['roles' => 'role'])->names('web.roles');
+
+    // Permissions Management
+    Route::resource('permissions', WebPermissionController::class)->parameters(['permissions' => 'permission'])->names('web.permissions');
 
     // Shops
     Route::resource('shops', WebShopController::class)->names('web.shops');
