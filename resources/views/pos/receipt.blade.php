@@ -46,15 +46,15 @@
                             <tr style="background-color: @if($loop->even) #f9f9f9 @endif;">
                                 <td style="border: 1px solid #ddd; padding: 10px;">{{ $item->product->name }}</td>
                                 <td style="border: 1px solid #ddd; padding: 10px;">{{ $item->quantity }}</td>
-                                <td style="border: 1px solid #ddd; padding: 10px;">TSh {{ number_format($item->price, 2) }}</td>
-                                <td style="border: 1px solid #ddd; padding: 10px;">TSh {{ number_format($item->total, 2) }}</td>
+                                <td style="border: 1px solid #ddd; padding: 10px;">Tsh {{ number_format($item->price, 2) }}</td>
+                                <td style="border: 1px solid #ddd; padding: 10px;">Tsh {{ number_format($item->total, 2) }}</td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
 
                     <div class="total text-end" style="font-size: 20px; font-weight: bold; color: #851b2d; margin-top: 20px; padding: 10px; background-color: #e8f5e8; border-radius: 5px;">
-                        Grand Total: TSh {{ number_format($sale->total, 2) }}
+                        Grand Total: Tsh {{ number_format($sale->total, 2) }}
                     </div>
 
                     <div class="footer text-center mt-4" style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #851b2d; color: #666; font-size: 12px;">
