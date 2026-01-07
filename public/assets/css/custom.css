@@ -226,7 +226,7 @@
 /* Active pagination styles */
 a.page-link {
     border-color: #72140c !important;
-    background-color: #72140c !important;
-    color: #fff;
+    /* background-color: #72140c !important; */
+    color: #72140c;
     box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
 }
