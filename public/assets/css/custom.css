@@ -212,6 +212,12 @@
     background: #741222 !important;
 }
 
+
+.bg-menu-theme .menu-inner > .menu-item.active > .menu-link
+{
+        background: #741222 !important;
+
+}
 .layout-menu-toggle {
     background: #72140c !important;
 }
