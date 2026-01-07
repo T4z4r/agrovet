@@ -17,7 +17,7 @@ class RoleMiddleware
     {
         $user = $request->user();
 
-        if (!$user || !isset($user->role) || !\in_array($user->role, $roles)) {
+        if (!$user || !$user->hasAnyRole($roles)) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 

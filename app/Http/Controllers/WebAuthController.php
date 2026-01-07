@@ -67,6 +67,10 @@ class WebAuthController extends Controller
 
     public function dashboard()
     {
+        if (auth()->user()->role === 'seller') {
+            return redirect()->route('web.pos.index');
+        }
+
         $data = [
             'total_products'  => Product::count(),
             'total_sales'     => Sale::sum('total'),

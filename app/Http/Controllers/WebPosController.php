@@ -20,15 +20,33 @@ class WebPosController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|numeric|min:0',
+            'items' => 'required|string',
             'payment_method' => 'nullable|string',
             'customer_name' => 'nullable|string'
         ]);
 
-        DB::transaction(function () use ($data) {
+        $items = json_decode($data['items'], true);
+
+        if (!is_array($items) || empty($items)) {
+            return back()->withErrors(['items' => 'Invalid items data']);
+        }
+
+        // Validate items
+        $validator = \Illuminate\Support\Facades\Validator::make(['items' => $items], [
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+
+        $data['items'] = $items;
+
+        $sale = null;
+        DB::transaction(function () use ($data, &$sale) {
             $sale = Sale::create([
                 'seller_id' => Auth::user()->id,
                 'sale_date' => now(),
@@ -64,7 +82,7 @@ class WebPosController extends Controller
             $sale->save();
         });
 
-        return response()->json(['success' => true, 'message' => 'Sale completed successfully']);
+        return redirect()->route('web.pos.receipt', $sale->id);
     }
 
     public function receipt($id)

@@ -13,6 +13,7 @@ use App\Http\Controllers\WebSupplierDebtController;
 use App\Http\Controllers\WebReportController;
 use App\Http\Controllers\WebAdminController;
 use App\Http\Controllers\WebBrandController;
+use App\Http\Controllers\WebPosController;
 
 /*p
 |--------------------------------------------------------------------------
@@ -65,6 +66,13 @@ Route::middleware('auth')->group(function () {
     // Sales
     Route::resource('sales', WebSaleController::class)->except(['edit', 'update'])->names('web.sales');
     Route::get('sales/{sale}/receipt', [WebSaleController::class, 'receipt'])->name('web.sales.receipt');
+
+    // POS
+    Route::middleware('role:seller')->group(function () {
+        Route::get('pos', [WebPosController::class, 'index'])->name('web.pos.index');
+        Route::post('pos', [WebPosController::class, 'store'])->name('web.pos.store');
+        Route::get('pos/receipt/{id}', [WebPosController::class, 'receipt'])->name('web.pos.receipt');
+    });
 
     // Expenses
     Route::resource('expenses', WebExpenseController::class)->names('web.expenses');

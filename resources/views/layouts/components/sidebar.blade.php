@@ -47,6 +47,16 @@
               </a>
             </li>
 
+            @if(auth()->user()->role === 'seller')
+            <!-- POS -->
+            <li class="menu-item {{ request()->routeIs('web.pos.*') ? 'active' : '' }}">
+              <a href="{{ route('web.pos.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-computer"></i>
+                <div>{{ __('POS') }}</div>
+              </a>
+            </li>
+            @endif
+
             <!-- Expenses -->
             <li class="menu-item {{ request()->routeIs('web.expenses.*') ? 'active' : '' }}">
               <a href="{{ route('web.expenses.index') }}" class="menu-link">
