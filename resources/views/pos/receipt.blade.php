@@ -12,8 +12,8 @@
             <div class="card-body">
                 <div class="text-center mb-4">
                     <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" style="height: 60px;">
-                    <h5>Agrovet</h5>
-                    <p>Quality Agricultural Products</p>
+                    <h5>Apex</h5>
+                    <p>Quality and Affordable Products</p>
                 </div>
 
                 <div class="row mb-3">
