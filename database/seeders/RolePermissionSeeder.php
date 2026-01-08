@@ -50,7 +50,30 @@ class RolePermissionSeeder extends Seeder
         $superadminRole->givePermissionTo(Permission::all());
 
         $ownerRole = Role::firstOrCreate(['name' => 'owner']);
-        $ownerRole->givePermissionTo(Permission::all());
+        $ownerRole->givePermissionTo([
+            'view products',
+            'create products',
+            'edit products',
+            'delete products',
+            'view suppliers',
+            'create suppliers',
+            'edit suppliers',
+            'delete suppliers',
+            'view sales',
+            'create sales',
+            'edit sales',
+            'delete sales',
+            'view expenses',
+            'create expenses',
+            'edit expenses',
+            'delete expenses',
+            'view reports',
+            'view users',
+            'create users',
+            'edit users',
+            'delete users',
+            // Owner cannot manage roles and permissions
+        ]);
 
         $sellerRole = Role::firstOrCreate(['name' => 'seller']);
         $sellerRole->givePermissionTo([
@@ -79,6 +102,8 @@ class RolePermissionSeeder extends Seeder
             'edit expenses',
             'view reports',
             'view users',
+            'create users',
+            'edit users',
         ]);
     }
 }
