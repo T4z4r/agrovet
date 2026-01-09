@@ -27,8 +27,14 @@ class ProductController extends Controller
             'cost_price'=>'required|min:0',
             'selling_price'=>'required|min:0',
             'minimum_quantity'=>'nullable|numeric|min:0',
-            'barcode'=>'nullable|string'
+            'barcode'=>'nullable|string',
+            'photo'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        if ($r->hasFile('photo')) {
+            $path = $r->file('photo')->store('products', 'public');
+            $data['photo'] = $path;
+        }
 
         $product = Product::create($data);
 

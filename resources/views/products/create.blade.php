@@ -10,7 +10,7 @@
                 <h5 class="mb-0">Create Product</h5>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ route('web.products.store') }}">
+                <form method="POST" action="{{ route('web.products.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -42,6 +42,13 @@
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label for="minimum_quantity" class="form-label">Minimum Quantity</label>
+                            <input type="number" class="form-control" id="minimum_quantity" name="minimum_quantity" value="{{ old('minimum_quantity') }}" min="0">
+                            @error('minimum_quantity')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label for="cost_price" class="form-label">Cost Price</label>
                             <input type="number" class="form-control" id="cost_price" name="cost_price" value="{{ old('cost_price') }}" required min="0" step="0.01">
                             @error('cost_price')
@@ -52,6 +59,20 @@
                             <label for="selling_price" class="form-label">Selling Price</label>
                             <input type="number" class="form-control" id="selling_price" name="selling_price" value="{{ old('selling_price') }}" required min="0" step="0.01">
                             @error('selling_price')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="barcode" class="form-label">Barcode</label>
+                            <input type="text" class="form-control" id="barcode" name="barcode" value="{{ old('barcode') }}">
+                            @error('barcode')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="photo" class="form-label">Photo</label>
+                            <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                            @error('photo')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>

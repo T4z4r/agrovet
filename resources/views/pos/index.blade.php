@@ -19,7 +19,7 @@
                             <div class="card product-card" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-stock="{{ $product->stock }}">
                                 <div class="card-body text-center">
                                     <h6>{{ $product->name }}</h6>
-                                    <p class="text-muted">{{ $product->selling_price }} KES</p>
+                                    <p class="text-muted">{{ $product->selling_price }} Tsh</p>
                                     <p class="small">Stock: {{ $product->stock }}</p>
                                     <button class="btn btn-primary btn-sm add-to-cart" {{ $product->stock <= 0 ? 'disabled' : '' }}>Add to Cart</button>
                                 </div>
@@ -42,7 +42,7 @@
                 <hr>
                 <div class="d-flex justify-content-between">
                     <strong>Total:</strong>
-                    <strong id="total">0.00 KES</strong>
+                    <strong id="total">0.00 Tsh</strong>
                 </div>
                 <form id="checkout-form" method="POST" action="{{ route('web.pos.store') }}">
                     @csrf
@@ -103,14 +103,14 @@ document.addEventListener('DOMContentLoaded', function() {
             itemDiv.innerHTML = `
                 <div>
                     <strong>${item.name}</strong><br>
-                    <small>${item.quantity} x ${item.price} = ${itemTotal.toFixed(2)} KES</small>
+                    <small>${item.quantity} x ${item.price} = ${itemTotal.toFixed(2)} Tsh</small>
                 </div>
                 <button class="btn btn-sm btn-danger remove-item" data-index="${index}">Remove</button>
             `;
             cartItemsDiv.appendChild(itemDiv);
         });
 
-        document.getElementById('total').textContent = total.toFixed(2) + ' KES';
+        document.getElementById('total').textContent = total.toFixed(2) + ' Tsh';
         document.getElementById('checkout-btn').disabled = cart.length === 0;
 
         // Update hidden input

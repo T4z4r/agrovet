@@ -34,10 +34,17 @@ class WebProductController extends Controller
             'unit' => 'required',
             'category' => 'required',
             'stock' => 'required|integer|min:0',
+            'minimum_quantity' => 'nullable|integer|min:0',
             'cost_price' => 'required|integer|min:0',
             'selling_price' => 'required|integer|min:0',
-            'barcode' => 'nullable|string'
+            'barcode' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('products', 'public');
+            $data['photo'] = $path;
+        }
 
         $product = Product::create($data);
 
@@ -74,7 +81,24 @@ class WebProductController extends Controller
         $product = Product::findOrFail($id);
         $oldStock = $product->stock;
 
-        $product->update($request->all());
+        $data = $request->validate([
+            'name' => 'required',
+            'unit' => 'required',
+            'category' => 'required',
+            'stock' => 'required|integer|min:0',
+            'minimum_quantity' => 'nullable|integer|min:0',
+            'cost_price' => 'required|integer|min:0',
+            'selling_price' => 'required|integer|min:0',
+            'barcode' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('products', 'public');
+            $data['photo'] = $path;
+        }
+
+        $product->update($data);
         $newStock = $product->stock;
 
         // Create stock transaction if stock changed
