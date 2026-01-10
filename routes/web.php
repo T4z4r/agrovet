@@ -20,6 +20,7 @@ use App\Http\Controllers\WebPrivacyPolicyController;
 use App\Http\Controllers\WebSubscriptionPackageController;
 use App\Http\Controllers\WebSubscriptionController;
 use App\Http\Controllers\WebSubscriptionPaymentController;
+use App\Http\Controllers\WebFeatureController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 
@@ -136,4 +137,7 @@ Route::middleware('auth')->group(function () {
 
     // Subscription Payments
     Route::resource('admin/subscription-payments', WebSubscriptionPaymentController::class)->names('admin.subscription-payments');
+
+    // Features
+    Route::resource('admin/features', WebFeatureController::class)->names('admin.features');
 });

@@ -176,6 +176,11 @@
                                <div>{{ __('Payments') }}</div>
                            </a>
                        </li>
+                       <li class="menu-item {{ request()->routeIs('admin.features.*') ? 'active' : '' }}">
+                           <a href="{{ route('admin.features.index') }}" class="menu-link">
+                               <div>{{ __('Features') }}</div>
+                           </a>
+                       </li>
                    </ul>
                </li>
            @endcan

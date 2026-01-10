@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Subscription extends Model
 {
     protected $fillable = [
+        'user_id',
         'shop_id',
         'subscription_package_id',
         'start_date',
@@ -18,6 +20,11 @@ class Subscription extends Model
         'start_date' => 'date',
         'end_date' => 'date',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function shop()
     {

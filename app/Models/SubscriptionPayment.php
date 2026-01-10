@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class SubscriptionPayment extends Model
 {
     protected $fillable = [
+        'user_id',
         'subscription_id',
         'amount',
         'payment_date',
@@ -18,6 +20,11 @@ class SubscriptionPayment extends Model
         'payment_date' => 'date',
         'amount' => 'decimal:2',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function subscription()
     {

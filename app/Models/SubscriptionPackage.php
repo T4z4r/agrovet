@@ -11,17 +11,20 @@ class SubscriptionPackage extends Model
         'description',
         'price',
         'duration_months',
-        'features',
         'is_active',
     ];
 
     protected $casts = [
-        'features' => 'array',
         'is_active' => 'boolean',
     ];
 
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function features()
+    {
+        return $this->belongsToMany(Feature::class, 'feature_subscription_package');
     }
 }

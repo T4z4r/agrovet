@@ -6,6 +6,7 @@ use App\Models\User;
 use Database\Seeders\AboutSeeder;
 use Database\Seeders\ContactSeeder;
 use Database\Seeders\CosmeticsProductSeeder;
+use Database\Seeders\FeatureSeeder;
 use Database\Seeders\KedrikProductSeeder;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\PrivacyPolicySeeder;
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(RolePermissionSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(FeatureSeeder::class);
         // $this->call(ProductSeeder::class);
         // $this->call(KedrikProductSeeder::class);
         $this->call(CosmeticsProductSeeder::class);

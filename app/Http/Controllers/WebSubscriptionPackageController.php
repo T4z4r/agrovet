@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SubscriptionPackage;
+use App\Models\Feature;
 use Illuminate\Http\Request;
 
 class WebSubscriptionPackageController extends Controller
@@ -10,14 +11,15 @@ class WebSubscriptionPackageController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $packages = SubscriptionPackage::orderBy('name')->get();
+            $packages = SubscriptionPackage::with('features')->orderBy('name')->get();
             return response()->json([
                 'data' => $packages
             ]);
         }
 
-        $packages = SubscriptionPackage::orderBy('name')->get();
-        return view('subscription-packages.index', compact('packages'));
+        $packages = SubscriptionPackage::with('features')->orderBy('name')->get();
+        $features = Feature::where('is_active', true)->get();
+        return view('subscription-packages.index', compact('packages', 'features'));
     }
 
     public function create()
@@ -25,7 +27,8 @@ class WebSubscriptionPackageController extends Controller
         if (request()->ajax()) {
             return response()->json(['success' => true]);
         }
-        return view('subscription-packages.create');
+        $features = Feature::where('is_active', true)->get();
+        return view('subscription-packages.create', compact('features'));
     }
 
     public function store(Request $request)
@@ -35,11 +38,16 @@ class WebSubscriptionPackageController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'duration_months' => 'required|integer|min:1',
-            'features' => 'nullable|array',
+            'feature_ids' => 'nullable|array',
+            'feature_ids.*' => 'exists:features,id',
             'is_active' => 'boolean'
         ]);
 
-        SubscriptionPackage::create($data);
+        $package = SubscriptionPackage::create($data);
+
+        if ($request->has('feature_ids')) {
+            $package->features()->sync($request->feature_ids);
+        }
 
         if ($request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Subscription package created successfully']);
@@ -50,17 +58,18 @@ class WebSubscriptionPackageController extends Controller
 
     public function show($id)
     {
-        $package = SubscriptionPackage::findOrFail($id);
+        $package = SubscriptionPackage::with('features')->findOrFail($id);
         return view('subscription-packages.show', compact('package'));
     }
 
     public function edit($id)
     {
-        $package = SubscriptionPackage::findOrFail($id);
+        $package = SubscriptionPackage::with('features')->findOrFail($id);
         if (request()->ajax()) {
             return response()->json($package);
         }
-        return view('subscription-packages.edit', compact('package'));
+        $features = Feature::where('is_active', true)->get();
+        return view('subscription-packages.edit', compact('package', 'features'));
     }
 
     public function update(Request $request, $id)
@@ -72,11 +81,16 @@ class WebSubscriptionPackageController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'duration_months' => 'required|integer|min:1',
-            'features' => 'nullable|array',
+            'feature_ids' => 'nullable|array',
+            'feature_ids.*' => 'exists:features,id',
             'is_active' => 'boolean'
         ]);
 
         $package->update($data);
+
+        if ($request->has('feature_ids')) {
+            $package->features()->sync($request->feature_ids);
+        }
 
         if ($request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Subscription package updated successfully']);

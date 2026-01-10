@@ -11,14 +11,14 @@ class WebSubscriptionPaymentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $payments = SubscriptionPayment::with(['subscription.shop', 'subscription.subscriptionPackage'])->get();
+            $payments = SubscriptionPayment::with(['user', 'subscription.shop', 'subscription.subscriptionPackage'])->get();
 
             return response()->json([
                 'data' => $payments
             ]);
         }
 
-        $payments = SubscriptionPayment::with(['subscription.shop', 'subscription.subscriptionPackage'])->get();
+        $payments = SubscriptionPayment::with(['user', 'subscription.shop', 'subscription.subscriptionPackage'])->get();
         $subscriptions = Subscription::with('shop', 'subscriptionPackage')->get();
         return view('subscription-payments.index', compact('payments', 'subscriptions'));
     }
@@ -41,6 +41,8 @@ class WebSubscriptionPaymentController extends Controller
             'payment_method' => 'nullable|string'
         ]);
 
+        $data['user_id'] = auth()->id();
+
         SubscriptionPayment::create($data);
 
         if ($request->ajax()) {
@@ -52,7 +54,7 @@ class WebSubscriptionPaymentController extends Controller
 
     public function show($id)
     {
-        $payment = SubscriptionPayment::with('subscription.shop', 'subscription.subscriptionPackage')->findOrFail($id);
+        $payment = SubscriptionPayment::with('user', 'subscription.shop', 'subscription.subscriptionPackage')->findOrFail($id);
         return view('subscription-payments.show', compact('payment'));
     }
 

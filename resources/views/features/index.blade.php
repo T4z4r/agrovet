@@ -1,14 +1,14 @@
 @extends('layouts.master')
 
-@section('title', 'Subscription Packages')
+@section('title', 'Features')
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Subscription Packages</h5>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Add Package</button>
+                <h5 class="mb-0">Features</h5>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Add Feature</button>
             </div>
             <div class="card-datatable text-nowrap">
                 <table class="dt-column-search table table-bordered">
@@ -16,8 +16,6 @@
                         <tr>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Price</th>
-                            <th>Duration (Months)</th>
                             <th>Active</th>
                             <th>Actions</th>
                         </tr>
@@ -26,8 +24,6 @@
                         <tr>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Price</th>
-                            <th>Duration (Months)</th>
                             <th>Active</th>
                             <th>Actions</th>
                         </tr>
@@ -43,7 +39,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">Add Subscription Package</h5>
+                <h5 class="modal-title" id="createModalLabel">Add Feature</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="createForm">
@@ -56,22 +52,6 @@
                     <div class="mb-3">
                         <label for="create_description" class="form-label">Description</label>
                         <textarea class="form-control" id="create_description" name="description"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="create_price" class="form-label">Price</label>
-                        <input type="number" step="0.01" class="form-control" id="create_price" name="price" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="create_duration_months" class="form-label">Duration (Months)</label>
-                        <input type="number" class="form-control" id="create_duration_months" name="duration_months" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="create_feature_ids" class="form-label">Features</label>
-                        <select class="form-control" id="create_feature_ids" name="feature_ids[]" multiple>
-                            @foreach($features ?? [] as $feature)
-                                <option value="{{ $feature->id }}">{{ $feature->name }}</option>
-                            @endforeach
-                        </select>
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="create_is_active" name="is_active" checked>
@@ -92,7 +72,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Subscription Package</h5>
+                <h5 class="modal-title" id="editModalLabel">Edit Feature</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="editForm">
@@ -107,22 +87,6 @@
                     <div class="mb-3">
                         <label for="edit_description" class="form-label">Description</label>
                         <textarea class="form-control" id="edit_description" name="description"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_price" class="form-label">Price</label>
-                        <input type="number" step="0.01" class="form-control" id="edit_price" name="price" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_duration_months" class="form-label">Duration (Months)</label>
-                        <input type="number" class="form-control" id="edit_duration_months" name="duration_months" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_feature_ids" class="form-label">Features</label>
-                        <select class="form-control" id="edit_feature_ids" name="feature_ids[]" multiple>
-                            @foreach($features ?? [] as $feature)
-                                <option value="{{ $feature->id }}">{{ $feature->name }}</option>
-                            @endforeach
-                        </select>
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="edit_is_active" name="is_active">
@@ -144,15 +108,13 @@
 $(document).ready(function() {
     var table = $('.dt-column-search').DataTable({
         ajax: {
-            url: '{{ route("admin.subscription-packages.index") }}',
+            url: '{{ route("admin.features.index") }}',
             type: 'GET',
             dataSrc: 'data'
         },
         columns: [
             { data: 'name' },
             { data: 'description' },
-            { data: 'price' },
-            { data: 'duration_months' },
             {
                 data: 'is_active',
                 render: function(data) {
@@ -165,7 +127,7 @@ $(document).ready(function() {
                 searchable: false,
                 render: function(data, type, row) {
                     return `
-                        <a href="{{ url('admin/subscription-packages') }}/${data}" class="btn btn-sm btn-info">View</a>
+                        <a href="{{ url('admin/features') }}/${data}" class="btn btn-sm btn-info">View</a>
                         <button type="button" class="btn btn-sm btn-warning edit-btn" data-id="${data}">Edit</button>
                         <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="${data}">Delete</button>
                     `;
@@ -180,7 +142,7 @@ $(document).ready(function() {
     $('#createForm').on('submit', function(e) {
         e.preventDefault();
         $.ajax({
-            url: '{{ route("admin.subscription-packages.store") }}',
+            url: '{{ route("admin.features.store") }}',
             type: 'POST',
             data: $(this).serialize(),
             success: function(response) {
@@ -189,11 +151,9 @@ $(document).ready(function() {
                     table.ajax.reload();
                     alert(response.message);
                     $('#createForm')[0].reset();
-                    $('#create_feature_ids option').prop('selected', false);
                 }
             },
             error: function(xhr) {
-                // Handle validation errors
                 var errors = xhr.responseJSON.errors;
                 for (var field in errors) {
                     alert(errors[field][0]);
@@ -206,22 +166,12 @@ $(document).ready(function() {
     $(document).on('click', '.edit-btn', function() {
         var id = $(this).data('id');
         $.ajax({
-            url: '{{ url("admin/subscription-packages") }}/' + id + '/edit',
+            url: '{{ url("admin/features") }}/' + id + '/edit',
             type: 'GET',
             success: function(data) {
                 $('#edit_id').val(data.id);
                 $('#edit_name').val(data.name);
                 $('#edit_description').val(data.description);
-                $('#edit_price').val(data.price);
-                $('#edit_duration_months').val(data.duration_months);
-                // Clear previous selections
-                $('#edit_feature_ids option').prop('selected', false);
-                // Select current features
-                if (data.features && data.features.length > 0) {
-                    data.features.forEach(function(feature) {
-                        $('#edit_feature_ids option[value="' + feature.id + '"]').prop('selected', true);
-                    });
-                }
                 $('#edit_is_active').prop('checked', data.is_active);
                 $('#editModal').modal('show');
             }
@@ -233,7 +183,7 @@ $(document).ready(function() {
         e.preventDefault();
         var id = $('#edit_id').val();
         $.ajax({
-            url: '{{ url("admin/subscription-packages") }}/' + id,
+            url: '{{ url("admin/features") }}/' + id,
             type: 'PUT',
             data: $(this).serialize(),
             success: function(response) {
@@ -255,9 +205,9 @@ $(document).ready(function() {
     // Delete button click
     $(document).on('click', '.delete-btn', function() {
         var id = $(this).data('id');
-        if (confirm('Are you sure you want to delete this package?')) {
+        if (confirm('Are you sure you want to delete this feature?')) {
             $.ajax({
-                url: '{{ url("admin/subscription-packages") }}/' + id,
+                url: '{{ url("admin/features") }}/' + id,
                 type: 'DELETE',
                 data: {
                     _token: '{{ csrf_token() }}'

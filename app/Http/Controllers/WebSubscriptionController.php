@@ -12,13 +12,13 @@ class WebSubscriptionController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $subscriptions = Subscription::with('shop', 'subscriptionPackage')->orderBy('created_at', 'desc')->get();
+            $subscriptions = Subscription::with('user', 'shop', 'subscriptionPackage')->orderBy('created_at', 'desc')->get();
             return response()->json([
                 'data' => $subscriptions
             ]);
         }
 
-        $subscriptions = Subscription::with('shop', 'subscriptionPackage')->orderBy('created_at', 'desc')->get();
+        $subscriptions = Subscription::with('user', 'shop', 'subscriptionPackage')->orderBy('created_at', 'desc')->get();
         $shops = Shop::all();
         $packages = SubscriptionPackage::where('is_active', true)->get();
         return view('subscriptions.index', compact('subscriptions', 'shops', 'packages'));
@@ -39,8 +39,10 @@ class WebSubscriptionController extends Controller
             'subscription_package_id' => 'required|exists:subscription_packages,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'status' => 'required|in:active,inactive,expired'
+            'status' => 'required|in:active,expired,cancelled'
         ]);
+
+        $data['user_id'] = auth()->id();
 
         Subscription::create($data);
 
@@ -53,7 +55,7 @@ class WebSubscriptionController extends Controller
 
     public function show($id)
     {
-        $subscription = Subscription::with('shop', 'subscriptionPackage', 'payments')->findOrFail($id);
+        $subscription = Subscription::with('user', 'shop', 'subscriptionPackage', 'payments')->findOrFail($id);
         return view('subscriptions.show', compact('subscription'));
     }
 
