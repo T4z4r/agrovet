@@ -43,6 +43,11 @@ class RolePermissionSeeder extends Seeder
             'create privacy policies',
             'edit privacy policies',
             'delete privacy policies',
+            'view shops',
+            'create shops',
+            'edit shops',
+            'delete shops',
+            'access admin',
         ];
 
         foreach ($permissions as $permission) {
@@ -80,7 +85,11 @@ class RolePermissionSeeder extends Seeder
             'create privacy policies',
             'edit privacy policies',
             'delete privacy policies',
-            // Owner cannot manage roles and permissions
+            'view shops',
+            'create shops',
+            'edit shops',
+            'delete shops',
+            // Owner cannot manage roles and permissions or access admin
         ]);
 
         $sellerRole = Role::firstOrCreate(['name' => 'seller']);

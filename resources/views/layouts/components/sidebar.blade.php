@@ -133,8 +133,7 @@
                </li>
            @endcan
 
-           @can('manage roles')
-               {{-- Assuming privacy policy management requires admin permissions --}}
+           @can('view privacy policies')
                <!-- Privacy Policies -->
                <li class="menu-item {{ request()->routeIs('web.privacy-policies.*') ? 'active' : '' }}">
                    <a href="{{ route('web.privacy-policies.index') }}" class="menu-link">
@@ -142,8 +141,9 @@
                        <div>{{ __('Privacy Policies') }}</div>
                    </a>
                </li>
+           @endcan
 
-               {{-- Assuming shop management requires admin permissions --}}
+           @can('view shops')
                <!-- Shops -->
                <li class="menu-item {{ request()->routeIs('web.shops.*') ? 'active' : '' }}">
                    <a href="{{ route('web.shops.index') }}" class="menu-link">
@@ -153,8 +153,7 @@
                </li>
            @endcan
 
-           @can('manage roles')
-               {{-- Database admin requires highest permissions --}}
+           @can('access admin')
                <!-- Admin -->
                <li class="menu-item {{ request()->routeIs('web.admin.*') ? 'active' : '' }}">
                    <a href="{{ route('web.admin.index') }}" class="menu-link">
