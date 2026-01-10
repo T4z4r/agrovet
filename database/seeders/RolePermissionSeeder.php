@@ -39,6 +39,10 @@ class RolePermissionSeeder extends Seeder
             'delete users',
             'manage roles',
             'manage permissions',
+            'view privacy policies',
+            'create privacy policies',
+            'edit privacy policies',
+            'delete privacy policies',
         ];
 
         foreach ($permissions as $permission) {
@@ -72,6 +76,10 @@ class RolePermissionSeeder extends Seeder
             'create users',
             'edit users',
             'delete users',
+            'view privacy policies',
+            'create privacy policies',
+            'edit privacy policies',
+            'delete privacy policies',
             // Owner cannot manage roles and permissions
         ]);
 

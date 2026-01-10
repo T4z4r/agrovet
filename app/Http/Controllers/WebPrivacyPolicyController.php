@@ -83,4 +83,18 @@ class WebPrivacyPolicyController extends Controller
 
         return redirect()->route('web.privacy-policies.index')->with('success', 'Privacy policy deleted successfully');
     }
+
+    /**
+     * Display the public privacy policy.
+     */
+    public function publicShow(): View
+    {
+        $privacyPolicy = PrivacyPolicy::where('is_active', true)->first();
+
+        if (!$privacyPolicy) {
+            abort(404, 'Privacy policy not found');
+        }
+
+        return view('privacy-policies.public', compact('privacyPolicy'));
+    }
 }

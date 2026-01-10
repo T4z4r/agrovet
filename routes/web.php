@@ -16,6 +16,7 @@ use App\Http\Controllers\WebBrandController;
 use App\Http\Controllers\WebPermissionController;
 use App\Http\Controllers\WebPosController;
 use App\Http\Controllers\WebRoleController;
+use App\Http\Controllers\WebPrivacyPolicyController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 
@@ -38,8 +39,11 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [WebAuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [WebAuthController::class, 'login']);
     // Route::get('/register', [WebAuthController::class, 'showRegister'])->name('register');
-    // Route::post('/register', [WebAuthController::class, 'register']);
+    // Route::post('/register', [WebAuthController::class, 'register');
 });
+
+// Public routes
+Route::get('/privacy-policy', [WebPrivacyPolicyController::class, 'publicShow'])->name('privacy-policy.public');
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
@@ -83,6 +87,9 @@ Route::middleware('auth')->group(function () {
 
     // Permissions Management
     Route::resource('permissions', WebPermissionController::class)->parameters(['permissions' => 'permission'])->names('web.permissions');
+
+    // Privacy Policies
+    Route::resource('privacy-policies', WebPrivacyPolicyController::class)->parameters(['privacy-policies' => 'privacyPolicy'])->names('web.privacy-policies');
 
     // Shops
     Route::resource('shops', WebShopController::class)->names('web.shops');

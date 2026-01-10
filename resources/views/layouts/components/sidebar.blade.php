@@ -134,6 +134,15 @@
            @endcan
 
            @can('manage roles')
+               {{-- Assuming privacy policy management requires admin permissions --}}
+               <!-- Privacy Policies -->
+               <li class="menu-item {{ request()->routeIs('web.privacy-policies.*') ? 'active' : '' }}">
+                   <a href="{{ route('web.privacy-policies.index') }}" class="menu-link">
+                       <i class="menu-icon tf-icons bx bx-shield"></i>
+                       <div>{{ __('Privacy Policies') }}</div>
+                   </a>
+               </li>
+
                {{-- Assuming shop management requires admin permissions --}}
                <!-- Shops -->
                <li class="menu-item {{ request()->routeIs('web.shops.*') ? 'active' : '' }}">
