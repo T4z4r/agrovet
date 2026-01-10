@@ -32,7 +32,7 @@
                 </div>
                 <div>
                     <strong>Content:</strong>
-                    <div class="mt-2">{!! nl2br(e($privacyPolicy->content)) !!}</div>
+                    <div class="mt-2">{!! $privacyPolicy->content !!}</div>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ use Database\Seeders\ContactSeeder;
 use Database\Seeders\CosmeticsProductSeeder;
 use Database\Seeders\KedrikProductSeeder;
 use Database\Seeders\ProductSeeder;
+use Database\Seeders\PrivacyPolicySeeder;
 use Database\Seeders\RolePermissionSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -35,6 +36,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CosmeticsProductSeeder::class);
         $this->call(AboutSeeder::class);
         $this->call(ContactSeeder::class);
+        $this->call(PrivacyPolicySeeder::class);
 
     }
 }
