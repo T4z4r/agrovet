@@ -67,14 +67,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="create_feature_ids" class="form-label">Features</label>
-                        <select class="form-control" id="create_feature_ids" name="feature_ids[]" multiple>
+                        <select class="form-control select" id="create_feature_ids" name="feature_ids[]" multiple>
                             @foreach($features ?? [] as $feature)
                                 <option value="{{ $feature->id }}">{{ $feature->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="create_is_active" name="is_active" checked>
+                        <input type="hidden" name="is_active" value="0">
+                        <input type="checkbox" class="form-check-input" id="create_is_active" name="is_active" value="1" checked>
                         <label class="form-check-label" for="create_is_active">Active</label>
                     </div>
                 </div>
@@ -118,14 +119,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="edit_feature_ids" class="form-label">Features</label>
-                        <select class="form-control" id="edit_feature_ids" name="feature_ids[]" multiple>
+                        <select class="form-control select" id="edit_feature_ids" name="feature_ids[]" multiple>
                             @foreach($features ?? [] as $feature)
                                 <option value="{{ $feature->id }}">{{ $feature->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="edit_is_active" name="is_active">
+                        <input type="hidden" name="is_active" value="0">
+                        <input type="checkbox" class="form-check-input" id="edit_is_active" name="is_active" value="1">
                         <label class="form-check-label" for="edit_is_active">Active</label>
                     </div>
                 </div>
@@ -142,6 +144,33 @@
 @section('scripts')
 <script>
 $(document).ready(function() {
+    function initSelect2(modalId, selectId) {
+        $(selectId).select2({
+            placeholder: "Select features",
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $(modalId)
+        });
+    }
+
+    // INIT ONCE WHEN MODAL OPENS
+    $('#createModal').on('shown.bs.modal', function () {
+        initSelect2('#createModal', '#create_feature_ids');
+    });
+
+    $('#editModal').on('shown.bs.modal', function () {
+        initSelect2('#editModal', '#edit_feature_ids');
+    });
+
+    // OPTIONAL: DESTROY ON CLOSE (prevents duplicates)
+    $('#createModal').on('hidden.bs.modal', function () {
+        $('#create_feature_ids').select2('destroy');
+    });
+
+    $('#editModal').on('hidden.bs.modal', function () {
+        $('#edit_feature_ids').select2('destroy');
+    });
+
     var table = $('.dt-column-search').DataTable({
         ajax: {
             url: '{{ route("admin.subscription-packages.index") }}',
@@ -189,7 +218,7 @@ $(document).ready(function() {
                     table.ajax.reload();
                     alert(response.message);
                     $('#createForm')[0].reset();
-                    $('#create_feature_ids option').prop('selected', false);
+                    $('#create_feature_ids').val(null).trigger('change');
                 }
             },
             error: function(xhr) {
@@ -222,6 +251,7 @@ $(document).ready(function() {
                         $('#edit_feature_ids option[value="' + feature.id + '"]').prop('selected', true);
                     });
                 }
+                $('#edit_feature_ids').trigger('change');
                 $('#edit_is_active').prop('checked', data.is_active);
                 $('#editModal').modal('show');
             }

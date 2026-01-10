@@ -73,4 +73,14 @@
         </div>
     </div>
 </div>
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    $('#feature_ids').select2({
+        placeholder: "Select features",
+        allowClear: true
+    });
+});
+</script>
 @endsection
