@@ -69,6 +69,12 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Select2 on payment method dropdown
+    $('#payment_method').select2({
+        placeholder: "Select Payment Method",
+        allowClear: true
+    });
+
     let cart = [];
     let total = 0;
 
