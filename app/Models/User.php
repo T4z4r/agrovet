@@ -24,7 +24,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'is_active'
+        'is_active',
+        'branch_id'
     ];
 
     /**
@@ -57,5 +58,10 @@ class User extends Authenticatable
     public function sales()
     {
         return $this->hasMany(Sale::class, 'seller_id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 }

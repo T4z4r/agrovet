@@ -6,11 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Expense extends Model
 {
-    protected $fillable = ['shop_id', 'recorded_by', 'category', 'amount', 'description', 'date'];
+    protected $fillable = ['shop_id', 'branch_id', 'recorded_by', 'category', 'amount', 'description', 'date'];
 
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     public function user()

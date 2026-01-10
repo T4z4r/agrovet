@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['shop_id', 'name', 'unit', 'category', 'stock', 'cost_price', 'selling_price', 'minimum_quantity', 'barcode', 'photo'];
+    protected $fillable = ['shop_id', 'branch_id', 'name', 'unit', 'category', 'stock', 'cost_price', 'selling_price', 'minimum_quantity', 'barcode', 'photo'];
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
     public function saleItems()
     {

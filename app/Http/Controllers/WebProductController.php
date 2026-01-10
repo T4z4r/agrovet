@@ -11,14 +11,21 @@ class WebProductController extends Controller
 {
     public function index(Request $request)
     {
+        $user = Auth::user();
+        $query = Product::with('branch');
+
+        if ($user->role !== 'owner') {
+            $query->where('branch_id', $user->branch_id);
+        }
+
         if ($request->ajax()) {
-            $products = Product::orderBy('name')->get();
+            $products = $query->orderBy('name')->get();
             return response()->json([
                 'data' => $products
             ]);
         }
 
-        $products = Product::orderBy('name')->get();
+        $products = $query->orderBy('name')->get();
         return view('products.index', compact('products'));
     }
 
@@ -29,6 +36,7 @@ class WebProductController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
         $data = $request->validate([
             'name' => 'required',
             'unit' => 'required',
@@ -46,11 +54,16 @@ class WebProductController extends Controller
             $data['photo'] = $path;
         }
 
+        if ($user->role !== 'owner' && $user->branch_id) {
+            $data['branch_id'] = $user->branch_id;
+        }
+
         $product = Product::create($data);
 
         // Create stock transaction if initial stock > 0
         if ($data['stock'] > 0) {
             StockTransaction::create([
+                'branch_id' => $product->branch_id,
                 'product_id' => $product->id,
                 'type' => 'stock_in',
                 'quantity' => $data['stock'],
@@ -105,6 +118,7 @@ class WebProductController extends Controller
         $stockDifference = $newStock - $oldStock;
         if ($stockDifference != 0) {
             StockTransaction::create([
+                'branch_id' => $product->branch_id,
                 'product_id' => $product->id,
                 'type' => $stockDifference > 0 ? 'stock_in' : 'stock_out',
                 'quantity' => abs($stockDifference),

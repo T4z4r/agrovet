@@ -6,6 +6,7 @@ use App\Http\Controllers\WebProductController;
 use App\Http\Controllers\WebSupplierController;
 use App\Http\Controllers\WebUserController;
 use App\Http\Controllers\WebShopController;
+use App\Http\Controllers\WebBranchController;
 use App\Http\Controllers\WebSaleController;
 use App\Http\Controllers\WebExpenseController;
 use App\Http\Controllers\WebStockTransactionController;
@@ -97,6 +98,9 @@ Route::middleware('auth')->group(function () {
 
     // Shops
     Route::resource('shops', WebShopController::class)->names('web.shops');
+
+    // Branches
+    Route::resource('branches', WebBranchController::class)->names('web.branches');
 
     // Sales
     Route::resource('sales', WebSaleController::class)->except(['edit', 'update'])->names('web.sales');

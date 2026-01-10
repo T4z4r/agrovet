@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class StockTransaction extends Model
 {
     protected $fillable = [
+        'branch_id',
         'product_id',
         'type',
         'quantity',
@@ -29,5 +30,10 @@ class StockTransaction extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'recorded_by');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 }
