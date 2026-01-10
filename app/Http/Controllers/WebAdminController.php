@@ -14,7 +14,7 @@ class WebAdminController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->role !== 'owner') {
+        if (auth()->user()->role !== 'superadmin') {
             abort(403, 'Unauthorized');
         }
 
@@ -42,7 +42,7 @@ class WebAdminController extends Controller
 
     public function clear(Request $request, $table)
     {
-        if (auth()->user()->role !== 'owner') {
+        if (auth()->user()->role !== 'superadmin') {
             abort(403, 'Unauthorized');
         }
 
