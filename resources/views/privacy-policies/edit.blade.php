@@ -45,19 +45,29 @@
     </div>
 </div>
 
-@endsection
-
-@section('scripts')
-<!-- TinyMCE -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<!-- Summernote CSS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+<!-- Summernote JS -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script>
-    tinymce.init({
-        selector: '#content',
-        height: 400,
-        menubar: false,
-        plugins: 'lists link image code',
-        toolbar: 'bold italic underline | bullist numlist | link image | code',
-        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }'
+    $(document).ready(function() {
+        $('#content').summernote({
+            height: 300,
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link', 'picture']],
+                ['view', ['fullscreen', 'codeview']]
+            ],
+            callbacks: {
+                onInit: function() {
+                    // Ensure proper styling
+                    $('.note-editor').css('border', '1px solid #ced4da');
+                    $('.note-editor').css('border-radius', '0.375rem');
+                }
+            }
+        });
     });
 </script>
 @endsection
