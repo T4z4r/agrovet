@@ -33,10 +33,12 @@
                     </div>
                     <div class="col-md-12">
                         <h6>Features:</h6>
-                        @if($package->features && $package->features->count() > 0)
-                            <ul>
+                        @if($package->features && $package->features->isNotEmpty())
+                            <ul class="list-unstyled">
                                 @foreach($package->features as $feature)
-                                    <li>{{ $feature->name }}</li>
+                                    @if($feature->name)
+                                        <li>{{ $feature->name }}</li>
+                                    @endif
                                 @endforeach
                             </ul>
                         @else

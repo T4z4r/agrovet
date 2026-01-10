@@ -18,6 +18,7 @@
                             <th>Description</th>
                             <th>Price</th>
                             <th>Duration (Months)</th>
+                            <th>Features</th>
                             <th>Active</th>
                             <th>Actions</th>
                         </tr>
@@ -28,6 +29,7 @@
                             <th>Description</th>
                             <th>Price</th>
                             <th>Duration (Months)</th>
+                            <th>Features</th>
                             <th>Active</th>
                             <th>Actions</th>
                         </tr>
@@ -158,9 +160,6 @@ $(document).ready(function() {
         initSelect2('#createModal', '#create_feature_ids');
     });
 
-    $('#editModal').on('shown.bs.modal', function () {
-        initSelect2('#editModal', '#edit_feature_ids');
-    });
 
     // OPTIONAL: DESTROY ON CLOSE (prevents duplicates)
     $('#createModal').on('hidden.bs.modal', function () {
@@ -182,6 +181,12 @@ $(document).ready(function() {
             { data: 'description' },
             { data: 'price' },
             { data: 'duration_months' },
+            {
+                data: 'features',
+                render: function(data) {
+                    return data && data.length > 0 ? data.map(f => f.name).join(', ') : '';
+                }
+            },
             {
                 data: 'is_active',
                 render: function(data) {
@@ -253,6 +258,7 @@ $(document).ready(function() {
                 }
                 $('#edit_feature_ids').trigger('change');
                 $('#edit_is_active').prop('checked', data.is_active);
+                initSelect2('#editModal', '#edit_feature_ids');
                 $('#editModal').modal('show');
             }
         });
@@ -306,3 +312,4 @@ $(document).ready(function() {
 });
 </script>
 @endsection
+

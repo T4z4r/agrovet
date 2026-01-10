@@ -25,6 +25,6 @@ class SubscriptionPackage extends Model
 
     public function features()
     {
-        return $this->belongsToMany(Feature::class, 'feature_subscription_package');
+        return $this->belongsToMany(Feature::class, 'feature_subscription_package', 'subscription_package_id', 'feature_id');
     }
 }
