@@ -44,25 +44,31 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
 <!-- Summernote CSS -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-
 <!-- Summernote JS -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#content').summernote({
-            height: 400,
+            height: 300,
             toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['fontname', ['fontname']],
-                ['color', ['color']],
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
                 ['insert', ['link', 'picture']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
+                ['view', ['fullscreen', 'codeview']]
+            ],
+            callbacks: {
+                onInit: function() {
+                    // Ensure proper styling
+                    $('.note-editor').css('border', '1px solid #ced4da');
+                    $('.note-editor').css('border-radius', '0.375rem');
+                }
+            }
         });
     });
 </script>
