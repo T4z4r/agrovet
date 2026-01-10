@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subscription;
+use App\Models\Shop;
+use App\Models\SubscriptionPackage;
 use Illuminate\Http\Request;
 
 class WebSubscriptionController extends Controller
@@ -17,11 +19,16 @@ class WebSubscriptionController extends Controller
         }
 
         $subscriptions = Subscription::with('shop', 'subscriptionPackage')->orderBy('created_at', 'desc')->get();
-        return view('subscriptions.index', compact('subscriptions'));
+        $shops = Shop::all();
+        $packages = SubscriptionPackage::where('is_active', true)->get();
+        return view('subscriptions.index', compact('subscriptions', 'shops', 'packages'));
     }
 
     public function create()
     {
+        if (request()->ajax()) {
+            return response()->json(['success' => true]);
+        }
         return view('subscriptions.create');
     }
 
@@ -37,6 +44,10 @@ class WebSubscriptionController extends Controller
 
         Subscription::create($data);
 
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Subscription created successfully']);
+        }
+
         return redirect()->route('admin.subscriptions.index')->with('success', 'Subscription created successfully');
     }
 
@@ -49,6 +60,9 @@ class WebSubscriptionController extends Controller
     public function edit($id)
     {
         $subscription = Subscription::findOrFail($id);
+        if (request()->ajax()) {
+            return response()->json($subscription);
+        }
         return view('subscriptions.edit', compact('subscription'));
     }
 
@@ -66,6 +80,10 @@ class WebSubscriptionController extends Controller
 
         $subscription->update($data);
 
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Subscription updated successfully']);
+        }
+
         return redirect()->route('admin.subscriptions.index')->with('success', 'Subscription updated successfully');
     }
 
@@ -74,6 +92,9 @@ class WebSubscriptionController extends Controller
         $subscription = Subscription::findOrFail($id);
 
         $subscription->delete();
+        if (request()->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Subscription deleted successfully']);
+        }
         return redirect()->route('admin.subscriptions.index')->with('success', 'Subscription deleted successfully');
     }
 }

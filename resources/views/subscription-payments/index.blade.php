@@ -1,23 +1,23 @@
 @extends('layouts.master')
 
-@section('title', 'Subscriptions')
+@section('title', 'Subscription Payments')
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Subscriptions</h5>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Add Subscription</button>
+                <h5 class="mb-0">Subscription Payments</h5>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Add Payment</button>
             </div>
             <div class="card-datatable text-nowrap">
                 <table class="dt-column-search table table-bordered">
                     <thead>
                         <tr>
                             <th>Shop</th>
-                            <th>Package</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
+                            <th>Subscription</th>
+                            <th>Amount</th>
+                            <th>Payment Date</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -25,9 +25,9 @@
                     <tfoot>
                         <tr>
                             <th>Shop</th>
-                            <th>Package</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
+                            <th>Subscription</th>
+                            <th>Amount</th>
+                            <th>Payment Date</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -43,45 +43,40 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">Add Subscription</h5>
+                <h5 class="modal-title" id="createModalLabel">Add Subscription Payment</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="createForm">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="create_shop_id" class="form-label">Shop</label>
-                        <select class="form-control" id="create_shop_id" name="shop_id" required>
-                            <option value="">Select Shop</option>
-                            @foreach($shops as $shop)
-                                <option value="{{ $shop->id }}">{{ $shop->name }}</option>
+                        <label for="create_subscription_id" class="form-label">Subscription</label>
+                        <select class="form-control" id="create_subscription_id" name="subscription_id" required>
+                            <option value="">Select Subscription</option>
+                            @foreach($subscriptions as $subscription)
+                                <option value="{{ $subscription->id }}">{{ $subscription->shop->name }} - {{ $subscription->subscriptionPackage->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="create_subscription_package_id" class="form-label">Package</label>
-                        <select class="form-control" id="create_subscription_package_id" name="subscription_package_id" required>
-                            <option value="">Select Package</option>
-                            @foreach($packages as $package)
-                                <option value="{{ $package->id }}">{{ $package->name }}</option>
-                            @endforeach
-                        </select>
+                        <label for="create_amount" class="form-label">Amount</label>
+                        <input type="number" step="0.01" class="form-control" id="create_amount" name="amount" required>
                     </div>
                     <div class="mb-3">
-                        <label for="create_start_date" class="form-label">Start Date</label>
-                        <input type="date" class="form-control" id="create_start_date" name="start_date" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="create_end_date" class="form-label">End Date</label>
-                        <input type="date" class="form-control" id="create_end_date" name="end_date" required>
+                        <label for="create_payment_date" class="form-label">Payment Date</label>
+                        <input type="date" class="form-control" id="create_payment_date" name="payment_date" required>
                     </div>
                     <div class="mb-3">
                         <label for="create_status" class="form-label">Status</label>
                         <select class="form-control" id="create_status" name="status" required>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="expired">Expired</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="create_payment_method" class="form-label">Payment Method</label>
+                        <input type="text" class="form-control" id="create_payment_method" name="payment_method">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -98,7 +93,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Subscription</h5>
+                <h5 class="modal-title" id="editModalLabel">Edit Subscription Payment</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="editForm">
@@ -107,38 +102,33 @@
                 <div class="modal-body">
                     <input type="hidden" id="edit_id" name="id">
                     <div class="mb-3">
-                        <label for="edit_shop_id" class="form-label">Shop</label>
-                        <select class="form-control" id="edit_shop_id" name="shop_id" required>
-                            <option value="">Select Shop</option>
-                            @foreach($shops as $shop)
-                                <option value="{{ $shop->id }}">{{ $shop->name }}</option>
+                        <label for="edit_subscription_id" class="form-label">Subscription</label>
+                        <select class="form-control" id="edit_subscription_id" name="subscription_id" required>
+                            <option value="">Select Subscription</option>
+                            @foreach($subscriptions as $subscription)
+                                <option value="{{ $subscription->id }}">{{ $subscription->shop->name }} - {{ $subscription->subscriptionPackage->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_subscription_package_id" class="form-label">Package</label>
-                        <select class="form-control" id="edit_subscription_package_id" name="subscription_package_id" required>
-                            <option value="">Select Package</option>
-                            @foreach($packages as $package)
-                                <option value="{{ $package->id }}">{{ $package->name }}</option>
-                            @endforeach
-                        </select>
+                        <label for="edit_amount" class="form-label">Amount</label>
+                        <input type="number" step="0.01" class="form-control" id="edit_amount" name="amount" required>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_start_date" class="form-label">Start Date</label>
-                        <input type="date" class="form-control" id="edit_start_date" name="start_date" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_end_date" class="form-label">End Date</label>
-                        <input type="date" class="form-control" id="edit_end_date" name="end_date" required>
+                        <label for="edit_payment_date" class="form-label">Payment Date</label>
+                        <input type="date" class="form-control" id="edit_payment_date" name="payment_date" required>
                     </div>
                     <div class="mb-3">
                         <label for="edit_status" class="form-label">Status</label>
                         <select class="form-control" id="edit_status" name="status" required>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="expired">Expired</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_payment_method" class="form-label">Payment Method</label>
+                        <input type="text" class="form-control" id="edit_payment_method" name="payment_method">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -156,15 +146,15 @@
 $(document).ready(function() {
     var table = $('.dt-column-search').DataTable({
         ajax: {
-            url: '{{ route("admin.subscriptions.index") }}',
+            url: '{{ route("admin.subscription-payments.index") }}',
             type: 'GET',
             dataSrc: 'data'
         },
         columns: [
-            { data: 'shop.name' },
-            { data: 'subscription_package.name' },
-            { data: 'start_date' },
-            { data: 'end_date' },
+            { data: 'subscription.shop.name' },
+            { data: 'subscription.subscription_package.name' },
+            { data: 'amount' },
+            { data: 'payment_date' },
             { data: 'status' },
             {
                 data: 'id',
@@ -172,7 +162,7 @@ $(document).ready(function() {
                 searchable: false,
                 render: function(data, type, row) {
                     return `
-                        <a href="{{ url('admin/subscriptions') }}/${data}" class="btn btn-sm btn-info">View</a>
+                        <a href="{{ url('admin/subscription-payments') }}/${data}" class="btn btn-sm btn-info">View</a>
                         <button type="button" class="btn btn-sm btn-warning edit-btn" data-id="${data}">Edit</button>
                         <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="${data}">Delete</button>
                     `;
@@ -187,7 +177,7 @@ $(document).ready(function() {
     $('#createForm').on('submit', function(e) {
         e.preventDefault();
         $.ajax({
-            url: '{{ route("admin.subscriptions.store") }}',
+            url: '{{ route("admin.subscription-payments.store") }}',
             type: 'POST',
             data: $(this).serialize(),
             success: function(response) {
@@ -211,15 +201,15 @@ $(document).ready(function() {
     $(document).on('click', '.edit-btn', function() {
         var id = $(this).data('id');
         $.ajax({
-            url: '{{ url("admin/subscriptions") }}/' + id + '/edit',
+            url: '{{ url("admin/subscription-payments") }}/' + id + '/edit',
             type: 'GET',
             success: function(data) {
                 $('#edit_id').val(data.id);
-                $('#edit_shop_id').val(data.shop_id);
-                $('#edit_subscription_package_id').val(data.subscription_package_id);
-                $('#edit_start_date').val(data.start_date);
-                $('#edit_end_date').val(data.end_date);
+                $('#edit_subscription_id').val(data.subscription_id);
+                $('#edit_amount').val(data.amount);
+                $('#edit_payment_date').val(data.payment_date);
                 $('#edit_status').val(data.status);
+                $('#edit_payment_method').val(data.payment_method);
                 $('#editModal').modal('show');
             }
         });
@@ -230,7 +220,7 @@ $(document).ready(function() {
         e.preventDefault();
         var id = $('#edit_id').val();
         $.ajax({
-            url: '{{ url("admin/subscriptions") }}/' + id,
+            url: '{{ url("admin/subscription-payments") }}/' + id,
             type: 'PUT',
             data: $(this).serialize(),
             success: function(response) {
@@ -252,9 +242,9 @@ $(document).ready(function() {
     // Delete button click
     $(document).on('click', '.delete-btn', function() {
         var id = $(this).data('id');
-        if (confirm('Are you sure you want to delete this subscription?')) {
+        if (confirm('Are you sure you want to delete this payment?')) {
             $.ajax({
-                url: '{{ url("admin/subscriptions") }}/' + id,
+                url: '{{ url("admin/subscription-payments") }}/' + id,
                 type: 'DELETE',
                 data: {
                     _token: '{{ csrf_token() }}'

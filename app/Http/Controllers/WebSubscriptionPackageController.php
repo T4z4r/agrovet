@@ -22,6 +22,9 @@ class WebSubscriptionPackageController extends Controller
 
     public function create()
     {
+        if (request()->ajax()) {
+            return response()->json(['success' => true]);
+        }
         return view('subscription-packages.create');
     }
 
@@ -38,6 +41,10 @@ class WebSubscriptionPackageController extends Controller
 
         SubscriptionPackage::create($data);
 
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Subscription package created successfully']);
+        }
+
         return redirect()->route('admin.subscription-packages.index')->with('success', 'Subscription package created successfully');
     }
 
@@ -50,6 +57,9 @@ class WebSubscriptionPackageController extends Controller
     public function edit($id)
     {
         $package = SubscriptionPackage::findOrFail($id);
+        if (request()->ajax()) {
+            return response()->json($package);
+        }
         return view('subscription-packages.edit', compact('package'));
     }
 
@@ -68,6 +78,10 @@ class WebSubscriptionPackageController extends Controller
 
         $package->update($data);
 
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Subscription package updated successfully']);
+        }
+
         return redirect()->route('admin.subscription-packages.index')->with('success', 'Subscription package updated successfully');
     }
 
@@ -77,10 +91,16 @@ class WebSubscriptionPackageController extends Controller
 
         // Check if package has subscriptions
         if ($package->subscriptions()->exists()) {
+            if (request()->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Cannot delete package that has subscriptions']);
+            }
             return redirect()->route('admin.subscription-packages.index')->with('error', 'Cannot delete package that has subscriptions');
         }
 
         $package->delete();
+        if (request()->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Subscription package deleted successfully']);
+        }
         return redirect()->route('admin.subscription-packages.index')->with('success', 'Subscription package deleted successfully');
     }
 }

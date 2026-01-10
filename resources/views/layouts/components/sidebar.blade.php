@@ -153,7 +153,7 @@
                </li>
            @endcan
 
-           {{-- @if(auth()->user()->role === 'superadmin') --}}
+           @can('manage subscriptions')
                <!-- Subscriptions -->
                <li class="menu-item {{ request()->routeIs('admin.subscription-packages.*', 'admin.subscriptions.*', 'admin.subscription-payments.*') ? 'active open' : '' }}">
                    <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -178,7 +178,7 @@
                        </li>
                    </ul>
                </li>
-           {{-- @endif --}}
+           @endcan
 
            @can('access admin')
                <!-- Admin -->
