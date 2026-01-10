@@ -11,6 +11,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PrivacyPolicyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,7 @@ use App\Http\Controllers\ContactController;
 */
 Route::get('about', [AboutController::class, 'index']);
 Route::get('contacts', [ContactController::class, 'index']);
+Route::apiResource('privacy-policies', PrivacyPolicyController::class);
 
 /*
 |--------------------------------------------------------------------------
