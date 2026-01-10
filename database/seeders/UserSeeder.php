@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +17,9 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Get the first branch
+        $branch = Branch::first();
+
         // Create superadmin user
         $superadmin = User::firstOrCreate(
             ['email' => 'superadmin@example.com'],
@@ -23,6 +27,7 @@ class UserSeeder extends Seeder
                 'name' => 'Super Admin',
                 'password' => Hash::make('password'),
                 'role'=>'admin',
+                'branch_id' => null, // Superadmin not tied to branch
 
             ]
         );
@@ -34,7 +39,8 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Shop Owner',
                 'password' => Hash::make('password'),
-                                'role'=>'owner',
+                'role'=>'owner',
+                'branch_id' => null, // Owner can access all branches
 
             ]
         );
@@ -46,6 +52,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Seller User',
                 'password' => Hash::make('password'),
+                'branch_id' => $branch ? $branch->id : null,
             ]
         );
         $seller->assignRole('seller');
@@ -57,6 +64,7 @@ class UserSeeder extends Seeder
                 'name' => 'Manager User',
                 'password' => Hash::make('password'),
                 'role'=>'owner',
+                'branch_id' => null,
             ]
         );
         $manager->assignRole('manager');

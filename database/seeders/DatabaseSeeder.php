@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Database\Seeders\AboutSeeder;
+use Database\Seeders\BranchSeeder;
 use Database\Seeders\ContactSeeder;
 use Database\Seeders\CosmeticsProductSeeder;
 use Database\Seeders\FeatureSeeder;
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call(RolePermissionSeeder::class);
+        $this->call(BranchSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(FeatureSeeder::class);
         // $this->call(ProductSeeder::class);
