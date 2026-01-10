@@ -153,6 +153,33 @@
                </li>
            @endcan
 
+           {{-- @if(auth()->user()->role === 'superadmin') --}}
+               <!-- Subscriptions -->
+               <li class="menu-item {{ request()->routeIs('admin.subscription-packages.*', 'admin.subscriptions.*', 'admin.subscription-payments.*') ? 'active open' : '' }}">
+                   <a href="javascript:void(0);" class="menu-link menu-toggle">
+                       <i class="menu-icon tf-icons bx bx-credit-card"></i>
+                       <div>{{ __('Subscriptions') }}</div>
+                   </a>
+                   <ul class="menu-sub">
+                       <li class="menu-item {{ request()->routeIs('admin.subscription-packages.*') ? 'active' : '' }}">
+                           <a href="{{ route('admin.subscription-packages.index') }}" class="menu-link">
+                               <div>{{ __('Packages') }}</div>
+                           </a>
+                       </li>
+                       <li class="menu-item {{ request()->routeIs('admin.subscriptions.*') ? 'active' : '' }}">
+                           <a href="{{ route('admin.subscriptions.index') }}" class="menu-link">
+                               <div>{{ __('Subscriptions') }}</div>
+                           </a>
+                       </li>
+                       <li class="menu-item {{ request()->routeIs('admin.subscription-payments.*') ? 'active' : '' }}">
+                           <a href="{{ route('admin.subscription-payments.index') }}" class="menu-link">
+                               <div>{{ __('Payments') }}</div>
+                           </a>
+                       </li>
+                   </ul>
+               </li>
+           {{-- @endif --}}
+
            @can('access admin')
                <!-- Admin -->
                <li class="menu-item {{ request()->routeIs('web.admin.*') ? 'active' : '' }}">

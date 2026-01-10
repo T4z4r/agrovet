@@ -17,6 +17,9 @@ use App\Http\Controllers\WebPermissionController;
 use App\Http\Controllers\WebPosController;
 use App\Http\Controllers\WebRoleController;
 use App\Http\Controllers\WebPrivacyPolicyController;
+use App\Http\Controllers\WebSubscriptionPackageController;
+use App\Http\Controllers\WebSubscriptionController;
+use App\Http\Controllers\WebSubscriptionPaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 
@@ -124,4 +127,13 @@ Route::middleware('auth')->group(function () {
     // Admin
     Route::get('admin', [WebAdminController::class, 'index'])->name('web.admin.index');
     Route::post('admin/clear/{table}', [WebAdminController::class, 'clear'])->name('web.admin.clear');
+
+    // Subscription Packages
+    Route::resource('admin/subscription-packages', WebSubscriptionPackageController::class)->names('admin.subscription-packages');
+
+    // Subscriptions
+    Route::resource('admin/subscriptions', WebSubscriptionController::class)->names('admin.subscriptions');
+
+    // Subscription Payments
+    Route::resource('admin/subscription-payments', WebSubscriptionPaymentController::class)->names('admin.subscription-payments');
 });
