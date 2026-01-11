@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -14,11 +15,21 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email'=> 'required|email|unique:users,email',
             'password'=>'required|confirmed',
-            'role' => 'required|in:admin,owner,seller'
+            'role' => 'required|in:admin,owner,seller',
+            'shop_name' => 'required_if:role,owner|string',
+            'shop_location' => 'required_if:role,owner|string',
         ]);
 
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
+
+        if ($data['role'] === 'owner') {
+            Shop::create([
+                'name' => $data['shop_name'],
+                'owner_id' => $user->id,
+                'location' => $data['shop_location'],
+            ]);
+        }
 
         return response()->json([
             'success' => true,
