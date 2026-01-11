@@ -9,17 +9,28 @@ use Carbon\Carbon;
 class SubscriptionService
 {
     /**
+     * Get the user's current active subscription
+     */
+    protected function activeSubscription(User $user): ?Subscription
+    {
+        return $user->subscriptions()
+            ->where('status', 'active')
+            ->latest('end_date')
+            ->first();
+    }
+
+    /**
      * Check if the user's subscription is active and not expired
      */
     public function isSubscriptionActive(User $user): bool
     {
-        $subscription = $user->subscriptions()->where('status', 'active')->latest()->first();
+        $subscription = $this->activeSubscription($user);
 
-        if (!$subscription) {
+        if (!$subscription || !$subscription->end_date) {
             return false;
         }
 
-        return $subscription->end_date->isFuture();
+        return Carbon::parse($subscription->end_date)->isFuture();
     }
 
     /**
@@ -27,17 +38,19 @@ class SubscriptionService
      */
     public function getRemainingDays(User $user): int
     {
-        $subscription = $user->subscriptions()->where('status', 'active')->latest()->first();
+        $subscription = $this->activeSubscription($user);
 
-        if (!$subscription) {
+        if (!$subscription || !$subscription->end_date) {
             return 0;
         }
 
-        if ($subscription->end_date->isPast()) {
+        $endDate = Carbon::parse($subscription->end_date);
+
+        if ($endDate->isPast()) {
             return 0;
         }
 
-        return now()->diffInDays($subscription->end_date, false);
+        return max(0, now()->diffInDays($endDate));
     }
 
     /**
@@ -53,7 +66,7 @@ class SubscriptionService
      */
     public function getCurrentSubscription(User $user): ?Subscription
     {
-        return $user->subscriptions()->where('status', 'active')->latest()->first();
+        return $this->activeSubscription($user);
     }
 
     /**
@@ -66,11 +79,17 @@ class SubscriptionService
         }
 
         $subscription = $this->getCurrentSubscription($user);
-        if (!$subscription) {
+
+        if (
+            !$subscription ||
+            !$subscription->subscriptionPackage
+        ) {
             return false;
         }
 
-        // Check if the subscription package includes the feature
-        return $subscription->subscriptionPackage->features()->where('name', $featureName)->exists();
+        return $subscription->subscriptionPackage
+            ->features()
+            ->where('name', $featureName)
+            ->exists();
     }
 }
