@@ -82,6 +82,18 @@ class UserSeeder extends Seeder
         );
         $seller->assignRole('seller');
 
+        // Create subscription for seller
+        if ($freePackage) {
+            Subscription::create([
+                'user_id' => $seller->id,
+                'shop_id' => $shop->id,
+                'subscription_package_id' => $freePackage->id,
+                'start_date' => now(),
+                'end_date' => now()->addMonths(12),
+                'status' => 'active',
+            ]);
+        }
+
         // Create manager user
         $manager = User::firstOrCreate(
             ['email' => 'manager@example.com'],
@@ -93,5 +105,17 @@ class UserSeeder extends Seeder
             ]
         );
         $manager->assignRole('manager');
+
+        // Create subscription for manager
+        if ($freePackage) {
+            Subscription::create([
+                'user_id' => $manager->id,
+                'shop_id' => $shop->id,
+                'subscription_package_id' => $freePackage->id,
+                'start_date' => now(),
+                'end_date' => now()->addMonths(12),
+                'status' => 'active',
+            ]);
+        }
     }
 }

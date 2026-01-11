@@ -29,6 +29,11 @@ class SubscriptionMiddleware
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
+        // Skip subscription check for superadmin
+        if ($user->hasRole('superadmin')) {
+            return $next($request);
+        }
+
         if (!$this->subscriptionService->isSubscriptionActive($user)) {
             return response()->json([
                 'message' => 'Subscription expired. Please renew your subscription to continue using the service.',
