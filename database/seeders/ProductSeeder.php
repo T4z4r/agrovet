@@ -4,11 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Product;
+use App\Models\Shop;
 
 class ProductSeeder extends Seeder
 {
     public function run()
     {
+        $shop = Shop::first(); // Assuming there's a shop
+
         $products = [
             ["Bajuton wp", "500g", 5, 9000, 11000],
             ["Bajuton wp", "250g", 10, 5000, 6500],
@@ -33,6 +36,7 @@ class ProductSeeder extends Seeder
                 'stock'         => $p[2],
                 'cost_price'    => $p[3],
                 'selling_price' => $p[4],
+                'shop_id'       => $shop->id,
             ]);
         }
     }

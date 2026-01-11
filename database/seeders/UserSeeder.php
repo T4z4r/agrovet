@@ -58,6 +58,10 @@ class UserSeeder extends Seeder
             ]
         );
 
+        // Assign shop_id to owner
+        $owner->shop_id = $shop->id;
+        $owner->save();
+
         // Create default subscription for owner
         $freePackage = SubscriptionPackage::where('name', 'Free')->first();
         if ($freePackage) {
@@ -77,7 +81,9 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Seller User',
                 'password' => Hash::make('password'),
+                'role' => 'seller',
                 'branch_id' => $branch ? $branch->id : null,
+                'shop_id' => $shop->id,
             ]
         );
         $seller->assignRole('seller');
@@ -100,8 +106,9 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Manager User',
                 'password' => Hash::make('password'),
-                'role'=>'owner',
+                'role'=>'manager',
                 'branch_id' => null,
+                'shop_id' => $shop->id,
             ]
         );
         $manager->assignRole('manager');
