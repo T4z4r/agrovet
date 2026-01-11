@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('branches', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('shop_id')->constrained('shops')->onDelete('cascade');
-            $table->string('name');
-            $table->string('location')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('branches')) {
+            Schema::create('branches', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('shop_id')->constrained('shops')->onDelete('cascade');
+                $table->string('name');
+                $table->string('location')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
