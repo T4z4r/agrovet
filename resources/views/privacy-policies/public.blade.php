@@ -3,14 +3,21 @@
 @section('title', $privacyPolicy->title)
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="bg-white rounded-lg shadow-sm border p-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-6">{{ $privacyPolicy->title }}</h1>
-        <div class="prose prose-gray max-w-none">
-            {!! $privacyPolicy->content !!}
-        </div>
-        <div class="mt-8 pt-6 border-t text-sm text-gray-500">
-            Last updated: {{ $privacyPolicy->updated_at->format('F j, Y') }}
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h1 class="card-title h2 fw-bold text-dark mb-4">{{ $privacyPolicy->title }}</h1>
+                    <div class="content">
+                        {!! $privacyPolicy->content !!}
+                    </div>
+                    <hr class="my-4">
+                    <small class="text-muted">
+                        Last updated: {{ $privacyPolicy->updated_at->format('F j, Y') }}
+                    </small>
+                </div>
+            </div>
         </div>
     </div>
 </div>
