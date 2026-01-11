@@ -106,7 +106,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Manager User',
                 'password' => Hash::make('password'),
-                'role'=>'manager',
+                'role'=>'owner',
                 'branch_id' => null,
                 'shop_id' => $shop->id,
             ]
