@@ -22,6 +22,7 @@ use App\Http\Controllers\OtpController;
 */
 Route::get('about', [AboutController::class, 'index']);
 Route::get('contacts', [ContactController::class, 'index']);
+Route::get('privacy-policy', [PrivacyPolicyController::class, 'index']);
 Route::apiResource('privacy-policies', PrivacyPolicyController::class);
 
 /*

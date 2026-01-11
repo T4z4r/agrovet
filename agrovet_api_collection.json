@@ -876,6 +876,23 @@
           }
         }
       ]
+    },
+    {
+      "name": "Privacy Policy",
+      "item": [
+        {
+          "name": "Get Current Privacy Policy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/privacy-policy",
+              "host": ["{{base_url}}"],
+              "path": ["privacy-policy"]
+            }
+          }
+        }
+      ]
     }
   ]
 }
