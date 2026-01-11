@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Apex API",
-    "description": "Postman collection for Apex API endpoints",
+    "description": "Postman collection for Apex API endpoints with OTP authentication",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -34,6 +34,21 @@
       "key": "end_date",
       "value": "2025-12-07",
       "type": "string"
+    },
+    {
+      "key": "email",
+      "value": "john@example.com",
+      "type": "string"
+    },
+    {
+      "key": "otp_code",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "purpose",
+      "value": "login",
+      "type": "string"
     }
   ],
   "item": [
@@ -62,7 +77,28 @@
           }
         },
         {
-          "name": "Login User",
+          "name": "Login User (Send OTP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
           "event": [
             {
               "listen": "test",
@@ -86,12 +122,33 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp_code\": \"{{otp_code}}\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/login",
+              "raw": "{{base_url}}/verify-otp",
               "host": ["{{base_url}}"],
-              "path": ["login"]
+              "path": ["verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/resend-otp",
+              "host": ["{{base_url}}"],
+              "path": ["resend-otp"]
             }
           }
         },
@@ -726,6 +783,95 @@
               "raw": "{{base_url}}/subscription/subscribe",
               "host": ["{{base_url}}"],
               "path": ["subscription", "subscribe"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "OTP Management",
+      "item": [
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"purpose\": \"{{purpose}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/send",
+              "host": ["{{base_url}}"],
+              "path": ["otp", "send"]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp_code\": \"{{otp_code}}\",\n  \"purpose\": \"{{purpose}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/verify",
+              "host": ["{{base_url}}"],
+              "path": ["otp", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Check OTP Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"purpose\": \"{{purpose}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/status",
+              "host": ["{{base_url}}"],
+              "path": ["otp", "status"]
+            }
+          }
+        },
+        {
+          "name": "Clear OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"purpose\": \"{{purpose}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/clear",
+              "host": ["{{base_url}}"],
+              "path": ["otp", "clear"]
             }
           }
         }

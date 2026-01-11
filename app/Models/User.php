@@ -25,7 +25,9 @@ class User extends Authenticatable
         'password',
         'role',
         'is_active',
-        'branch_id'
+        'branch_id',
+        'otp_code',
+        'otp_expires_at'
     ];
 
     /**
@@ -48,6 +50,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'otp_expires_at' => 'datetime',
         ];
     }
 
@@ -68,6 +71,31 @@ class User extends Authenticatable
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function generateOtp()
+    {
+        $this->otp_code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $this->otp_expires_at = now()->addMinutes(10); // OTP expires in 10 minutes
+        $this->save();
+
+        $this->notify(new \App\Notifications\OtpNotification($this->otp_code));
+    }
+
+    public function verifyOtp($code)
+    {
+        if ($this->otp_code === $code && $this->otp_expires_at > now()) {
+            $this->otp_code = null;
+            $this->otp_expires_at = null;
+            $this->save();
+            return true;
+        }
+        return false;
+    }
+
+    public function isOtpExpired()
+    {
+        return $this->otp_expires_at && $this->otp_expires_at <= now();
     }
 
     protected static function boot()

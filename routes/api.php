@@ -13,6 +13,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\OtpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,18 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('resend-otp', [AuthController::class, 'resendOtp']);
+
+/*
+|--------------------------------------------------------------------------
+| OTP Management
+|--------------------------------------------------------------------------
+*/
+Route::prefix('otp')->group(function () {
+    Route::post('send', [OtpController::class, 'send']);
+    Route::post('verify', [OtpController::class, 'verify']);
+    Route::post('status', [OtpController::class, 'status']);
+    Route::post('clear', [OtpController::class, 'clear']);
+});
 
 Route::middleware(['auth:sanctum', 'subscription'])->group(function () {
 
