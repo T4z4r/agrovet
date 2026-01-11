@@ -22,7 +22,7 @@ class PrivacyPolicySeeder extends Seeder
 
 <p><strong>Last updated: January 11, 2026</strong></p>
 
-<p>This Privacy Policy describes how AgroVet ("we", "us", or "our") collects, uses, and protects your information when you use our mobile application (the "App").</p>
+<p>This Privacy Policy describes how Apex ("we", "us", or "our") collects, uses, and protects your information when you use our mobile application (the "App").</p>
 
 <h2>Information We Collect</h2>
 
@@ -142,7 +142,7 @@ class PrivacyPolicySeeder extends Seeder
 <li><strong>App Support</strong>: Through the app\'s support features</li>
 </ul>
 
-<p>By using AgroVet, you agree to the collection and use of information in accordance with this Privacy Policy.</p>',
+<p>By using Apex, you agree to the collection and use of information in accordance with this Privacy Policy.</p>',
             'is_active' => true,
         ]);
     }
