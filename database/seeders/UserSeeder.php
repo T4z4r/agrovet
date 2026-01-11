@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Branch;
 use App\Models\Shop;
+use App\Models\Subscription;
+use App\Models\SubscriptionPackage;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -56,8 +58,18 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // Update owner's subscription to link to the shop
-        $owner->subscriptions()->update(['shop_id' => $shop->id]);
+        // Create default subscription for owner
+        $freePackage = SubscriptionPackage::where('name', 'Free')->first();
+        if ($freePackage) {
+            Subscription::create([
+                'user_id' => $owner->id,
+                'shop_id' => $shop->id,
+                'subscription_package_id' => $freePackage->id,
+                'start_date' => now(),
+                'end_date' => now()->addMonths($freePackage->duration_months),
+                'status' => 'active',
+            ]);
+        }
 
         // Create seller user
         $seller = User::firstOrCreate(
