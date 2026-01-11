@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SubscriptionMiddleware
 {
-    protected $subscriptionService;
+    protected SubscriptionService $subscriptionService;
 
     public function __construct(SubscriptionService $subscriptionService)
     {
@@ -18,27 +18,27 @@ class SubscriptionMiddleware
 
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
 
         if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json([
+                'message' => 'Unauthenticated.'
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
         // Skip subscription check for superadmin
-        if ($user->hasRole('superadmin')) {
+        if (method_exists($user, 'hasRole') && $user->hasRole('superadmin')) {
             return $next($request);
         }
 
         if (!$this->subscriptionService->isSubscriptionActive($user)) {
             return response()->json([
-                'message' => 'Subscription expired. Please renew your subscription to continue using the service.',
-                'remaining_days' => $this->subscriptionService->getRemainingDays($user)
-            ], 403);
+                'message' => 'Your subscription has expired. Please renew to continue.',
+                'remaining_days' => $this->subscriptionService->getRemainingDays($user),
+            ], Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);
