@@ -64,4 +64,27 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            $freePackage = SubscriptionPackage::where('name', 'Free')->first();
+            if ($freePackage) {
+                Subscription::create([
+                    'user_id' => $user->id,
+                    'subscription_package_id' => $freePackage->id,
+                    'start_date' => now(),
+                    'end_date' => now()->addMonths($freePackage->duration_months),
+                    'status' => 'active',
+                ]);
+            }
+        });
+    }
 }

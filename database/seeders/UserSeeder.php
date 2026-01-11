@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Branch;
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -45,6 +46,18 @@ class UserSeeder extends Seeder
             ]
         );
         $owner->assignRole('owner');
+
+        // Create shop for owner
+        $shop = Shop::firstOrCreate(
+            ['owner_id' => $owner->id],
+            [
+                'name' => 'Sample Shop',
+                'location' => 'Nairobi, Kenya',
+            ]
+        );
+
+        // Update owner's subscription to link to the shop
+        $owner->subscriptions()->update(['shop_id' => $shop->id]);
 
         // Create seller user
         $seller = User::firstOrCreate(

@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(SetLocale::class);
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'subscription' => \App\Http\Middleware\SubscriptionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
