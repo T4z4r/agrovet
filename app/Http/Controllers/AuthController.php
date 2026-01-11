@@ -31,6 +31,9 @@ class AuthController extends Controller
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
 
+        // Generate and send OTP
+        $this->otpService->sendOtp($user, 'register');
+
         if ($data['role'] === 'owner') {
             Shop::create([
                 'name' => $data['shop_name'],
@@ -41,11 +44,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'user' => $user,
-                'token' => $user->createToken('agrovet')->plainTextToken
-            ],
-            'message' => 'User registered successfully'
+            'message' => 'User registered successfully. OTP sent to your email. Please verify to complete registration.'
         ]);
     }
 
@@ -65,15 +64,13 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        // Generate and send OTP
-        $this->otpService->sendOtp($user, 'login');
-
-        // Log out the user since they need to verify OTP first
-        Auth::logout();
-
         return response()->json([
             'success' => true,
-            'message' => 'OTP sent to your email. Please verify to complete login.'
+            'data' => [
+                'user' => $user,
+                'token' => $user->createToken('agrovet')->plainTextToken
+            ],
+            'message' => 'Logged in successfully'
         ]);
     }
 
@@ -93,7 +90,7 @@ class AuthController extends Controller
             ], 404);
         }
 
-        if ($this->otpService->verifyOtp($user, $data['otp_code'], 'login')) {
+        if ($this->otpService->verifyOtp($user, $data['otp_code'], 'register')) {
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -126,14 +123,14 @@ class AuthController extends Controller
         }
 
         // Check if there's an existing OTP and if it's not expired
-        if ($this->otpService->hasValidOtp($user, 'login')) {
+        if ($this->otpService->hasValidOtp($user, 'register')) {
             return response()->json([
                 'success' => false,
                 'message' => 'OTP already sent. Please wait before requesting a new one.'
             ], 429);
         }
 
-        $this->otpService->sendOtp($user, 'login');
+        $this->otpService->sendOtp($user, 'register');
 
         return response()->json([
             'success' => true,
