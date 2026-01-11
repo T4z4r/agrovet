@@ -8,6 +8,7 @@ use App\Models\Expense;
 use App\Models\StockTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -18,7 +19,7 @@ class UserController extends Controller
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 
-        $sellers = User::where('role', 'seller')->get();
+        $sellers = User::where('role', 'seller')->where('shop_id', Auth::user()->shop_id)->get();
 
         return response()->json([
             'success' => true,
@@ -41,6 +42,7 @@ class UserController extends Controller
 
         $data['password'] = Hash::make($data['password']);
         $data['role'] = 'seller'; // Force role to seller
+        $data['shop_id'] = Auth::user()->shop_id;
 
         $user = User::create($data);
 
@@ -57,7 +59,7 @@ class UserController extends Controller
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 
-        $seller = User::where('role', 'seller')->findOrFail($id);
+        $seller = User::where('role', 'seller')->where('shop_id', Auth::user()->shop_id)->findOrFail($id);
 
         return response()->json([
             'success' => true,
@@ -72,7 +74,7 @@ class UserController extends Controller
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 
-        $seller = User::where('role', 'seller')->findOrFail($id);
+        $seller = User::where('role', 'seller')->where('shop_id', Auth::user()->shop_id)->findOrFail($id);
 
         $data = $request->validate([
             'name' => 'sometimes|string',
@@ -99,7 +101,7 @@ class UserController extends Controller
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 
-        $seller = User::where('role', 'seller')->findOrFail($id);
+        $seller = User::where('role', 'seller')->where('shop_id', Auth::user()->shop_id)->findOrFail($id);
         $seller->update(['is_active' => !$seller->is_active]);
 
         $status = $seller->is_active ? 'unblocked' : 'blocked';

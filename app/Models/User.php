@@ -26,6 +26,7 @@ class User extends Authenticatable
         'role',
         'is_active',
         'branch_id',
+        'shop_id',
         'otp_code',
         'otp_expires_at'
     ];
@@ -57,6 +58,11 @@ class User extends Authenticatable
     public function shops()
     {
         return $this->hasMany(Shop::class, 'owner_id');
+    }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
     }
     public function sales()
     {

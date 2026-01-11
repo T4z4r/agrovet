@@ -19,14 +19,14 @@ class ReportController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'sales' => Sale::with('items.product', 'seller')
+                'sales' => Sale::where('shop_id', Auth::user()->shop_id)->with('items.product', 'seller')
                     ->where('sale_date', $date)->get(),
 
-                'total_sales' => Sale::where('sale_date', $date)->sum('total'),
+                'total_sales' => Sale::where('shop_id', Auth::user()->shop_id)->where('sale_date', $date)->sum('total'),
 
-                'expenses' => Expense::where('date', $date)->get(),
+                'expenses' => Expense::where('shop_id', Auth::user()->shop_id)->where('date', $date)->get(),
 
-                'total_expenses' => Expense::where('date', $date)->sum('amount')
+                'total_expenses' => Expense::where('shop_id', Auth::user()->shop_id)->where('date', $date)->sum('amount')
             ],
             'message' => 'Daily report retrieved successfully'
         ]);
@@ -34,7 +34,9 @@ class ReportController extends Controller
 
     public function profit($start, $end)
     {
-        $sales = SaleItem::whereBetween('created_at', [$start, $end])
+        $sales = SaleItem::whereHas('product', function($q) {
+            $q->where('shop_id', Auth::user()->shop_id);
+        })->whereBetween('created_at', [$start, $end])
             ->with('product')
             ->get();
 
@@ -59,12 +61,12 @@ class ReportController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'total_products'  => Product::count(),
-                'total_sales'     => Sale::sum('total'),
-                'total_expenses'  => Expense::sum('amount'),
-                'today_sales'     => Sale::where('sale_date', today())->sum('total'),
-                'stock_value'     => Product::sum(DB::raw('cost_price * stock')),
-                'low_stock_products_count' => Product::whereRaw('stock <= minimum_quantity')->count(),
+                'total_products'  => Product::where('shop_id', Auth::user()->shop_id)->count(),
+                'total_sales'     => Sale::where('shop_id', Auth::user()->shop_id)->sum('total'),
+                'total_expenses'  => Expense::where('shop_id', Auth::user()->shop_id)->sum('amount'),
+                'today_sales'     => Sale::where('shop_id', Auth::user()->shop_id)->where('sale_date', today())->sum('total'),
+                'stock_value'     => Product::where('shop_id', Auth::user()->shop_id)->sum(DB::raw('cost_price * stock')),
+                'low_stock_products_count' => Product::where('shop_id', Auth::user()->shop_id)->whereRaw('stock <= minimum_quantity')->count(),
             ],
             'message' => 'Dashboard data retrieved successfully'
         ]);
@@ -109,14 +111,14 @@ class ReportController extends Controller
 
     public function dailyPdf($date)
     {
-        $sales = Sale::with('items.product', 'seller')
+        $sales = Sale::where('shop_id', Auth::user()->shop_id)->with('items.product', 'seller')
             ->where('sale_date', $date)->get();
 
-        $total_sales = Sale::where('sale_date', $date)->sum('total');
+        $total_sales = Sale::where('shop_id', Auth::user()->shop_id)->where('sale_date', $date)->sum('total');
 
-        $expenses = Expense::where('date', $date)->get();
+        $expenses = Expense::where('shop_id', Auth::user()->shop_id)->where('date', $date)->get();
 
-        $total_expenses = Expense::where('date', $date)->sum('amount');
+        $total_expenses = Expense::where('shop_id', Auth::user()->shop_id)->where('date', $date)->sum('amount');
 
         $pdf = PDF::loadView('pdf.daily-report', compact('sales', 'total_sales', 'expenses', 'total_expenses', 'date'));
         return $pdf->download("daily_report_{$date}.pdf");

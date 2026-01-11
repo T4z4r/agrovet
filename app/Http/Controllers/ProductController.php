@@ -12,7 +12,7 @@ class ProductController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => Product::orderBy('name')->get(),
+            'data' => Product::where('shop_id', Auth::user()->shop_id)->orderBy('name')->get(),
             'message' => 'Products retrieved successfully'
         ]);
     }
@@ -36,6 +36,7 @@ class ProductController extends Controller
             $data['photo'] = $path;
         }
 
+        $data['shop_id'] = Auth::user()->shop_id;
         $product = Product::create($data);
 
         // Create stock transaction if initial stock > 0
@@ -46,6 +47,7 @@ class ProductController extends Controller
                 'quantity' => $data['stock'],
                 'supplier_id' => null,
                 'recorded_by' => Auth::id(),
+                'shop_id' => Auth::user()->shop_id,
                 'date' => now()->toDateString(),
                 'remarks' => 'Initial stock on product creation'
             ]);
@@ -60,7 +62,7 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::with('stockTransactions.supplier', 'stockTransactions.user')->findOrFail($id);
+        $product = Product::where('shop_id', Auth::user()->shop_id)->with('stockTransactions.supplier', 'stockTransactions.user')->findOrFail($id);
         return response()->json([
             'success' => true,
             'data' => $product,
@@ -70,7 +72,7 @@ class ProductController extends Controller
 
     public function update(Request $r, $id)
     {
-        $p = Product::findOrFail($id);
+        $p = Product::where('shop_id', Auth::user()->shop_id)->findOrFail($id);
         $oldStock = $p->stock;
 
         $p->update($r->all());
@@ -85,6 +87,7 @@ class ProductController extends Controller
                 'quantity' => abs($stockDifference),
                 'supplier_id' => null,
                 'recorded_by' => Auth::id(),
+                'shop_id' => Auth::user()->shop_id,
                 'date' => now()->toDateString(),
                 'remarks' => 'Stock adjustment on product update'
             ]);
@@ -99,7 +102,7 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::where('shop_id', Auth::user()->shop_id)->findOrFail($id);
 
         // Check if product is linked to sales
         if ($product->saleItems()->exists()) {
@@ -126,7 +129,7 @@ class ProductController extends Controller
 
     public function getByBarcode($barcode)
     {
-        $product = Product::where('barcode', $barcode)->first();
+        $product = Product::where('shop_id', Auth::user()->shop_id)->where('barcode', $barcode)->first();
 
         if (!$product) {
             return response()->json([
