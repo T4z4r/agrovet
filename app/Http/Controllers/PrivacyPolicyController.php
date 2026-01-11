@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PrivacyPolicy;
+use App\Http\Resources\PrivacyPolicyResource;
 use Illuminate\Http\Request;
 
 class PrivacyPolicyController extends Controller
@@ -16,7 +17,7 @@ class PrivacyPolicyController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $privacyPolicy,
+            'data' => new PrivacyPolicyResource($privacyPolicy),
             'message' => 'Privacy policy retrieved successfully'
         ]);
     }
@@ -36,7 +37,7 @@ class PrivacyPolicyController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $privacyPolicy,
+            'data' => new PrivacyPolicyResource($privacyPolicy),
             'message' => 'Privacy policy created successfully'
         ], 201);
     }
@@ -50,7 +51,7 @@ class PrivacyPolicyController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $privacyPolicy,
+            'data' => new PrivacyPolicyResource($privacyPolicy),
             'message' => 'Privacy policy retrieved successfully'
         ]);
     }
@@ -71,7 +72,7 @@ class PrivacyPolicyController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $privacyPolicy,
+            'data' => new PrivacyPolicyResource($privacyPolicy),
             'message' => 'Privacy policy updated successfully'
         ]);
     }
