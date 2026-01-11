@@ -36,7 +36,7 @@
                 <div class="row align-items-center py-3">
                     <div class="col">
                         <a href="{{ route('login') }}" class="d-flex align-items-center text-decoration-none">
-                            <img src="{{ asset('assets/img/logo.png') }}" alt="Apex Logo" class="h-10 me-2">
+                            <img src="{{ asset('assets/img/logo.png') }}" style="width:80px !important; height:80px !important;" alt="Apex Logo" class=" me-2">
                             <span class="h4 mb-0 fw-bold text-dark">Apex</span>
                         </a>
                     </div>
