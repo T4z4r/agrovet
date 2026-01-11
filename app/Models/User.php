@@ -109,7 +109,7 @@ class User extends Authenticatable
                     'user_id' => $user->id,
                     'subscription_package_id' => $freePackage->id,
                     'start_date' => now(),
-                    'end_date' => now()->addMonths($freePackage->duration_months),
+                    'end_date' => now()->addMonths(12), // Extend for testing
                     'status' => 'active',
                 ]);
             }
