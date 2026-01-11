@@ -34,12 +34,12 @@ class SubscriptionMiddleware
             return $next($request);
         }
 
-        if (!$this->subscriptionService->isSubscriptionActive($user)) {
-            return response()->json([
-                'message' => 'Your subscription has expired. Please renew to continue.',
-                'remaining_days' => $this->subscriptionService->getRemainingDays($user),
-            ], Response::HTTP_FORBIDDEN);
-        }
+        // if (!$this->subscriptionService->isSubscriptionActive($user)) {
+        //     return response()->json([
+        //         'message' => 'Your subscription has expired. Please renew to continue.',
+        //         'remaining_days' => $this->subscriptionService->getRemainingDays($user),
+        //     ], Response::HTTP_FORBIDDEN);
+        // }
 
         return $next($request);
     }
