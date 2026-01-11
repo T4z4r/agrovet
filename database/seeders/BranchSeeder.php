@@ -10,24 +10,20 @@ class BranchSeeder extends Seeder
 {
     public function run(): void
     {
-        // Get the first shop or create one if none exists
+        // Get the first shop
         $shop = Shop::first();
         if (!$shop) {
-            $shop = Shop::create([
-                'name' => 'Default Shop',
-                'owner_id' => 1, // Assuming superadmin or owner id
-                'location' => 'Default Location'
-            ]);
+            throw new \Exception('No shop found. Please ensure UserSeeder runs before BranchSeeder.');
         }
 
         // Create branches for the shop
         Branch::firstOrCreate(
-            ['name' => 'Main Branch', 'shop_id' => $shop->id],
+            ['name' => 'Main Branch', 'shop_id' => $shop->id??1],
             ['location' => 'Main Location']
         );
 
         Branch::firstOrCreate(
-            ['name' => 'Branch 2', 'shop_id' => $shop->id],
+            ['name' => 'Branch 2', 'shop_id' => $shop->id??1],
             ['location' => 'Branch 2 Location']
         );
     }
