@@ -19,7 +19,7 @@ class ExpenseController extends Controller
     {
         $data = $r->validate([
             'category'=>'required|string',
-            'amount'=>'required|integer|min:0',
+            'amount'=>'required|min:0',
             'description'=>'nullable|string',
             'date'=>'required|date'
         ]);
