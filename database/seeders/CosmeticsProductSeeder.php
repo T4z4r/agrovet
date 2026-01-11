@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Branch;
+use App\Models\Shop;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\StockTransaction;
@@ -11,7 +11,7 @@ class CosmeticsProductSeeder extends Seeder
 {
     public function run()
     {
-        $branch = Branch::first(); // Assign to first branch
+        $shop = Shop::first(); // Assign to first shop
         $products = [
             // Skincare
             ["Cetaphil Gentle Skin Cleanser", "150ml", 20, 15000, 25000, "Skincare"],
@@ -73,7 +73,7 @@ class CosmeticsProductSeeder extends Seeder
                 'name' => $p[0],
                 'unit' => $p[1],
             ], [
-                'branch_id'     => $branch ? $branch->id : null,
+                'shop_id'       => $shop ? $shop->id : null,
                 'stock'         => $p[2],
                 'cost_price'    => $p[3],
                 'selling_price' => $p[4],
@@ -83,7 +83,7 @@ class CosmeticsProductSeeder extends Seeder
             // Create stock transaction if stock > 0
             if ($p[2] > 0) {
                 StockTransaction::updateOrCreate([
-                    'branch_id' => $branch ? $branch->id : null,
+                    'shop_id' => $shop ? $shop->id : null,
                     'product_id' => $product->id,
                     'type' => 'stock_in',
                     'quantity' => $p[2],
