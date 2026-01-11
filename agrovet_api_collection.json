@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "AgroVet API",
-    "description": "Postman collection for AgroVet API endpoints",
+    "name": "Apex API",
+    "description": "Postman collection for Apex API endpoints",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -662,6 +662,70 @@
               "raw": "{{base_url}}/reports/dashboard",
               "host": ["{{base_url}}"],
               "path": ["reports", "dashboard"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subscriptions",
+      "item": [
+        {
+          "name": "List Subscription Packages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/subscription-packages",
+              "host": ["{{base_url}}"],
+              "path": ["subscription-packages"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Subscription",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/subscription/current",
+              "host": ["{{base_url}}"],
+              "path": ["subscription", "current"]
+            }
+          }
+        },
+        {
+          "name": "Subscribe to Package",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"package_id\": 2,\n  \"shop_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/subscription/subscribe",
+              "host": ["{{base_url}}"],
+              "path": ["subscription", "subscribe"]
             }
           }
         }

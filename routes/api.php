@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PrivacyPolicyController;
+use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,5 +93,14 @@ Route::middleware(['auth:sanctum', 'subscription'])->group(function () {
     Route::apiResource('sellers', UserController::class);
     Route::patch('sellers/{id}/block', [UserController::class, 'block']);
     Route::get('sellers/{id}/report', [UserController::class, 'sellerReport']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Subscriptions
+    |--------------------------------------------------------------------------
+    */
+    Route::get('subscription-packages', [SubscriptionController::class, 'indexPackages']);
+    Route::get('subscription/current', [SubscriptionController::class, 'currentSubscription']);
+    Route::post('subscription/subscribe', [SubscriptionController::class, 'subscribe']);
 
 });
