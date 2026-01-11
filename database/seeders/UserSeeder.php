@@ -66,7 +66,7 @@ class UserSeeder extends Seeder
                 'shop_id' => $shop->id,
                 'subscription_package_id' => $freePackage->id,
                 'start_date' => now(),
-                'end_date' => now()->addMonths($freePackage->duration_months),
+                'end_date' => now()->addMonths(12), // Extend for testing
                 'status' => 'active',
             ]);
         }

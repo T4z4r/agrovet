@@ -32,7 +32,7 @@ class SubscriptionMiddleware
         if (!$this->subscriptionService->isSubscriptionActive($user)) {
             return response()->json([
                 'message' => 'Subscription expired. Please renew your subscription to continue using the service.',
-                'remaining_days' => 0
+                'remaining_days' => $this->subscriptionService->getRemainingDays($user)
             ], 403);
         }
 
