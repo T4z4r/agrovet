@@ -9,7 +9,7 @@
             <div class="d-flex align-items-end row">
                 <div class="col-sm-7">
                     <div class="card-body">
-                        <h5 class="card-title text-primary">Welcome to Agrovet! 🎉</h5>
+                        <h5 class="card-title text-primary">Welcome to Apex! 🎉</h5>
                         <p class="mb-4">
                             You have logged in successfully. Manage your products, suppliers, sales, and more.
                         </p>
