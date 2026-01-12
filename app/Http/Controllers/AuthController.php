@@ -30,8 +30,7 @@ class AuthController extends Controller
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
 
-
-        //   if ($data['role'] === 'owner') {
+        if (!empty($data['shop_name'])) {
             $shop = Shop::create([
                 'name' => $data['shop_name'],
                 'owner_id' => $user->id,
@@ -39,7 +38,7 @@ class AuthController extends Controller
             ]);
             $user->shop_id = $shop->id;
             $user->save();
-        // }
+        }
 
         // Generate and send OTP
         $this->otpService->sendOtp($user, 'register');
