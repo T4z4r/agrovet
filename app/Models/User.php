@@ -133,24 +133,24 @@ class User extends Authenticatable
     // Model Events
     // ────────────────────────────────────────────────
 
-    protected static function booted(): void
-    {
-        static::created(function (User $user) {
-            // Give free subscription on creation
-            $freePackage = SubscriptionPackage::firstOrCreate(['name' => 'Free'], [
-                'description' => 'Free subscription package',
-                'price' => 0,
-                'duration_months' => 12,
-                'is_active' => true,
-            ]);
+    // protected static function booted(): void
+    // {
+    //     static::created(function (User $user) {
+    //         // Give free subscription on creation
+    //         $freePackage = SubscriptionPackage::firstOrCreate(['name' => 'Free'], [
+    //             'description' => 'Free subscription package',
+    //             'price' => 0,
+    //             'duration_months' => 12,
+    //             'is_active' => true,
+    //         ]);
 
-            Subscription::create([
-                'user_id'                 => $user->id,
-                'subscription_package_id' => $freePackage->id,
-                'start_date'              => now(),
-                'end_date'                => now()->addYear(), // ← changed to addYear() for clarity
-                'status'                  => 'active',
-            ]);
-        });
-    }
+    //         Subscription::create([
+    //             'user_id'                 => $user->id,
+    //             'subscription_package_id' => $freePackage->id,
+    //             'start_date'              => now(),
+    //             'end_date'                => now()->addYear(), // ← changed to addYear() for clarity
+    //             'status'                  => 'active',
+    //         ]);
+    //     });
+    // }
 }
