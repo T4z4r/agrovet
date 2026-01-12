@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Shop;
+use App\Models\Subscription;
+use App\Models\SubscriptionPackage;
+use App\Models\User;
 use App\Services\OtpService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -21,8 +24,8 @@ class AuthController extends Controller
     {
         $data = $r->validate([
             'name' => 'required|string',
-            'email'=> 'required|email|unique:users,email',
-            'password'=>'required|confirmed',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|confirmed',
             'role' => 'required|string',
             'shop_name' => 'nullable|string',
             'shop_location' => 'nullable|string',
@@ -32,22 +35,24 @@ class AuthController extends Controller
         $user = User::create($data);
 
 
-        $user=User::where('email',$data['email'])->first();
+        $user = User::where('email', $data['email'])->first();
 
         //   if ($data['role'] === 'owner') {
-            $shop = Shop::create([
-                'name' => $data['shop_name'],
-                'owner_id' => $user->id,
-                'location' => $data['shop_location'],
-            ]);
-            $user->shop_id = $shop->id;
-            $user->save();
+        $shop = Shop::create([
+            'name' => $data['shop_name'],
+            'owner_id' => $user->id,
+            'location' => $data['shop_location'],
+        ]);
+        $user->shop_id = $shop->id;
+        $user->save();
         // }
+
+
 
         // Generate and send OTP
         $this->otpService->sendOtp($user, 'register');
 
-      
+
 
         return response()->json([
             'success' => true,
@@ -118,6 +123,22 @@ class AuthController extends Controller
                 'message' => 'OTP verified successfully. Logged in.'
             ]);
         }
+
+        $freePackage = SubscriptionPackage::firstOrCreate(['name' => 'Free'], [
+            'description' => 'Free subscription package',
+            'price' => 0,
+            'duration_months' => 12,
+            'is_active' => true,
+        ]);
+
+        Subscription::create([
+            'user_id'                 => $user->id,
+            'subscription_package_id' => $freePackage->id,
+            'start_date'              => now(),
+            'end_date'                => now()->addYear(), // ← changed to addYear() for clarity
+            'status'                  => 'active',
+        ]);
+
 
         return response()->json([
             'success' => false,
