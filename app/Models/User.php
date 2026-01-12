@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Carbon;
 
 class User extends Authenticatable
 {
@@ -17,33 +17,34 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role',
+        'role',         
         'is_active',
         'branch_id',
         'shop_id',
         'otp_verified',
         'otp_code',
-        'otp_expires_at'
+        'otp_expires_at',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
         'remember_token',
+        'otp_code',           // ← usually don't expose OTP
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -51,20 +52,34 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'otp_expires_at' => 'datetime',
+            'password'          => 'hashed',
+            'otp_expires_at'    => 'datetime',
+            'otp_verified'      => 'boolean',
+            'is_active'         => 'boolean',
         ];
     }
 
+    // ────────────────────────────────────────────────
+    // Relationships
+    // ────────────────────────────────────────────────
+
+    /**
+     * Shops owned by this user (if user is owner)
+     */
     public function shops()
     {
         return $this->hasMany(Shop::class, 'owner_id');
     }
 
-    public function shop()
+    /**
+     * The shop this user belongs to / works at
+     * (rename if it better reflects "assigned shop" vs "owned shop")
+     */
+    public function assignedShop()
     {
-        return $this->belongsTo(Shop::class);
+        return $this->belongsTo(Shop::class, 'shop_id');
     }
+
     public function sales()
     {
         return $this->hasMany(Sale::class, 'seller_id');
@@ -80,46 +95,62 @@ class User extends Authenticatable
         return $this->hasMany(Subscription::class);
     }
 
-    public function generateOtp()
+    // ────────────────────────────────────────────────
+    // OTP Helpers
+    // ────────────────────────────────────────────────
+
+    public function generateOtp(): void
     {
-        $this->otp_code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        $this->otp_expires_at = now()->addMinutes(30); // OTP expires in 30 minutes
-        $this->save();
+        $this->otp_code      = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $this->otp_expires_at = Carbon::now()->addMinutes(30);
+        $this->otp_verified   = false; // reset verification status
+
+        $this->saveQuietly(); // avoid events if not needed
 
         $this->notify(new \App\Notifications\OtpNotification($this->otp_code));
     }
 
-    public function verifyOtp($code)
+    public function verifyOtp(string $code): bool
     {
-        if ($this->otp_code === $code && $this->otp_expires_at > now()) {
-            $this->otp_code = null;
+        if ($this->otp_code === $code && $this->otp_expires_at?->isFuture()) {
+            $this->otp_code       = null;
             $this->otp_expires_at = null;
-            $this->save();
+            $this->otp_verified   = true;
+            $this->saveQuietly();
+
             return true;
         }
+
         return false;
     }
 
-    public function isOtpExpired()
+    public function isOtpExpired(): bool
     {
-        return $this->otp_expires_at && $this->otp_expires_at <= now();
+        return $this->otp_expires_at !== null && $this->otp_expires_at->isPast();
     }
 
-    // protected static function boot()
-    // {
-    //     parent::boot();
+    // ────────────────────────────────────────────────
+    // Model Events
+    // ────────────────────────────────────────────────
 
-    //     static::created(function ($user) {
-    //         $freePackage = SubscriptionPackage::where('name', 'Free')->first();
-    //         if ($freePackage) {
-    //             Subscription::create([
-    //                 'user_id' => $user->id,
-    //                 'subscription_package_id' => $freePackage->id,
-    //                 'start_date' => now(),
-    //                 'end_date' => now()->addMonths(12), // Extend for testing
-    //                 'status' => 'active',
-    //             ]);
-    //         }
-    //     });
-    // }
+    protected static function booted(): void
+    {
+        static::created(function (User $user) {
+            // Give free subscription on creation
+            $freePackage = SubscriptionPackage::firstOrCreate(['name' => 'Free'], [
+                'description' => 'Free subscription package',
+                'price' => 0,
+                'duration_months' => 12,
+                'is_active' => true,
+            ]);
+
+            Subscription::create([
+                'user_id'                 => $user->id,
+                'subscription_package_id' => $freePackage->id,
+                'start_date'              => now(),
+                'end_date'                => now()->addYear(), // ← changed to addYear() for clarity
+                'status'                  => 'active',
+            ]);
+        });
+    }
 }
