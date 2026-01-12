@@ -1,0 +1,5 @@
+name,unit,category,stock,cost_price,selling_price,minimum_quantity,barcode
+Maize Seeds,kg,Agricultural,100,5000,6000,10,123456789012
+Fertilizer,bags,Agricultural,50,15000,18000,5,987654321098
+Chicken Feed,kg,Animal Feed,200,3000,3500,20,456789012345
+Pesticide,liters,Chemicals,25,8000,9500,3,789012345678

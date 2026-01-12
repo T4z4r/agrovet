@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\StockTransaction;
 use App\Exports\ProductExport;
+use App\Exports\ProductImportTemplate;
 use App\Imports\ProductImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -155,7 +156,7 @@ class WebProductController extends Controller
 
     public function downloadTemplate()
     {
-        return Excel::download(new ProductExport, 'products_template.xlsx');
+        return Excel::download(new ProductImportTemplate, 'product_import_template.xlsx');
     }
 
     public function import(Request $request)

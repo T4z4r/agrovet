@@ -10,7 +10,7 @@
                 <h5 class="mb-0">Products</h5>
                 <div>
                     <a href="{{ route('web.products.downloadTemplate') }}" class="btn btn-info me-2">Download Template</a>
-                    <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#importModal">Import Products</button>
+                    {{-- <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#importModal">Import Products</button> --}}
                     <a href="{{ route('web.products.create') }}" class="btn btn-primary">Add Product</a>
                 </div>
             </div>
@@ -98,7 +98,10 @@ $(document).ready(function() {
                     <div class="mb-3">
                         <label for="file" class="form-label">Select Excel/CSV File</label>
                         <input type="file" class="form-control" id="file" name="file" accept=".xlsx,.xls,.csv" required>
-                        <div class="form-text">Upload a file with product data. Make sure to use the downloaded template format.</div>
+                        <div class="form-text">
+                            Upload a file with product data. Make sure to use the correct format.
+                            <a href="{{ route('web.products.downloadTemplate') }}" class="text-primary">Download Template</a>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
