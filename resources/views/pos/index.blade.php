@@ -123,7 +123,12 @@ document.addEventListener('DOMContentLoaded', function() {
             itemDiv.innerHTML = `
                 <div>
                     <strong>${item.name}</strong><br>
-                    <small>${item.quantity} x ${item.price} = ${itemTotal.toFixed(2)} Tsh</small>
+                    <small>
+                        <button class="btn btn-sm btn-secondary minus-qty" data-index="${index}">-</button>
+                        <span class="quantity-display">${item.quantity}</span>
+                        <button class="btn btn-sm btn-secondary plus-qty" data-index="${index}">+</button>
+                        x ${item.price} = ${itemTotal.toFixed(2)} Tsh
+                    </small>
                 </div>
                 <button class="btn btn-sm btn-danger remove-item" data-index="${index}">Remove</button>
             `;
@@ -169,6 +174,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const index = e.target.dataset.index;
             cart.splice(index, 1);
             updateCart();
+        }
+        if (e.target.classList.contains('plus-qty')) {
+            const index = e.target.dataset.index;
+            if (cart[index].quantity < cart[index].stock) {
+                cart[index].quantity++;
+                updateCart();
+            } else {
+                alert('Insufficient stock');
+            }
+        }
+        if (e.target.classList.contains('minus-qty')) {
+            const index = e.target.dataset.index;
+            if (cart[index].quantity > 1) {
+                cart[index].quantity--;
+                updateCart();
+            }
         }
     });
 });
