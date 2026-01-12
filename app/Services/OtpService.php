@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Mail\OtpMail;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 class OtpService
@@ -12,18 +11,15 @@ class OtpService
     /**
      * Generate and send OTP for a user
      */
-    public function sendOtp(User $user, string $purpose = 'login', int $length = 6, int $expiresInMinutes = 10): void
+    public function sendOtp(User $user, string $purpose = 'login', int $length = 6, int $expiresInMinutes = 30): void
     {
         $otp = $this->generateOtpCode($length);
         $expiresAt = now()->addMinutes($expiresInMinutes);
 
-        // Store OTP in cache with user ID and purpose
-        $cacheKey = "otp_{$user->id}_{$purpose}";
-        Cache::put($cacheKey, [
-            'code' => $otp,
-            'expires_at' => $expiresAt,
-            'attempts' => 0
-        ], $expiresInMinutes);
+        // Store OTP in database
+        $user->otp_code = $otp;
+        $user->otp_expires_at = $expiresAt;
+        $user->save();
 
         // Send mail
         Mail::to($user->email)->send(new OtpMail($otp, $purpose));
@@ -34,27 +30,25 @@ class OtpService
      */
     public function verifyOtp(User $user, string $code, string $purpose = 'login'): bool
     {
-        $cacheKey = "otp_{$user->id}_{$purpose}";
-        $otpData = Cache::get($cacheKey);
-
-        if (!$otpData) {
-            return false; // OTP not found or expired
+        if (!$user->otp_code || !$user->otp_expires_at) {
+            return false; // OTP not set
         }
 
-        // Check attempts (max 3 attempts)
-        if ($otpData['attempts'] >= 3) {
-            Cache::forget($cacheKey); // Lock out after max attempts
+        if (now()->greaterThan($user->otp_expires_at)) {
+            // Expired, clear it
+            $user->otp_code = null;
+            $user->otp_expires_at = null;
+            $user->save();
             return false;
         }
 
-        if ($otpData['code'] === $code && now()->lessThan($otpData['expires_at'])) {
-            Cache::forget($cacheKey); // Clear OTP after successful verification
+        if ($user->otp_code === $code) {
+            // Clear OTP after successful verification
+            $user->otp_code = null;
+            $user->otp_expires_at = null;
+            $user->save();
             return true;
         }
-
-        // Increment attempts on failure
-        $otpData['attempts']++;
-        Cache::put($cacheKey, $otpData, now()->diffInMinutes($otpData['expires_at']));
 
         return false;
     }
@@ -64,10 +58,7 @@ class OtpService
      */
     public function hasValidOtp(User $user, string $purpose = 'login'): bool
     {
-        $cacheKey = "otp_{$user->id}_{$purpose}";
-        $otpData = Cache::get($cacheKey);
-
-        return $otpData && now()->lessThan($otpData['expires_at']) && $otpData['attempts'] < 3;
+        return $user->otp_code && $user->otp_expires_at && now()->lessThan($user->otp_expires_at);
     }
 
     /**
@@ -75,8 +66,9 @@ class OtpService
      */
     public function clearOtp(User $user, string $purpose = 'login'): void
     {
-        $cacheKey = "otp_{$user->id}_{$purpose}";
-        Cache::forget($cacheKey);
+        $user->otp_code = null;
+        $user->otp_expires_at = null;
+        $user->save();
     }
 
     /**
@@ -92,13 +84,10 @@ class OtpService
      */
     public function getRemainingTime(User $user, string $purpose = 'login'): ?int
     {
-        $cacheKey = "otp_{$user->id}_{$purpose}";
-        $otpData = Cache::get($cacheKey);
-
-        if (!$otpData) {
+        if (!$user->otp_expires_at) {
             return null;
         }
 
-        return now()->diffInMinutes($otpData['expires_at'], false);
+        return now()->diffInMinutes($user->otp_expires_at, false);
     }
 }

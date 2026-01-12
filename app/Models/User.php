@@ -83,7 +83,7 @@ class User extends Authenticatable
     public function generateOtp()
     {
         $this->otp_code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        $this->otp_expires_at = now()->addMinutes(10); // OTP expires in 10 minutes
+        $this->otp_expires_at = now()->addMinutes(30); // OTP expires in 30 minutes
         $this->save();
 
         $this->notify(new \App\Notifications\OtpNotification($this->otp_code));
