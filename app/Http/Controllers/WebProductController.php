@@ -18,8 +18,8 @@ class WebProductController extends Controller
         $user = Auth::user();
         $query = Product::with('branch');
 
-        if ($user->role !== 'owner') {
-            $query->where('branch_id', $user->branch_id);
+        if (!$user->hasRole('superadmin')) {
+            $query->where('shop_id', $user->shop_id);
         }
 
         if ($request->ajax()) {
@@ -50,7 +50,8 @@ class WebProductController extends Controller
             'cost_price' => 'required|integer|min:0',
             'selling_price' => 'required|integer|min:0',
             'barcode' => 'nullable|string',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'shop_id' => 'nullable|exists:shops,id'
         ]);
 
         if ($request->hasFile('photo')) {
@@ -58,6 +59,9 @@ class WebProductController extends Controller
             $data['photo'] = $path;
         }
 
+        if (!$user->hasRole('superadmin')) {
+            $data['shop_id'] = $user->shop_id;
+        }
         if ($user->role !== 'owner' && $user->branch_id) {
             $data['branch_id'] = $user->branch_id;
         }
@@ -107,7 +111,8 @@ class WebProductController extends Controller
             'cost_price' => 'required|integer|min:0',
             'selling_price' => 'required|integer|min:0',
             'barcode' => 'nullable|string',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'shop_id' => 'nullable|exists:shops,id'
         ]);
 
         if ($request->hasFile('photo')) {
