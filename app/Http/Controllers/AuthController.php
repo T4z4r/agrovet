@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -8,9 +7,6 @@ use App\Models\Shop;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-
 
 class AuthController extends Controller
 {
@@ -21,56 +17,40 @@ class AuthController extends Controller
         $this->otpService = $otpService;
     }
 
-    public function register(Request $request)
+    public function register(Request $r)
     {
-        $validated = $request->validate([
-            'name'           => 'required|string|max:255',
-            'email'          => 'required|email|max:255|unique:users,email',
-            'password'       => 'required|confirmed|min:8',
-            'shop_name'      => 'nullable|string|max:255',
-            'shop_location'  => 'nullable|string|max:255',
+        $data = $r->validate([
+            'name' => 'required|string',
+            'email'=> 'required|email|unique:users,email',
+            'password'=>'required|confirmed',
+            'role' => 'required|string',
+            'shop_name' => 'nullable|string',
+            'shop_location' => 'nullable|string',
         ]);
 
-        DB::beginTransaction();
+        $data['password'] = bcrypt($data['password']);
+        $user = User::create($data);
 
-        try {
-            // Create user (ONLY user fields)
-            $user = User::create([
-                'name'     => $validated['name'],
-                'email'    => $validated['email'],
-                'password' => Hash::make($validated['password']),
+
+          if ($data['role'] === 'owner') {
+            $shop = Shop::create([
+                'name' => $data['shop_name'],
+                'owner_id' => $user->id,
+                'location' => $data['shop_location'],
             ]);
-
-            // Create shop if provided
-            if (!empty($validated['shop_name'])) {
-                $shop = Shop::create([
-                    'name'      => $validated['shop_name'],
-                    'owner_id'  => $user->id,
-                    'location'  => $validated['shop_location'] ?? null,
-                ]);
-
-                $user->update([
-                    'shop_id' => $shop->id,
-                ]);
-            }
-
-            // Send OTP
-            $this->otpService->sendOtp($user, 'register');
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'User registered successfully. OTP sent to your email. Please verify to complete registration.',
-            ], 201);
-        } catch (\Throwable $e) {
-            DB::rollBack();
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Registration failed. Please try again.',
-            ], 500);
+            $user->shop_id = $shop->id;
+            $user->save();
         }
+
+        // Generate and send OTP
+        $this->otpService->sendOtp($user, 'register');
+
+      
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User registered successfully. OTP sent to your email. Please verify to complete registration.'
+        ], 201);
     }
 
     public function login(Request $r)
