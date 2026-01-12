@@ -10,7 +10,7 @@
                 <h5 class="mb-0">Products</h5>
                 <div>
                     <a href="{{ route('web.products.downloadTemplate') }}" class="btn btn-info me-2">Download Template</a>
-                    {{-- <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#importModal">Import Products</button> --}}
+                    <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#importModal">Import Products</button>
                     <a href="{{ route('web.products.create') }}" class="btn btn-primary">Add Product</a>
                 </div>
             </div>
