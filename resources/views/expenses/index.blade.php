@@ -36,10 +36,10 @@
                                 <td>
                                     <a href="{{ route('web.expenses.show', $expense) }}" class="btn btn-sm btn-info">View</a>
                                     <a href="{{ route('web.expenses.edit', $expense) }}" class="btn btn-sm btn-warning">Edit</a>
-                                    <form method="POST" action="{{ route('web.expenses.destroy', $expense) }}" class="d-inline">
+                                    <form method="POST" action="{{ route('web.expenses.destroy', $expense) }}" class="d-inline" id="delete-form-{{ $expense->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $expense->id }})">Delete</button>
                                     </form>
                                 </td>
                             </tr>
@@ -51,4 +51,25 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+<script>
+function confirmDelete(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d6d6d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
 @endsection
