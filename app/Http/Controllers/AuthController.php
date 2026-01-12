@@ -34,7 +34,7 @@ class AuthController extends Controller
         // Generate and send OTP
         $this->otpService->sendOtp($user, 'register');
 
-        if ($data['role'] === 'owner') {
+        // if ($data['role'] === 'owner') {
             $shop = Shop::create([
                 'name' => $data['shop_name'],
                 'owner_id' => $user->id,
@@ -42,7 +42,7 @@ class AuthController extends Controller
             ]);
             $user->shop_id = $shop->id;
             $user->save();
-        }
+        // }
 
         return response()->json([
             'success' => true,
