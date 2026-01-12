@@ -105,21 +105,21 @@ class User extends Authenticatable
         return $this->otp_expires_at && $this->otp_expires_at <= now();
     }
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::created(function ($user) {
-            $freePackage = SubscriptionPackage::where('name', 'Free')->first();
-            if ($freePackage) {
-                Subscription::create([
-                    'user_id' => $user->id,
-                    'subscription_package_id' => $freePackage->id,
-                    'start_date' => now(),
-                    'end_date' => now()->addMonths(12), // Extend for testing
-                    'status' => 'active',
-                ]);
-            }
-        });
-    }
+    //     static::created(function ($user) {
+    //         $freePackage = SubscriptionPackage::where('name', 'Free')->first();
+    //         if ($freePackage) {
+    //             Subscription::create([
+    //                 'user_id' => $user->id,
+    //                 'subscription_package_id' => $freePackage->id,
+    //                 'start_date' => now(),
+    //                 'end_date' => now()->addMonths(12), // Extend for testing
+    //                 'status' => 'active',
+    //             ]);
+    //         }
+    //     });
+    // }
 }
