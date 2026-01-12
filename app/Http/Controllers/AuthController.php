@@ -32,6 +32,8 @@ class AuthController extends Controller
         $user = User::create($data);
 
 
+        $user=User::where('email',$data['email'])->first();
+
           if ($data['role'] === 'owner') {
             $shop = Shop::create([
                 'name' => $data['shop_name'],
