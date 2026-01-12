@@ -23,18 +23,15 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email'=> 'required|email|unique:users,email',
             'password'=>'required|confirmed',
-            'role' => 'required|in:admin,owner,seller',
-            'shop_name' => 'required_if:role,owner|string',
-            'shop_location' => 'required_if:role,owner|string',
+            'shop_name' => 'nullable|string',
+            'shop_location' => 'nullable|string',
         ]);
 
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
 
-        // Generate and send OTP
-        $this->otpService->sendOtp($user, 'register');
 
-        // if ($data['role'] === 'owner') {
+          if ($data['role'] === 'owner') {
             $shop = Shop::create([
                 'name' => $data['shop_name'],
                 'owner_id' => $user->id,
@@ -42,7 +39,12 @@ class AuthController extends Controller
             ]);
             $user->shop_id = $shop->id;
             $user->save();
-        // }
+        }
+
+        // Generate and send OTP
+        $this->otpService->sendOtp($user, 'register');
+
+      
 
         return response()->json([
             'success' => true,
