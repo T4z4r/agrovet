@@ -94,6 +94,20 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('qty-input')) {
+            const index = e.target.dataset.index;
+            const newQty = parseInt(e.target.value);
+            if (isNaN(newQty) || newQty < 1 || newQty > cart[index].stock) {
+                e.target.value = cart[index].quantity;
+                alert('Invalid quantity');
+                return;
+            }
+            cart[index].quantity = newQty;
+            updateCart();
+        }
+    });
 
     function updateCart() {
         const cartItemsDiv = document.getElementById('cart-items');
@@ -138,14 +152,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Check if already in cart
             let existingItem = cart.find(item => item.id == id);
             if (existingItem) {
-                if (existingItem.quantity < stock) {
+                if (existingItem.quantity < existingItem.stock) {
                     existingItem.quantity++;
                 } else {
                     alert('Insufficient stock');
                     return;
                 }
             } else {
-                cart.push({ id, name, price, quantity: 1 });
+                cart.push({ id, name, price, quantity: 1, stock });
             }
 
             updateCart();
