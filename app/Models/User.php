@@ -27,6 +27,7 @@ class User extends Authenticatable
         'is_active',
         'branch_id',
         'shop_id',
+        'otp_verified',
         'otp_code',
         'otp_expires_at'
     ];

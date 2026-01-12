@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Notifications\OtpNotification;
+use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 
 class OtpService
 {
@@ -24,8 +25,8 @@ class OtpService
             'attempts' => 0
         ], $expiresInMinutes);
 
-        // Send notification
-        $user->notify(new OtpNotification($otp, $purpose));
+        // Send mail
+        Mail::to($user->email)->send(new OtpMail($otp, $purpose));
     }
 
     /**

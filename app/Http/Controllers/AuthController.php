@@ -47,7 +47,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'User registered successfully. OTP sent to your email. Please verify to complete registration.'
-        ]);
+        ], 201);
     }
 
     public function login(Request $r)
@@ -65,6 +65,15 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+
+        if (!$user->otp_verified) {
+            // Send OTP for verification
+            $this->otpService->sendOtp($user, 'login');
+            return response()->json([
+                'success' => false,
+                'message' => 'Account not verified. OTP sent to your email. Please verify to login.'
+            ], 403);
+        }
 
         return response()->json([
             'success' => true,
@@ -93,6 +102,8 @@ class AuthController extends Controller
         }
 
         if ($this->otpService->verifyOtp($user, $data['otp_code'], 'register')) {
+            $user->otp_verified = true;
+            $user->save();
             return response()->json([
                 'success' => true,
                 'data' => [
