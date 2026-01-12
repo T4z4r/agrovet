@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\StockTransaction;
+use App\Exports\ProductExport;
+use App\Imports\ProductImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class WebProductController extends Controller
 {
@@ -148,5 +151,28 @@ class WebProductController extends Controller
 
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Product deleted successfully');
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new ProductExport, 'products_template.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        $import = new ProductImport();
+        Excel::import($import, $request->file('file'));
+
+        $errors = $import->getErrors();
+
+        if (!empty($errors)) {
+            return redirect()->route('products.index')->with('error', 'Import completed with errors: ' . implode(', ', $errors));
+        }
+
+        return redirect()->route('products.index')->with('success', 'Products imported successfully');
     }
 }

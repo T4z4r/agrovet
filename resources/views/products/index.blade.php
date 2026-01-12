@@ -8,7 +8,11 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Products</h5>
-                <a href="{{ route('web.products.create') }}" class="btn btn-primary">Add Product</a>
+                <div>
+                    <a href="{{ route('web.products.downloadTemplate') }}" class="btn btn-info me-2">Download Template</a>
+                    <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#importModal">Import Products</button>
+                    <a href="{{ route('web.products.create') }}" class="btn btn-primary">Add Product</a>
+                </div>
             </div>
             <div class="card-datatable text-nowrap">
                 <table class="dt-column-search table table-bordered">
@@ -79,4 +83,30 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<!-- Import Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Import Products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('web.products.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select Excel/CSV File</label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".xlsx,.xls,.csv" required>
+                        <div class="form-text">Upload a file with product data. Make sure to use the downloaded template format.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Import Products</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
