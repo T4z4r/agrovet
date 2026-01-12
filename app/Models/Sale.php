@@ -11,7 +11,8 @@ class Sale extends Model
         'sale_date',
         'total',
         'payment_method',
-        'customer_name'
+        'customer_name',
+        'shop_id'
     ];
 
     protected $casts = [
