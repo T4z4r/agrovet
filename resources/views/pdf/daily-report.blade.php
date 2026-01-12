@@ -109,7 +109,7 @@
     <div class="container">
         <div class="header">
             <img src="{{ public_path('assets/img/logo.png') }}" alt="Agrovet Logo">
-            <h1>Apex Agrovet</h1>
+            <h1>Apex POS</h1>
             <p>Quality and Affordable Products</p>
             <p>Daily Report</p>
         </div>
