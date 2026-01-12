@@ -10,13 +10,21 @@ use Illuminate\Support\Facades\Auth;
 
 class WebStockTransactionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $query = StockTransaction::with('product', 'supplier', 'user');
         if (!$user->hasRole('superadmin')) {
             $query->where('shop_id', $user->shop_id);
         }
+
+        if ($request->ajax()) {
+            $transactions = $query->latest()->get();
+            return response()->json([
+                'data' => $transactions
+            ]);
+        }
+
         $transactions = $query->latest()->get();
         return view('stock-transactions.index', compact('transactions'));
     }
