@@ -40,13 +40,6 @@
                                 </td>
                             </tr>
                             @endforeach
-                            <tr>
-                                <td>Database Backup</td>
-                                <td>N/A</td>
-                                <td>
-                                    <a href="{{ route('web.admin.exportBackup') }}" class="btn btn-sm btn-primary">Export</a>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
