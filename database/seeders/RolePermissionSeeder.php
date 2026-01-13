@@ -49,6 +49,7 @@ class RolePermissionSeeder extends Seeder
             'delete shops',
             'manage subscriptions',
             'view subscription packages',
+            'view audits',
             'create subscription packages',
             'edit subscription packages',
             'delete subscription packages',

@@ -22,6 +22,7 @@ use App\Http\Controllers\WebSubscriptionPackageController;
 use App\Http\Controllers\WebSubscriptionController;
 use App\Http\Controllers\WebSubscriptionPaymentController;
 use App\Http\Controllers\WebFeatureController;
+use App\Http\Controllers\WebAuditController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 
@@ -146,4 +147,7 @@ Route::middleware('auth')->group(function () {
 
     // Features
     Route::resource('admin/features', WebFeatureController::class)->names('admin.features');
+
+    // Audits
+    Route::get('admin/audits', [WebAuditController::class, 'index'])->middleware('permission:view audits')->name('admin.audits.index');
 });
