@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use OwenIt\Auditing\Auditable;
 
-class SubscriptionPayment extends Model
+class SubscriptionPayment extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
     use Auditable;
 

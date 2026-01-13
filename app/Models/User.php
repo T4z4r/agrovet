@@ -10,7 +10,7 @@ use OwenIt\Auditing\Auditable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Carbon;
 
-class User extends Authenticatable
+class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens, Auditable, HasRoles;

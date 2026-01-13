@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Auditable;
 
-class SupplierDebt extends Model
+class SupplierDebt extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
     use Auditable;
 

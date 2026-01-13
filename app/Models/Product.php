@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Auditable;
 
-class Product extends Model
+class Product extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
     use HasFactory, Auditable;
     protected $fillable = ['shop_id', 'branch_id', 'name', 'unit', 'category', 'stock', 'cost_price', 'selling_price', 'minimum_quantity', 'barcode', 'photo'];
