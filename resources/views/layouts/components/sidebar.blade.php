@@ -195,6 +195,16 @@
                </li>
            @endcan
 
+           @can('view audits')
+               <!-- Audits -->
+               <li class="menu-item {{ request()->routeIs('admin.audits.*') ? 'active' : '' }}">
+                   <a href="{{ route('admin.audits.index') }}" class="menu-link">
+                       <i class="menu-icon tf-icons bx bx-history"></i>
+                       <div>{{ __('System Logs') }}</div>
+                   </a>
+               </li>
+           @endcan
+
            <!-- Language Switcher -->
            {{-- <li class="menu-item">
                <a href="javascript:void(0);" class="menu-link menu-toggle">
