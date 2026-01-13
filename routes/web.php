@@ -134,6 +134,7 @@ Route::middleware('auth')->group(function () {
 
     // Admin
     Route::get('admin', [WebAdminController::class, 'index'])->name('web.admin.index');
+    Route::post('admin/send-otp', [WebAdminController::class, 'sendOtp'])->name('web.admin.sendOtp');
     Route::post('admin/clear/{table}', [WebAdminController::class, 'clear'])->name('web.admin.clear');
 
     // Subscription Packages
