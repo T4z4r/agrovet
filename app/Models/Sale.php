@@ -2,9 +2,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable;
 
 class Sale extends Model
 {
+    use Auditable;
+
     protected $fillable = [
         'branch_id',
         'seller_id',

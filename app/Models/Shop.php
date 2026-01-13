@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable;
 
 class Shop extends Model
 {
+    use Auditable;
+
     protected $fillable = ['name', 'owner_id', 'location'];
     public function owner()
     {

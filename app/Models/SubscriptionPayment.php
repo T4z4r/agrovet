@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use OwenIt\Auditing\Auditable;
 
 class SubscriptionPayment extends Model
 {
+    use Auditable;
+
     protected $fillable = [
         'user_id',
         'subscription_id',

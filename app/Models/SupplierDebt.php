@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable;
 
 class SupplierDebt extends Model
 {
+    use Auditable;
+
     protected $fillable = ['supplier_id', 'description', 'amount', 'paid', 'date'];
 
     public function supplier()

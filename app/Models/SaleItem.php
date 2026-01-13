@@ -2,9 +2,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable;
 
 class SaleItem extends Model
 {
+    use Auditable;
+
     protected $fillable = [
         'sale_id','product_id','quantity','price','total'
     ];

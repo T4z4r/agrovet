@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable;
 
 class Expense extends Model
 {
+    use Auditable;
+
     protected $fillable = ['shop_id', 'branch_id', 'recorded_by', 'category', 'amount', 'description', 'date'];
 
     public function shop()
