@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
 
     // Settings
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
     // Language switch
     Route::get('/lang/{locale}', function ($locale) {
