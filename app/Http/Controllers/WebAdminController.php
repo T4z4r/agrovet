@@ -16,9 +16,9 @@ class WebAdminController extends Controller
 {
     public function index()
     {
-        // if (auth()->user()->role !== 'superadmin') {
-        //     abort(403, 'Unauthorized');
-        // }
+        if (!auth()->user()->hasRole('superadmin')) {
+            abort(404);
+        }
 
         // Get list of tables, excluding system tables
         $tablesResult = DB::select('SHOW TABLES');
@@ -61,9 +61,9 @@ class WebAdminController extends Controller
 
     public function clear(Request $request, $table)
     {
-        // if (auth()->user()->role !== 'superadmin') {
-        //     abort(403, 'Unauthorized');
-        // }
+        if (!auth()->user()->hasRole('superadmin')) {
+            abort(404);
+        }
 
         $request->validate([
             'password' => 'required|string',
