@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sale;
 use App\Models\Shop;
+use App\Models\StockTransaction;
+use App\Models\Supplier;
+use App\Models\SupplierDebt;
 use Illuminate\Http\Request;
 
 class WebShopController extends Controller
@@ -87,6 +91,16 @@ class WebShopController extends Controller
         if (auth()->user()->hasRole('owner') && $shop->owner_id !== auth()->id()) {
             abort(403, 'You can only delete your own shop.');
         }
+
+        // Prevent deletion if shop has linked data
+        if ($shop->products()->exists() || $shop->branches()->exists() ||
+            Supplier::where('shop_id', $shop->id)->exists() ||
+            Sale::where('shop_id', $shop->id)->exists() ||
+            StockTransaction::where('shop_id', $shop->id)->exists() ||
+            SupplierDebt::where('shop_id', $shop->id)->exists()) {
+            return redirect()->route('web.shops.index')->with('error', 'Cannot delete shop with linked data.');
+        }
+
         $shop->delete();
         return redirect()->route('web.shops.index')->with('success', 'Shop deleted successfully');
     }

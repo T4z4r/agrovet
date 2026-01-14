@@ -11,12 +11,19 @@
                 <div class="mt-3">
                     <input type="text" id="product-search" class="form-control" placeholder="Search products...">
                 </div>
+                <div class="mt-3">
+                    <input type="text" id="barcode-input" class="form-control" placeholder="Scan barcode...">
+                </div>
+                <div class="mt-3">
+                    <button id="camera-scan" class="btn btn-secondary">Scan with Camera</button>
+                </div>
+                <div id="interactive" class="viewport" style="display: none;"></div>
             </div>
             <div class="card-body">
                 <div class="row" id="products-grid">
                     @foreach($products as $product)
                         <div class="col-md-3 mb-3">
-                            <div class="card product-card" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-stock="{{ $product->stock }}">
+                            <div class="card product-card" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-stock="{{ $product->stock }}" data-barcode="{{ $product->barcode }}">
                                 <div class="card-body text-center">
                                     <h6>{{ $product->name }}</h6>
                                     <p class="text-muted">{{ $product->selling_price }} Tsh</p>
@@ -67,6 +74,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Select2 on payment method dropdown
@@ -94,7 +102,74 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
+    // Barcode scanning functionality
+    const barcodeInput = document.getElementById('barcode-input');
+    barcodeInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const barcode = this.value.trim();
+            if (barcode) {
+                addProductByBarcode(barcode);
+                this.value = '';
+            }
+        }
+    });
+
+    function addProductByBarcode(barcode) {
+        const productCard = Array.from(productCards).find(card => card.dataset.barcode === barcode);
+        if (productCard) {
+            const addButton = productCard.querySelector('.add-to-cart');
+            if (!addButton.disabled) {
+                addButton.click();
+            } else {
+                alert('Product out of stock');
+            }
+        } else {
+            alert('Product not found');
+        }
+    }
+
+    // Camera scanning functionality
+    document.getElementById('camera-scan').addEventListener('click', function() {
+        const interactive = document.getElementById('interactive');
+        interactive.style.display = 'block';
+        Quagga.init({
+            inputStream: {
+                name: "Live",
+                type: "LiveStream",
+                target: interactive,
+                constraints: {
+                    width: 640,
+                    height: 480,
+                    facingMode: "environment"
+                },
+            },
+            locator: {
+                patchSize: "medium",
+                halfSample: true
+            },
+            numOfWorkers: 2,
+            decoder: {
+                readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "upc_reader"]
+            },
+            locate: true
+        }, function(err) {
+            if (err) {
+                console.log(err);
+                alert('Camera not available');
+                interactive.style.display = 'none';
+                return;
+            }
+            Quagga.start();
+        });
+        Quagga.onDetected(function(result) {
+            const code = result.codeResult.code;
+            addProductByBarcode(code);
+            Quagga.stop();
+            interactive.style.display = 'none';
+        });
+    });
+
     document.addEventListener('input', function(e) {
         if (e.target.classList.contains('qty-input')) {
             const index = e.target.dataset.index;
