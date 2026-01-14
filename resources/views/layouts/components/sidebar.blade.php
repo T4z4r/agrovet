@@ -106,7 +106,6 @@
            @endcan
 
            @can('view users')
-           @if(!auth()->user()->hasRole('superadmin'))
               <!-- User Management -->
                <li class="menu-item {{ request()->routeIs('web.users.*') ? 'active open' : '' }}">
                    <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -140,7 +139,7 @@
                                </ul>
                            </li>
                        @endcan
-                       @endif
+                       
                    </ul>
                </li>
            @endcan
