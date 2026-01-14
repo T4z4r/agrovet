@@ -39,6 +39,7 @@ class RolePermissionSeeder extends Seeder
             'delete users',
             'manage roles',
             'manage permissions',
+            'manage staff',
             'view privacy policies',
             'create privacy policies',
             'edit privacy policies',
