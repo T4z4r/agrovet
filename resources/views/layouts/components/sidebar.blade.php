@@ -23,6 +23,16 @@
                </a>
            </li>
 
+           @can('manage staff')
+               <!-- Staff -->
+               <li class="menu-item {{ request()->routeIs('staff.*') ? 'active' : '' }}">
+                   <a href="{{ route('staff.index') }}" class="menu-link">
+                       <i class="menu-icon tf-icons bx bx-group"></i>
+                       <div>{{ __('Staff') }}</div>
+                   </a>
+               </li>
+           @endcan
+
            @can('create sales')
                <!-- POS -->
                <li class="menu-item {{ request()->routeIs('web.pos.*') ? 'active' : '' }}">
@@ -127,13 +137,6 @@
                                        </a>
                                    </li>
                                </ul>
-                           </li>
-                       @endcan
-                       @can('manage staff')
-                           <li class="menu-item {{ request()->routeIs('staff.*') ? 'active' : '' }}">
-                               <a href="{{ route('staff.index') }}" class="menu-link">
-                                   <div>{{ __('Staff') }}</div>
-                               </a>
                            </li>
                        @endcan
                    </ul>
