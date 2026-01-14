@@ -11,7 +11,14 @@ class WebShopController extends Controller
     {
 
 
-        $shops = Shop::with('owner')->get();
+        $query = Shop::with('owner');
+
+        // If user is owner, only show their own shops
+        if (auth()->user()->hasRole('owner')) {
+            $query->where('owner_id', auth()->id());
+        }
+
+        $shops = $query->get();
         return view('shops.index', compact('shops'));
     }
 
@@ -43,6 +50,9 @@ class WebShopController extends Controller
 
 
         $shop = Shop::with('owner', 'branches')->findOrFail($id);
+        if (auth()->user()->hasRole('owner') && $shop->owner_id !== auth()->id()) {
+            abort(403, 'You can only view your own shop.');
+        }
         return view('shops.show', compact('shop'));
     }
 
@@ -51,6 +61,9 @@ class WebShopController extends Controller
 
 
         $shop = Shop::findOrFail($id);
+        if (auth()->user()->hasRole('owner') && $shop->owner_id !== auth()->id()) {
+            abort(403, 'You can only edit your own shop.');
+        }
         return view('shops.edit', compact('shop'));
     }
 
@@ -59,6 +72,9 @@ class WebShopController extends Controller
 
 
         $shop = Shop::findOrFail($id);
+        if (auth()->user()->hasRole('owner') && $shop->owner_id !== auth()->id()) {
+            abort(403, 'You can only update your own shop.');
+        }
         $shop->update($request->all());
         return redirect()->route('web.shops.index')->with('success', 'Shop updated successfully');
     }
@@ -67,7 +83,11 @@ class WebShopController extends Controller
     {
 
 
-        Shop::findOrFail($id)->delete();
+        $shop = Shop::findOrFail($id);
+        if (auth()->user()->hasRole('owner') && $shop->owner_id !== auth()->id()) {
+            abort(403, 'You can only delete your own shop.');
+        }
+        $shop->delete();
         return redirect()->route('web.shops.index')->with('success', 'Shop deleted successfully');
     }
 }
