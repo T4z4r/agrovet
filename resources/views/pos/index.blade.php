@@ -9,15 +9,21 @@
             <div class="card-header">
                 <h5 class="mb-0">Products</h5>
                 <div class="mt-3">
-                    <input type="text" id="product-search" class="form-control" placeholder="Search products...">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" id="product-search" class="form-control" placeholder="Search products...">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fas fa-barcode"></i></span>
+                        <input type="text" id="barcode-input" class="form-control" placeholder="Scan barcode...">
+                    </div>
+                    <div class="mb-3">
+                        <button id="camera-scan" class="btn btn-outline-secondary w-100"><i class="fas fa-camera"></i> Scan with Camera</button>
+                    </div>
+                    <div id="interactive" class="viewport position-relative" style="display: none; width: 100%; max-width: 640px; height: 480px; margin: 0 auto;">
+                        <button id="close-scan" class="btn btn-danger position-absolute" style="top: 10px; right: 10px; z-index: 10;">&times;</button>
+                    </div>
                 </div>
-                <div class="mt-3">
-                    <input type="text" id="barcode-input" class="form-control" placeholder="Scan barcode...">
-                </div>
-                <div class="mt-3">
-                    <button id="camera-scan" class="btn btn-secondary">Scan with Camera</button>
-                </div>
-                <div id="interactive" class="viewport" style="display: none;"></div>
             </div>
             <div class="card-body">
                 <div class="row" id="products-grid">
@@ -168,6 +174,12 @@ document.addEventListener('DOMContentLoaded', function() {
             Quagga.stop();
             interactive.style.display = 'none';
         });
+    });
+
+    // Close scan button
+    document.getElementById('close-scan').addEventListener('click', function() {
+        Quagga.stop();
+        document.getElementById('interactive').style.display = 'none';
     });
 
     document.addEventListener('input', function(e) {
