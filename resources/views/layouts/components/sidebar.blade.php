@@ -106,7 +106,8 @@
            @endcan
 
            @can('view users')
-               <!-- User Management -->
+           @if(!auth()->user()->hasRole('superadmin'))
+              <!-- User Management -->
                <li class="menu-item {{ request()->routeIs('web.users.*') ? 'active open' : '' }}">
                    <a href="javascript:void(0);" class="menu-link menu-toggle">
                        <i class="menu-icon tf-icons bx bx-user-check"></i>
@@ -139,6 +140,7 @@
                                </ul>
                            </li>
                        @endcan
+                       @endif
                    </ul>
                </li>
            @endcan
