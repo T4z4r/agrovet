@@ -129,6 +129,13 @@
                                </ul>
                            </li>
                        @endcan
+                       @can('manage staff')
+                           <li class="menu-item {{ request()->routeIs('staff.*') ? 'active' : '' }}">
+                               <a href="{{ route('staff.index') }}" class="menu-link">
+                                   <div>{{ __('Staff') }}</div>
+                               </a>
+                           </li>
+                       @endcan
                    </ul>
                </li>
            @endcan

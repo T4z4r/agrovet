@@ -131,6 +131,18 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
     }
 
     // ────────────────────────────────────────────────
+    // Scopes
+    // ────────────────────────────────────────────────
+
+    /**
+     * Scope for staff users (sellers and managers)
+     */
+    public function scopeStaff($query)
+    {
+        return $query->role(['seller', 'manager']);
+    }
+
+    // ────────────────────────────────────────────────
     // Model Events
     // ────────────────────────────────────────────────
 

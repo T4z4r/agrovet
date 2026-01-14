@@ -25,6 +25,7 @@ use App\Http\Controllers\WebFeatureController;
 use App\Http\Controllers\WebAuditController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\StaffController;
 
 /*p
 |--------------------------------------------------------------------------
@@ -71,6 +72,12 @@ Route::middleware('auth')->group(function () {
         }
         return redirect()->back();
     })->name('lang.switch');
+
+    // Staff Management
+    Route::middleware('role:owner')->group(function () {
+        Route::resource('staff', StaffController::class)->names('staff');
+        Route::post('staff/{user}/assign-role', [StaffController::class, 'assignRole'])->name('staff.assignRole');
+    });
 
     // Products
     Route::resource('products', WebProductController::class)->names('web.products');
