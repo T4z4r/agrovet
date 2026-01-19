@@ -33,8 +33,8 @@
                         @if($guide->content)
                         <div class="mb-3">
                             <h6 class="text-muted">Content</h6>
-                            <div class="border p-3 rounded">
-                                {!! nl2br(e($guide->content)) !!}
+                            <div class="border p-3 rounded guide-content">
+                                {!! $guide->content !!}
                             </div>
                         </div>
                         @endif
@@ -90,4 +90,46 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+.guide-content {
+    min-height: 200px;
+    line-height: 1.6;
+}
+
+.guide-content h1, .guide-content h2, .guide-content h3,
+.guide-content h4, .guide-content h5, .guide-content h6 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.guide-content p {
+    margin-bottom: 1rem;
+}
+
+.guide-content ul, .guide-content ol {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+}
+
+.guide-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.guide-content table th,
+.guide-content table td {
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+}
+
+.guide-content table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+</style>
 @endsection
