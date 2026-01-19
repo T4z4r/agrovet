@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Sale;
 use App\Models\Expense;
+use App\Models\Sale;
 use App\Models\StockTransaction;
+use App\Models\Subscription;
+use App\Models\SubscriptionPackage;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -46,6 +48,23 @@ class UserController extends Controller
 
         $user = User::create($data);
 
+
+
+          $freePackage = SubscriptionPackage::firstOrCreate(['name' => 'Free'], [
+                'description' => 'Free subscription package',
+                'price' => 0,
+                'duration_months' => 12,
+                'is_active' => true,
+            ]);
+
+            Subscription::create([
+                'user_id'                 => $user->id,
+                'subscription_package_id' => $freePackage->id,
+                'start_date'              => now(),
+                'end_date'                => now()->addYear(), // ← changed to addYear() for clarity
+                'status'                  => 'active',
+            ]);
+        
         return response()->json([
             'success' => true,
             'data' => $user,
