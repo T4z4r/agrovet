@@ -23,6 +23,7 @@ use App\Http\Controllers\WebSubscriptionController;
 use App\Http\Controllers\WebSubscriptionPaymentController;
 use App\Http\Controllers\WebFeatureController;
 use App\Http\Controllers\WebAuditController;
+use App\Http\Controllers\WebGuideController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StaffController;
@@ -159,4 +160,8 @@ Route::middleware('auth')->group(function () {
 
     // Audits
     Route::get('admin/audits', [WebAuditController::class, 'index'])->middleware('permission:view audits')->name('admin.audits.index');
+
+    // Guides
+    Route::resource('admin/guides', WebGuideController::class)->names('admin.guides');
+    Route::get('admin/guides/{guide}/download', [WebGuideController::class, 'download'])->name('admin.guides.download');
 });

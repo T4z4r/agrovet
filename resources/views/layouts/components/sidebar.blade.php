@@ -216,6 +216,16 @@
                </li>
            @endcan
 
+           @can('manage guides')
+               <!-- Guides -->
+               <li class="menu-item {{ request()->routeIs('admin.guides.*') ? 'active' : '' }}">
+                   <a href="{{ route('admin.guides.index') }}" class="menu-link">
+                       <i class="menu-icon tf-icons bx bx-book"></i>
+                       <div>{{ __('Guides') }}</div>
+                   </a>
+               </li>
+           @endcan
+
            <!-- Language Switcher -->
            {{-- <li class="menu-item">
                <a href="javascript:void(0);" class="menu-link menu-toggle">

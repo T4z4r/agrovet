@@ -62,6 +62,7 @@ class RolePermissionSeeder extends Seeder
             'create subscription payments',
             'edit subscription payments',
             'delete subscription payments',
+            'manage guides',
             'access admin',
         ];
 
@@ -126,6 +127,7 @@ class RolePermissionSeeder extends Seeder
             'create subscription payments',
             'edit subscription payments',
             'delete subscription payments',
+            'manage guides',
             // Owner cannot manage roles and permissions or access admin
         ]);
 

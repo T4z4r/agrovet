@@ -967,6 +967,135 @@
       ]
     },
     {
+      "name": "Guides Management",
+      "item": [
+        {
+          "name": "List Guides",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/guides?language=en",
+              "host": ["{{base_url}}"],
+              "path": ["guides"],
+              "query": [
+                {
+                  "key": "language",
+                  "value": "en"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Guide (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Getting Started Guide\",\n  \"content\": \"This guide helps you get started with the system.\",\n  \"language\": \"en\",\n  \"target_role\": \"owner\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/guides",
+              "host": ["{{base_url}}"],
+              "path": ["guides"]
+            }
+          }
+        },
+        {
+          "name": "Get Guide",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/guides/{{id}}",
+              "host": ["{{base_url}}"],
+              "path": ["guides", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Guide (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Guide Title\",\n  \"content\": \"Updated guide content.\",\n  \"language\": \"en\",\n  \"target_role\": \"both\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/guides/{{id}}",
+              "host": ["{{base_url}}"],
+              "path": ["guides", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Guide (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/guides/{{id}}",
+              "host": ["{{base_url}}"],
+              "path": ["guides", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Download Guide File",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/guides/{{id}}/download",
+              "host": ["{{base_url}}"],
+              "path": ["guides", "{{id}}", "download"]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Privacy Policy",
       "item": [
         {

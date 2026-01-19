@@ -1029,6 +1029,147 @@ The OTP (One-Time Password) system provides secure verification for various purp
   }
   ```
 
+## Guides Management
+
+The guides system allows administrators to upload guides and documents for owners and sellers, with language-specific content and role-based access control.
+
+### List Guides
+- **Method**: GET
+- **Endpoint**: `/api/guides?language=en`
+- **Description**: Get guides accessible to the authenticated user based on their role and specified language
+- **Authentication**: Required (Bearer token)
+- **Query Parameters**:
+  - `language`: string (optional, default: 'en') - Language code ('en' or 'sw')
+- **Response**:
+  ```json
+  [
+    {
+      "id": 1,
+      "title": "Getting Started Guide",
+      "content": "This guide helps you get started...",
+      "file_path": "guides/guide1.pdf",
+      "language": "en",
+      "target_role": "owner",
+      "created_by": 1,
+      "created_at": "2026-01-19T17:00:00.000000Z",
+      "updated_at": "2026-01-19T17:00:00.000000Z",
+      "creator": {
+        "id": 1,
+        "name": "Admin User"
+      }
+    }
+  ]
+  ```
+
+### Create Guide (Admin Only)
+- **Method**: POST
+- **Endpoint**: `/api/guides`
+- **Description**: Create a new guide (Admin only)
+- **Authentication**: Required (Bearer token, Admin role)
+- **Request Body** (form-data):
+  - `title`: string (required)
+  - `content`: string (optional)
+  - `file`: file (optional, pdf,doc,docx,txt, max 10MB)
+  - `language`: string (required, 'en' or 'sw')
+  - `target_role`: string (required, 'owner', 'seller', or 'both')
+- **Success Response** (201):
+  ```json
+  {
+    "id": 1,
+    "title": "Getting Started Guide",
+    "content": "This guide helps you get started...",
+    "file_path": "guides/guide1.pdf",
+    "language": "en",
+    "target_role": "owner",
+    "created_by": 1,
+    "created_at": "2026-01-19T17:00:00.000000Z",
+    "updated_at": "2026-01-19T17:00:00.000000Z",
+    "creator": {
+      "id": 1,
+      "name": "Admin User"
+    }
+  }
+  ```
+- **Error Response** (403):
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+- **Error Response** (422):
+  ```json
+  {
+    "errors": {
+      "title": ["The title field is required."],
+      "language": ["The selected language is invalid."]
+    }
+  }
+  ```
+
+### Get Guide
+- **Method**: GET
+- **Endpoint**: `/api/guides/{id}`
+- **Description**: Get a specific guide if user has access
+- **Authentication**: Required (Bearer token)
+- **Response**: Same as create response
+- **Error Response** (403):
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "message": "Guide not found"
+  }
+  ```
+
+### Update Guide (Admin Only)
+- **Method**: PUT
+- **Endpoint**: `/api/guides/{id}`
+- **Description**: Update a guide (Admin only)
+- **Authentication**: Required (Bearer token, Admin role)
+- **Request Body**: Same as create, all fields optional
+- **Response**: Updated guide object
+
+### Delete Guide (Admin Only)
+- **Method**: DELETE
+- **Endpoint**: `/api/guides/{id}`
+- **Description**: Delete a guide (Admin only)
+- **Authentication**: Required (Bearer token, Admin role)
+- **Response**:
+  ```json
+  {
+    "message": "Guide deleted successfully"
+  }
+  ```
+
+### Download Guide File
+- **Method**: GET
+- **Endpoint**: `/api/guides/{id}/download`
+- **Description**: Download the guide's attached file
+- **Authentication**: Required (Bearer token)
+- **Response**: File download
+- **Error Response** (403):
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "message": "File not found"
+  }
+  ```
+
+### Guide Access Control
+- **Owner Role**: Can access guides with `target_role` = 'owner' or 'both'
+- **Seller Role**: Can access guides with `target_role` = 'seller' or 'both'
+- **Admin Role**: Can access all guides and perform CRUD operations
+- **Language Filtering**: Users can specify language preference to filter guides
+
 ## Usage Examples
 
 ### User Login Flow

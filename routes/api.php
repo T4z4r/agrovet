@@ -15,6 +15,7 @@ use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\GuideController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,5 +130,13 @@ Route::middleware(['auth:sanctum', 'subscription'])->group(function () {
     */
     Route::get('shop', [ShopController::class, 'show']);
     Route::put('shop', [ShopController::class, 'update']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Guides Management
+    |--------------------------------------------------------------------------
+    */
+    Route::apiResource('guides', GuideController::class);
+    Route::get('guides/{guide}/download', [GuideController::class, 'download']);
 
 });
