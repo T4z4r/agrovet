@@ -156,6 +156,73 @@ All API requests require authentication except for registration and login. Use t
   }
   ```
 
+### Forgot Password
+- **Method**: POST
+- **Endpoint**: `/api/forgot-password`
+- **Description**: Send password reset OTP to user's email
+- **Request Body**:
+  ```json
+  {
+    "email": "string (required, email)"
+  }
+  ```
+- **Success Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Password reset OTP sent to your email."
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "success": false,
+    "message": "User not found"
+  }
+  ```
+- **Error Response** (429):
+  ```json
+  {
+    "success": false,
+    "message": "OTP already sent. Please wait before requesting a new one."
+  }
+  ```
+
+### Reset Password
+- **Method**: POST
+- **Endpoint**: `/api/reset-password`
+- **Description**: Reset user password using OTP
+- **Request Body**:
+  ```json
+  {
+    "email": "string (required, email)",
+    "otp_code": "string (required, 6 digits)",
+    "password": "string (required, min:8, confirmed)",
+    "password_confirmation": "string (required)"
+  }
+  ```
+- **Success Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Password reset successfully."
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "success": false,
+    "message": "User not found"
+  }
+  ```
+- **Error Response** (401):
+  ```json
+  {
+    "success": false,
+    "message": "Invalid or expired OTP"
+  }
+  ```
+
 ### Get Current User
 - **Method**: GET
 - **Endpoint**: `/api/me`

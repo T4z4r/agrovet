@@ -177,6 +177,70 @@ class AuthController extends Controller
         ]);
     }
 
+    public function forgotPassword(Request $r)
+    {
+        $data = $r->validate([
+            'email' => 'required|email'
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        // Check if there's an existing OTP and if it's not expired
+        if ($this->otpService->hasValidOtp($user, 'password_reset')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'OTP already sent. Please wait before requesting a new one.'
+            ], 429);
+        }
+
+        $this->otpService->sendOtp($user, 'password_reset');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password reset OTP sent to your email.'
+        ]);
+    }
+
+    public function resetPassword(Request $r)
+    {
+        $data = $r->validate([
+            'email' => 'required|email',
+            'otp_code' => 'required|string|size:6',
+            'password' => 'required|confirmed|min:8'
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        if ($this->otpService->verifyOtp($user, $data['otp_code'], 'password_reset')) {
+            $user->password = bcrypt($data['password']);
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Password reset successfully.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid or expired OTP'
+        ], 401);
+    }
+
     public function me(Request $r)
     {
         return response()->json([
