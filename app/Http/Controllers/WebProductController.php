@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\StockTransaction;
+use App\Models\CommonProduct;
 use App\Exports\ProductExport;
 use App\Exports\ProductImportTemplate;
 use App\Imports\ProductImport;
@@ -35,7 +36,22 @@ class WebProductController extends Controller
 
     public function create()
     {
-        return view('products.create');
+        $commonProducts = CommonProduct::where('is_active', true)->with('commonCategory')->get();
+        return view('products.create', compact('commonProducts'));
+    }
+
+    public function getCommonProduct(Request $request)
+    {
+        $commonProduct = CommonProduct::findOrFail($request->id);
+        return response()->json([
+            'name' => $commonProduct->name,
+            'unit' => $commonProduct->unit,
+            'category' => $commonProduct->commonCategory->name ?? '',
+            'cost_price' => $commonProduct->default_cost_price,
+            'selling_price' => $commonProduct->default_selling_price,
+            'minimum_quantity' => $commonProduct->default_minimum_quantity,
+            'barcode' => $commonProduct->barcode,
+        ]);
     }
 
     public function store(Request $request)
@@ -103,6 +119,7 @@ class WebProductController extends Controller
         $oldStock = $product->stock;
 
         $data = $request->validate([
+            'common_product_id' => 'nullable|exists:common_products,id',
             'name' => 'required',
             'unit' => 'required',
             'category' => 'required',

@@ -1096,6 +1096,139 @@
       ]
     },
     {
+      "name": "Sellers",
+      "item": [
+        {
+          "name": "List Sellers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sellers",
+              "host": ["{{base_url}}"],
+              "path": ["sellers"]
+            }
+          }
+        },
+        {
+          "name": "Create Seller",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sellers",
+              "host": ["{{base_url}}"],
+              "path": ["sellers"]
+            }
+          }
+        },
+        {
+          "name": "Get Seller",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sellers/{{id}}",
+              "host": ["{{base_url}}"],
+              "path": ["sellers", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Seller",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sellers/{{id}}",
+              "host": ["{{base_url}}"],
+              "path": ["sellers", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Block/Unblock Seller",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sellers/{{id}}/block",
+              "host": ["{{base_url}}"],
+              "path": ["sellers", "{{id}}", "block"]
+            }
+          }
+        },
+        {
+          "name": "Get Seller Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sellers/{{id}}/report?start={{start_date}}&end={{end_date}}",
+              "host": ["{{base_url}}"],
+              "path": ["sellers", "{{id}}", "report"],
+              "query": [
+                {
+                  "key": "start",
+                  "value": "{{start_date}}"
+                },
+                {
+                  "key": "end",
+                  "value": "{{end_date}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Privacy Policy",
       "item": [
         {

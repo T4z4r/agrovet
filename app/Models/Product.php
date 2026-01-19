@@ -19,6 +19,14 @@ class Product extends Model implements \OwenIt\Auditing\Contracts\Auditable
     {
         return $this->belongsTo(Branch::class);
     }
+    public function commonProduct()
+
+    {
+
+        return $this->belongsTo(CommonProduct::class);
+
+    }
+
     public function saleItems()
     {
         return $this->hasMany(SaleItem::class);

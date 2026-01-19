@@ -13,6 +13,18 @@
                 <form method="POST" action="{{ route('web.products.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="common_product_id" class="form-label">Select Common Product (Optional)</label>
+                            <select class="form-control" id="common_product_id" name="common_product_id">
+                                <option value="">None - Create Custom Product</option>
+                                @foreach($commonProducts as $commonProduct)
+                                    <option value="{{ $commonProduct->id }}">{{ $commonProduct->name }} ({{ $commonProduct->commonCategory->name ?? 'No Category' }})</option>
+                                @endforeach
+                            </select>
+                            @error('common_product_id')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
@@ -84,4 +96,40 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    $('#common_product_id').change(function() {
+        var commonProductId = $(this).val();
+        if (commonProductId) {
+            $.ajax({
+                url: '{{ route("web.products.getCommonProduct") }}',
+                type: 'GET',
+                data: { id: commonProductId },
+                success: function(data) {
+                    $('#name').val(data.name);
+                    $('#unit').val(data.unit);
+                    $('#category').val(data.category);
+                    $('#cost_price').val(data.cost_price);
+                    $('#selling_price').val(data.selling_price);
+                    $('#minimum_quantity').val(data.minimum_quantity);
+                    $('#barcode').val(data.barcode);
+                },
+                error: function() {
+                    alert('Error fetching common product data.');
+                }
+            });
+        } else {
+            // Clear fields if "None" selected
+            $('#name').val('');
+            $('#unit').val('');
+            $('#category').val('');
+            $('#cost_price').val('');
+            $('#selling_price').val('');
+            $('#minimum_quantity').val('');
+            $('#barcode').val('');
+        }
+    });
+});
+</script>
 @endsection

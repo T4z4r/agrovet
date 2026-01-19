@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function () {
 
     // Products
     Route::resource('products', WebProductController::class)->names('web.products');
+    Route::get('products/get-common-product', [WebProductController::class, 'getCommonProduct'])->name('web.products.getCommonProduct');
     Route::get('products-template/download', [WebProductController::class, 'downloadTemplate'])->name('web.products.downloadTemplate');
     Route::post('products/import', [WebProductController::class, 'import'])->name('web.products.import');
 

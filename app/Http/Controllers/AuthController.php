@@ -122,22 +122,25 @@ class AuthController extends Controller
                 ],
                 'message' => 'OTP verified successfully. Logged in.'
             ]);
+
+            $freePackage = SubscriptionPackage::firstOrCreate(['name' => 'Free'], [
+                'description' => 'Free subscription package',
+                'price' => 0,
+                'duration_months' => 12,
+                'is_active' => true,
+            ]);
+
+            Subscription::create([
+                'user_id'                 => $user->id,
+                'shop_id'                 => $user->shop_id,
+                'subscription_package_id' => $freePackage->id,
+                'start_date'              => now(),
+                'end_date'                => now()->addYear(),
+                'status'                  => 'active',
+            ]);
         }
 
-        $freePackage = SubscriptionPackage::firstOrCreate(['name' => 'Free'], [
-            'description' => 'Free subscription package',
-            'price' => 0,
-            'duration_months' => 12,
-            'is_active' => true,
-        ]);
 
-        Subscription::create([
-            'user_id'                 => $user->id,
-            'subscription_package_id' => $freePackage->id,
-            'start_date'              => now(),
-            'end_date'                => now()->addYear(), // ← changed to addYear() for clarity
-            'status'                  => 'active',
-        ]);
 
 
         return response()->json([
