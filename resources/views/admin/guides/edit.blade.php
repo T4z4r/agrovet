@@ -90,3 +90,24 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    $('#content').summernote({
+        height: 300,
+        placeholder: 'Enter guide content here...',
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ]
+    });
+});
+</script>
+@endsection
