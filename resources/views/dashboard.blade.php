@@ -116,16 +116,23 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         Highcharts.chart('chart-container', {
+            chart: {
+                backgroundColor: 'transparent'
+            },
             title: {
                 text: 'Sales vs Expenses'
             },
             xAxis: {
-                categories: @json($dates)
+                categories: @json($dates),
+                gridLineWidth: 1,
+                gridLineColor: '#e0e0e0'
             },
             yAxis: {
                 title: {
                     text: 'Amount'
-                }
+                },
+                gridLineWidth: 1,
+                gridLineColor: '#e0e0e0'
             },
             series: [{
                 name: 'Sales',
