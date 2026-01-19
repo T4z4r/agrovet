@@ -966,6 +966,69 @@ The OTP (One-Time Password) system provides secure verification for various purp
   }
   ```
 
+## Shop Management
+
+### Get Shop Details
+- **Method**: GET
+- **Endpoint**: `/api/shop`
+- **Description**: Get the authenticated user's shop details
+- **Authentication**: Required (Bearer token)
+- **Response**:
+  ```json
+  {
+    "id": 1,
+    "name": "My Shop",
+    "owner_id": 1,
+    "location": "Nairobi",
+    "created_at": "2025-12-05T22:25:04.000000Z",
+    "updated_at": "2025-12-05T22:25:04.000000Z"
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "message": "Shop not found"
+  }
+  ```
+
+### Update Shop Details
+- **Method**: PUT
+- **Endpoint**: `/api/shop`
+- **Description**: Update the authenticated user's shop details
+- **Authentication**: Required (Bearer token)
+- **Request Body**:
+  ```json
+  {
+    "name": "string (optional, max:255)",
+    "location": "string (optional, max:255, nullable)"
+  }
+  ```
+- **Success Response**:
+  ```json
+  {
+    "id": 1,
+    "name": "Updated Shop Name",
+    "owner_id": 1,
+    "location": "New Location",
+    "created_at": "2025-12-05T22:25:04.000000Z",
+    "updated_at": "2026-01-19T16:58:09.000000Z"
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "message": "Shop not found"
+  }
+  ```
+- **Error Response** (422):
+  ```json
+  {
+    "errors": {
+      "name": ["The name may not be greater than 255 characters."]
+    }
+  }
+  ```
+
 ## Usage Examples
 
 ### User Login Flow

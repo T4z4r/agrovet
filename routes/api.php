@@ -14,6 +14,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\OtpController;
+use App\Http\Controllers\ShopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -120,5 +121,13 @@ Route::middleware(['auth:sanctum', 'subscription'])->group(function () {
     Route::get('subscription-packages', [SubscriptionController::class, 'indexPackages']);
     Route::get('subscription/current', [SubscriptionController::class, 'currentSubscription']);
     Route::post('subscription/subscribe', [SubscriptionController::class, 'subscribe']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Shop Management
+    |--------------------------------------------------------------------------
+    */
+    Route::get('shop', [ShopController::class, 'show']);
+    Route::put('shop', [ShopController::class, 'update']);
 
 });

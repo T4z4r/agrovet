@@ -831,6 +831,53 @@
       ]
     },
     {
+      "name": "Shop Management",
+      "item": [
+        {
+          "name": "Get Shop Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/shop",
+              "host": ["{{base_url}}"],
+              "path": ["shop"]
+            }
+          }
+        },
+        {
+          "name": "Update Shop Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Shop Name\",\n  \"location\": \"New Location\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/shop",
+              "host": ["{{base_url}}"],
+              "path": ["shop"]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "OTP Management",
       "item": [
         {
