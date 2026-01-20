@@ -66,6 +66,86 @@ class CommonCategorySeeder extends Seeder
                 'description' => 'Cigarettes and tobacco products',
                 'is_active' => true,
             ],
+            [
+                'name' => 'Spices & Seasonings',
+                'description' => 'Spices, herbs, and cooking seasonings',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Fresh Produce',
+                'description' => 'Fruits and vegetables',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Dairy Products',
+                'description' => 'Milk, cheese, and dairy items',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Bakery Products',
+                'description' => 'Bread, cakes, and baked goods',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Canned & Packaged Foods',
+                'description' => 'Canned goods and packaged food items',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Alcoholic Beverages',
+                'description' => 'Beer, wine, and spirits',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Cosmetics & Beauty',
+                'description' => 'Makeup, skincare, and beauty products',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Home & Garden',
+                'description' => 'Home decor and garden supplies',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Automotive',
+                'description' => 'Car parts and automotive accessories',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Pet Supplies',
+                'description' => 'Pet food and pet care products',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Baby Products',
+                'description' => 'Baby food, diapers, and baby care items',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Sports & Recreation',
+                'description' => 'Sports equipment and recreational items',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Books & Media',
+                'description' => 'Books, magazines, and media products',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Health & Pharmacy',
+                'description' => 'Medicines, vitamins, and health products',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Electrical Appliances',
+                'description' => 'Fans, irons, and small electrical appliances',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Furniture & Furnishings',
+                'description' => 'Furniture and home furnishing items',
+                'is_active' => true,
+            ],
         ];
 
         foreach ($categories as $category) {
