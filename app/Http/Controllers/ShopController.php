@@ -21,7 +21,7 @@ class ShopController extends Controller
             return response()->json(['message' => 'Shop not found'], 404);
         }
 
-        return response()->json($shop);
+        return response()->json(['message' => 'Shop retrieved successfully', 'data' => $shop]);
     }
 
     /**

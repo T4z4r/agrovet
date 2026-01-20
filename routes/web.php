@@ -24,6 +24,8 @@ use App\Http\Controllers\WebSubscriptionPaymentController;
 use App\Http\Controllers\WebFeatureController;
 use App\Http\Controllers\WebAuditController;
 use App\Http\Controllers\WebGuideController;
+use App\Http\Controllers\WebCommonCategoryController;
+use App\Http\Controllers\WebCommonProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StaffController;
@@ -165,4 +167,10 @@ Route::middleware('auth')->group(function () {
     // Guides
     Route::resource('admin/guides', WebGuideController::class)->names('admin.guides');
     Route::get('admin/guides/{guide}/download', [WebGuideController::class, 'download'])->name('admin.guides.download');
+
+    // Common Categories (Superadmin only)
+    Route::resource('superadmin/common-categories', WebCommonCategoryController::class)->names('web.superadmin.common-categories');
+
+    // Common Products (Superadmin only)
+    Route::resource('superadmin/common-products', WebCommonProductController::class)->names('web.superadmin.common-products');
 });
