@@ -11,8 +11,8 @@ class WebCommonProductController extends Controller
 {
     public function index(Request $request)
     {
-        // Check if user has admin role
-        if (!Auth::user()->hasRole('admin')) {
+        // Check if user has superadmin role
+        if (!Auth::user()->hasRole('superadmin')) {
             abort(403, 'Unauthorized');
         }
 
@@ -31,7 +31,7 @@ class WebCommonProductController extends Controller
 
     public function create()
     {
-        if (!Auth::user()->hasRole('admin')) {
+        if (!Auth::user()->hasRole('superadmin')) {
             abort(403, 'Unauthorized');
         }
 
@@ -41,7 +41,7 @@ class WebCommonProductController extends Controller
 
     public function store(Request $request)
     {
-        if (!Auth::user()->hasRole('admin')) {
+        if (!Auth::user()->hasRole('superadmin')) {
             abort(403, 'Unauthorized');
         }
 
@@ -70,7 +70,7 @@ class WebCommonProductController extends Controller
 
     public function show($id)
     {
-        if (!Auth::user()->hasRole('admin')) {
+        if (!Auth::user()->hasRole('superadmin')) {
             abort(403, 'Unauthorized');
         }
 
@@ -80,7 +80,7 @@ class WebCommonProductController extends Controller
 
     public function edit($id)
     {
-        if (!Auth::user()->hasRole('admin')) {
+        if (!Auth::user()->hasRole('superadmin')) {
             abort(403, 'Unauthorized');
         }
 
@@ -91,7 +91,7 @@ class WebCommonProductController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (!Auth::user()->hasRole('admin')) {
+        if (!Auth::user()->hasRole('superadmin')) {
             abort(403, 'Unauthorized');
         }
 
@@ -122,7 +122,7 @@ class WebCommonProductController extends Controller
 
     public function destroy($id)
     {
-        if (!Auth::user()->hasRole('admin')) {
+        if (!Auth::user()->hasRole('superadmin')) {
             abort(403, 'Unauthorized');
         }
 

@@ -139,7 +139,7 @@
                                </ul>
                            </li>
                        @endcan
-                       
+
                    </ul>
                </li>
            @endcan
@@ -223,6 +223,28 @@
                        <i class="menu-icon tf-icons bx bx-book"></i>
                        <div>{{ __('Guides') }}</div>
                    </a>
+               </li>
+           @endcan
+
+           @can('access admin')
+               <!-- Common Products -->
+               <li class="menu-item {{ request()->routeIs('web.superadmin.common-products.*', 'web.superadmin.common-categories.*') ? 'active open' : '' }}">
+                   <a href="javascript:void(0);" class="menu-link menu-toggle">
+                       <i class="menu-icon tf-icons bx bx-package"></i>
+                       <div>{{ __('Common Products') }}</div>
+                   </a>
+                   <ul class="menu-sub">
+                       <li class="menu-item {{ request()->routeIs('web.superadmin.common-categories.*') ? 'active' : '' }}">
+                           <a href="{{ route('web.superadmin.common-categories.index') }}" class="menu-link">
+                               <div>{{ __('Categories') }}</div>
+                           </a>
+                       </li>
+                       <li class="menu-item {{ request()->routeIs('web.superadmin.common-products.*') ? 'active' : '' }}">
+                           <a href="{{ route('web.superadmin.common-products.index') }}" class="menu-link">
+                               <div>{{ __('Products') }}</div>
+                           </a>
+                       </li>
+                   </ul>
                </li>
            @endcan
 
