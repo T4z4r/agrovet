@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use Database\Seeders\AboutSeeder;
 use Database\Seeders\BranchSeeder;
+use Database\Seeders\CommonCategorySeeder;
+use Database\Seeders\CommonProductSeeder;
 use Database\Seeders\ContactSeeder;
 use Database\Seeders\CosmeticsProductSeeder;
 use Database\Seeders\FeatureSeeder;
@@ -35,6 +37,8 @@ class DatabaseSeeder extends Seeder
         $this->call(RolePermissionSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(BranchSeeder::class);
+        $this->call(CommonCategorySeeder::class);
+        $this->call(CommonProductSeeder::class);
         $this->call(FeatureSeeder::class);
         $this->call(SubscriptionPackageSeeder::class);
         // $this->call(ProductSeeder::class);
