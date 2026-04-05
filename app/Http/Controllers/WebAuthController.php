@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Shop;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Expense;
@@ -40,22 +41,34 @@ class WebAuthController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed'
+            'name'              => 'required|string',
+            'email'             => 'required|email|unique:users,email',
+            'password'          => 'required|min:6|confirmed',
+            'shop_name'         => 'required|string',
+            'shop_location'     => 'nullable|string',
         ]);
 
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'name'     => $data['name'],
+            'email'    => $data['email'],
             'password' => bcrypt($data['password']),
+            'role'     => 'owner',
         ]);
 
-        $user->assignRole('seller'); // default role
+        $user->assignRole('owner');
+
+        $shop = Shop::create([
+            'name'     => $data['shop_name'],
+            'owner_id' => $user->id,
+            'location' => $data['shop_location'] ?? null,
+        ]);
+
+        $user->shop_id = $shop->id;
+        $user->save();
 
         Auth::login($user);
 
-        return redirect(route('dashboard'));
+        return redirect()->route('dashboard');
     }
 
     public function logout(Request $request)

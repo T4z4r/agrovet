@@ -137,6 +137,15 @@
                 <div class="mb-3">
                   <button class="btn btn-primary d-grid w-100" type="submit">{{ __('Sign in') }}</button>
                 </div>
+
+                @if (Route::has('register'))
+                <p class="text-center">
+                  <span>{{ __("Don't have an account?") }}</span>
+                  <a href="{{ route('register') }}">
+                    <span>{{ __('Create one') }}</span>
+                  </a>
+                </p>
+                @endif
               </form>
 
 
