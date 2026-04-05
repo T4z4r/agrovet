@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Agrovet Receipt</title>
+    <title>Apex Receipt</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -22,7 +22,7 @@
         }
         .header {
             text-align: center;
-            border-bottom: 3px solid #4CAF50;
+            border-bottom: 3px solid #851b2d;
             padding-bottom: 15px;
             margin-bottom: 20px;
         }
@@ -32,7 +32,7 @@
             margin-bottom: 10px;
         }
         .header h1 {
-            color: #4CAF50;
+            color: #851b2d;
             margin: 0;
             font-size: 28px;
             font-weight: bold;
@@ -65,7 +65,7 @@
             text-align: left;
         }
         th {
-            background-color: #4CAF50;
+            background-color: #851b2d;
             color: #fff;
             font-weight: bold;
             text-transform: uppercase;
@@ -78,7 +78,7 @@
             text-align: right;
             font-size: 20px;
             font-weight: bold;
-            color: #4CAF50;
+            color: #851b2d;
             margin-top: 20px;
             padding: 10px;
             background-color: #e8f5e8;
@@ -88,7 +88,7 @@
             text-align: center;
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 2px solid #4CAF50;
+            border-top: 2px solid #851b2d;
             color: #666;
             font-size: 12px;
         }
@@ -97,9 +97,9 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ public_path('assets/img/logo.png') }}" alt="Agrovet Logo">
-            <h1>Kendrick Agrovet</h1>
-            <p>Quality Agricultural Products</p>
+            <img src="{{ public_path('assets/img/logo.png') }}" alt="Apex Logo">
+            <h1>Apex</h1>
+            <p>Quality and Affordable Products</p>
             <p>Receipt</p>
         </div>
 
@@ -141,7 +141,7 @@
 
         <div class="footer">
             <p>Thank you for your business!</p>
-            <p>Visit us again at Agrovet</p>
+            <p>Visit us again at Apex</p>
         </div>
     </div>
 </body>

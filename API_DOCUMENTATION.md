@@ -1,6 +1,6 @@
-# AgroVet API Documentation
+# Apex API Documentation
 
-This document describes the API endpoints for the AgroVet application.
+This document describes the API endpoints for the Apex application.
 
 ## Public Endpoints
 
@@ -14,7 +14,7 @@ This document describes the API endpoints for the AgroVet application.
     "success": true,
     "data": {
       "id": 1,
-      "title": "About AgroVet",
+      "title": "About Apex",
       "content": "...",
       "created_at": "...",
       "updated_at": "..."
@@ -75,10 +75,10 @@ All API requests require authentication except for registration and login. Use t
   }
   ```
 
-### Login User
+### Login User (OTP-based)
 - **Method**: POST
 - **Endpoint**: `/api/login`
-- **Description**: Authenticate user
+- **Description**: Authenticate user and send OTP
 - **Request Body**:
   ```json
   {
@@ -90,11 +90,7 @@ All API requests require authentication except for registration and login. Use t
   ```json
   {
     "success": true,
-    "data": {
-      "user": {...},
-      "token": "string"
-    },
-    "message": "User logged in successfully"
+    "message": "OTP sent to your email. Please verify to complete login."
   }
   ```
 - **Error Response** (401):
@@ -102,6 +98,128 @@ All API requests require authentication except for registration and login. Use t
   {
     "success": false,
     "message": "Invalid credentials"
+  }
+  ```
+
+### Verify OTP
+- **Method**: POST
+- **Endpoint**: `/api/verify-otp`
+- **Description**: Verify OTP code and complete login
+- **Request Body**:
+  ```json
+  {
+    "email": "string (required)",
+    "otp_code": "string (required, 6 digits)"
+  }
+  ```
+- **Success Response**:
+  ```json
+  {
+    "success": true,
+    "data": {
+      "user": {...},
+      "token": "string"
+    },
+    "message": "OTP verified successfully. Logged in."
+  }
+  ```
+- **Error Response** (401):
+  ```json
+  {
+    "success": false,
+    "message": "Invalid or expired OTP"
+  }
+  ```
+
+### Resend OTP
+- **Method**: POST
+- **Endpoint**: `/api/resend-otp`
+- **Description**: Resend OTP code for login
+- **Request Body**:
+  ```json
+  {
+    "email": "string (required)"
+  }
+  ```
+- **Success Response**:
+  ```json
+  {
+    "success": true,
+    "message": "New OTP sent to your email."
+  }
+  ```
+- **Error Response** (429):
+  ```json
+  {
+    "success": false,
+    "message": "OTP already sent. Please wait before requesting a new one."
+  }
+  ```
+
+### Forgot Password
+- **Method**: POST
+- **Endpoint**: `/api/forgot-password`
+- **Description**: Send password reset OTP to user's email
+- **Request Body**:
+  ```json
+  {
+    "email": "string (required, email)"
+  }
+  ```
+- **Success Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Password reset OTP sent to your email."
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "success": false,
+    "message": "User not found"
+  }
+  ```
+- **Error Response** (429):
+  ```json
+  {
+    "success": false,
+    "message": "OTP already sent. Please wait before requesting a new one."
+  }
+  ```
+
+### Reset Password
+- **Method**: POST
+- **Endpoint**: `/api/reset-password`
+- **Description**: Reset user password using OTP
+- **Request Body**:
+  ```json
+  {
+    "email": "string (required, email)",
+    "otp_code": "string (required, 6 digits)",
+    "password": "string (required, min:8, confirmed)",
+    "password_confirmation": "string (required)"
+  }
+  ```
+- **Success Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Password reset successfully."
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "success": false,
+    "message": "User not found"
+  }
+  ```
+- **Error Response** (401):
+  ```json
+  {
+    "success": false,
+    "message": "Invalid or expired OTP"
   }
   ```
 
@@ -129,6 +247,150 @@ All API requests require authentication except for registration and login. Use t
     "message": "Logged out successfully"
   }
   ```
+
+## OTP Management
+
+The OTP (One-Time Password) system provides secure verification for various purposes including login, email verification, password reset, and additional security checks.
+
+### Send OTP
+- **Method**: POST
+- **Endpoint**: `/api/otp/send`
+- **Description**: Send OTP code for a specific purpose
+- **Request Body**:
+ ```json
+ {
+   "email": "string (required)",
+   "purpose": "login|email_verification|password_reset|security (required)"
+ }
+ ```
+- **Success Response**:
+ ```json
+ {
+   "success": true,
+   "message": "OTP sent successfully to your email."
+ }
+ ```
+- **Error Response** (404):
+ ```json
+ {
+   "success": false,
+   "message": "User not found"
+ }
+ ```
+- **Error Response** (429):
+ ```json
+ {
+   "success": false,
+   "message": "OTP already sent. Please check your email."
+ }
+ ```
+
+### Verify OTP
+- **Method**: POST
+- **Endpoint**: `/api/otp/verify`
+- **Description**: Verify OTP code for a specific purpose
+- **Request Body**:
+ ```json
+ {
+   "email": "string (required)",
+   "otp_code": "string (required, 6 digits)",
+   "purpose": "login|email_verification|password_reset|security (required)"
+ }
+ ```
+- **Success Response**:
+ ```json
+ {
+   "success": true,
+   "message": "OTP verified successfully.",
+   "data": {
+     "user": {...},
+     "purpose": "string"
+   }
+ }
+ ```
+- **Error Response** (404):
+ ```json
+ {
+   "success": false,
+   "message": "User not found"
+ }
+ ```
+- **Error Response** (401):
+ ```json
+ {
+   "success": false,
+   "message": "Invalid or expired OTP"
+ }
+ ```
+
+### Check OTP Status
+- **Method**: POST
+- **Endpoint**: `/api/otp/status`
+- **Description**: Check if user has a valid OTP and get remaining time
+- **Request Body**:
+ ```json
+ {
+   "email": "string (required)",
+   "purpose": "login|email_verification|password_reset|security (required)"
+ }
+ ```
+- **Success Response**:
+ ```json
+ {
+   "success": true,
+   "data": {
+     "has_valid_otp": true,
+     "remaining_minutes": 8
+   }
+ }
+ ```
+- **Error Response** (404):
+ ```json
+ {
+   "success": false,
+   "message": "User not found"
+ }
+ ```
+
+### Clear OTP
+- **Method**: POST
+- **Endpoint**: `/api/otp/clear`
+- **Description**: Clear OTP for a user (admin/utility function)
+- **Request Body**:
+ ```json
+ {
+   "email": "string (required)",
+   "purpose": "login|email_verification|password_reset|security (required)"
+ }
+ ```
+- **Success Response**:
+ ```json
+ {
+   "success": true,
+   "message": "OTP cleared successfully."
+ }
+ ```
+- **Error Response** (404):
+ ```json
+ {
+   "success": false,
+   "message": "User not found"
+ }
+ ```
+
+### OTP Purposes
+- **login**: User authentication (used by login flow)
+- **email_verification**: Email address verification
+- **password_reset**: Password reset verification
+- **security**: Additional security verification for sensitive operations
+
+### OTP Features
+- **6-digit codes**: Randomly generated numeric codes
+- **10-minute expiration**: OTP codes expire after 10 minutes
+- **Attempt limiting**: Maximum 3 verification attempts per OTP
+- **Purpose isolation**: OTP codes are specific to their purpose
+- **Email notifications**: OTP codes are sent via email with contextual messages
+- **Cache storage**: OTP data stored in Laravel cache for performance
 
 ## Products
 
@@ -704,6 +966,283 @@ All API requests require authentication except for registration and login. Use t
   }
   ```
 
+## Shop Management
+
+### Get Shop Details
+- **Method**: GET
+- **Endpoint**: `/api/shop`
+- **Description**: Get the authenticated user's shop details
+- **Authentication**: Required (Bearer token)
+- **Response**:
+  ```json
+  {
+    "id": 1,
+    "name": "My Shop",
+    "owner_id": 1,
+    "location": "Nairobi",
+    "created_at": "2025-12-05T22:25:04.000000Z",
+    "updated_at": "2025-12-05T22:25:04.000000Z"
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "message": "Shop not found"
+  }
+  ```
+
+### Update Shop Details
+- **Method**: PUT
+- **Endpoint**: `/api/shop`
+- **Description**: Update the authenticated user's shop details
+- **Authentication**: Required (Bearer token)
+- **Request Body**:
+  ```json
+  {
+    "name": "string (optional, max:255)",
+    "location": "string (optional, max:255, nullable)"
+  }
+  ```
+- **Success Response**:
+  ```json
+  {
+    "id": 1,
+    "name": "Updated Shop Name",
+    "owner_id": 1,
+    "location": "New Location",
+    "created_at": "2025-12-05T22:25:04.000000Z",
+    "updated_at": "2026-01-19T16:58:09.000000Z"
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "message": "Shop not found"
+  }
+  ```
+- **Error Response** (422):
+  ```json
+  {
+    "errors": {
+      "name": ["The name may not be greater than 255 characters."]
+    }
+  }
+  ```
+
+## Guides Management
+
+The guides system allows administrators to upload guides and documents for owners and sellers, with language-specific content and role-based access control.
+
+### List Guides
+- **Method**: GET
+- **Endpoint**: `/api/guides?language=en`
+- **Description**: Get guides accessible to the authenticated user based on their role and specified language
+- **Authentication**: Required (Bearer token)
+- **Query Parameters**:
+  - `language`: string (optional, default: 'en') - Language code ('en' or 'sw')
+- **Response**:
+  ```json
+  [
+    {
+      "id": 1,
+      "title": "Getting Started Guide",
+      "content": "This guide helps you get started...",
+      "file_path": "guides/guide1.pdf",
+      "language": "en",
+      "target_role": "owner",
+      "created_by": 1,
+      "created_at": "2026-01-19T17:00:00.000000Z",
+      "updated_at": "2026-01-19T17:00:00.000000Z",
+      "creator": {
+        "id": 1,
+        "name": "Admin User"
+      }
+    }
+  ]
+  ```
+
+### Create Guide (Admin Only)
+- **Method**: POST
+- **Endpoint**: `/api/guides`
+- **Description**: Create a new guide (Admin only)
+- **Authentication**: Required (Bearer token, Admin role)
+- **Request Body** (form-data):
+  - `title`: string (required)
+  - `content`: string (optional)
+  - `file`: file (optional, pdf,doc,docx,txt, max 10MB)
+  - `language`: string (required, 'en' or 'sw')
+  - `target_role`: string (required, 'owner', 'seller', or 'both')
+- **Success Response** (201):
+  ```json
+  {
+    "id": 1,
+    "title": "Getting Started Guide",
+    "content": "This guide helps you get started...",
+    "file_path": "guides/guide1.pdf",
+    "language": "en",
+    "target_role": "owner",
+    "created_by": 1,
+    "created_at": "2026-01-19T17:00:00.000000Z",
+    "updated_at": "2026-01-19T17:00:00.000000Z",
+    "creator": {
+      "id": 1,
+      "name": "Admin User"
+    }
+  }
+  ```
+- **Error Response** (403):
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+- **Error Response** (422):
+  ```json
+  {
+    "errors": {
+      "title": ["The title field is required."],
+      "language": ["The selected language is invalid."]
+    }
+  }
+  ```
+
+### Get Guide
+- **Method**: GET
+- **Endpoint**: `/api/guides/{id}`
+- **Description**: Get a specific guide if user has access
+- **Authentication**: Required (Bearer token)
+- **Response**: Same as create response
+- **Error Response** (403):
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "message": "Guide not found"
+  }
+  ```
+
+### Update Guide (Admin Only)
+- **Method**: PUT
+- **Endpoint**: `/api/guides/{id}`
+- **Description**: Update a guide (Admin only)
+- **Authentication**: Required (Bearer token, Admin role)
+- **Request Body**: Same as create, all fields optional
+- **Response**: Updated guide object
+
+### Delete Guide (Admin Only)
+- **Method**: DELETE
+- **Endpoint**: `/api/guides/{id}`
+- **Description**: Delete a guide (Admin only)
+- **Authentication**: Required (Bearer token, Admin role)
+- **Response**:
+  ```json
+  {
+    "message": "Guide deleted successfully"
+  }
+  ```
+
+### Download Guide File
+- **Method**: GET
+- **Endpoint**: `/api/guides/{id}/download`
+- **Description**: Download the guide's attached file
+- **Authentication**: Required (Bearer token)
+- **Response**: File download
+- **Error Response** (403):
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+- **Error Response** (404):
+  ```json
+  {
+    "message": "File not found"
+  }
+  ```
+
+### Guide Access Control
+- **Owner Role**: Can access guides with `target_role` = 'owner' or 'both'
+- **Seller Role**: Can access guides with `target_role` = 'seller' or 'both'
+- **Admin Role**: Can access all guides and perform CRUD operations
+- **Language Filtering**: Users can specify language preference to filter guides
+
+## Usage Examples
+
+### User Login Flow
+```javascript
+// 1. Login with credentials
+const loginResponse = await fetch('/api/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    password: 'password123'
+  })
+});
+
+// 2. Verify OTP
+const verifyResponse = await fetch('/api/verify-otp', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    otp_code: '123456'
+  })
+});
+
+// Use the token for authenticated requests
+const token = verifyResponse.data.token;
+```
+
+### Password Reset Flow
+```javascript
+// 1. Request password reset OTP
+await fetch('/api/otp/send', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    purpose: 'password_reset'
+  })
+});
+
+// 2. Verify OTP and proceed with password reset
+const verifyResponse = await fetch('/api/otp/verify', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    otp_code: '123456',
+    purpose: 'password_reset'
+  })
+});
+
+// 3. If verified, proceed with password update
+if (verifyResponse.success) {
+  // Update password logic here
+}
+```
+
+### Check OTP Status
+```javascript
+const statusResponse = await fetch('/api/otp/status', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    purpose: 'login'
+  })
+});
+
+if (statusResponse.data.has_valid_otp) {
+  console.log(`${statusResponse.data.remaining_minutes} minutes left`);
+}
+```
+
 ## Error Handling
 
 All API responses follow a consistent format. Successful responses include:
@@ -715,4 +1254,19 @@ Error responses include:
 - `success`: false
 - `message`: Error description
 
-Validation errors are returned automatically by Laravel with appropriate HTTP status codes.
+### Common HTTP Status Codes
+- **200**: Success
+- **201**: Created
+- **400**: Bad Request (validation errors)
+- **401**: Unauthorized (invalid credentials, invalid/expired OTP)
+- **404**: Not Found (resource or user not found)
+- **422**: Unprocessable Entity (validation errors, insufficient stock)
+- **429**: Too Many Requests (OTP rate limiting)
+- **500**: Internal Server Error
+
+### OTP-Specific Errors
+- **Invalid or expired OTP** (401): OTP code is incorrect or has expired
+- **OTP already sent** (429): User must wait before requesting new OTP
+- **Maximum attempts exceeded** (401): Too many failed verification attempts
+
+Validation errors are returned automatically by Laravel with appropriate HTTP status codes and detailed field-specific error messages.

@@ -2,11 +2,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable;
 
-class Sale extends Model
+class Sale extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
+    use Auditable;
+
     protected $fillable = [
-        'seller_id','total','sale_date'
+        'branch_id',
+        'seller_id',
+        'sale_date',
+        'total',
+        'payment_method',
+        'customer_name',
+        'shop_id'
     ];
 
     protected $casts = [
@@ -16,6 +25,11 @@ class Sale extends Model
     public function seller()
     {
         return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     public function items()

@@ -3,17 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable;
 
-class StockTransaction extends Model
+class StockTransaction extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
+    use Auditable;
+
     protected $fillable = [
+        'branch_id',
         'product_id',
         'type',
         'quantity',
         'supplier_id',
         'recorded_by',
         'date',
-        'remarks'
+        'remarks',
+        'shop_id'
     ];
 
     public function product()
@@ -29,5 +34,10 @@ class StockTransaction extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'recorded_by');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 }

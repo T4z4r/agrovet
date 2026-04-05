@@ -6,6 +6,7 @@ use App\Http\Controllers\WebProductController;
 use App\Http\Controllers\WebSupplierController;
 use App\Http\Controllers\WebUserController;
 use App\Http\Controllers\WebShopController;
+use App\Http\Controllers\WebBranchController;
 use App\Http\Controllers\WebSaleController;
 use App\Http\Controllers\WebExpenseController;
 use App\Http\Controllers\WebStockTransactionController;
@@ -13,6 +14,21 @@ use App\Http\Controllers\WebSupplierDebtController;
 use App\Http\Controllers\WebReportController;
 use App\Http\Controllers\WebAdminController;
 use App\Http\Controllers\WebBrandController;
+use App\Http\Controllers\WebPermissionController;
+use App\Http\Controllers\WebPosController;
+use App\Http\Controllers\WebRoleController;
+use App\Http\Controllers\WebPrivacyPolicyController;
+use App\Http\Controllers\WebSubscriptionPackageController;
+use App\Http\Controllers\WebSubscriptionController;
+use App\Http\Controllers\WebSubscriptionPaymentController;
+use App\Http\Controllers\WebFeatureController;
+use App\Http\Controllers\WebAuditController;
+use App\Http\Controllers\WebGuideController;
+use App\Http\Controllers\WebCommonCategoryController;
+use App\Http\Controllers\WebCommonProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\StaffController;
 
 /*p
 |--------------------------------------------------------------------------
@@ -33,12 +49,24 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [WebAuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [WebAuthController::class, 'login']);
     // Route::get('/register', [WebAuthController::class, 'showRegister'])->name('register');
-    // Route::post('/register', [WebAuthController::class, 'register']);
+    // Route::post('/register', [WebAuthController::class, 'register');
 });
+
+// Public routes
+Route::get('/privacy-policy', [WebPrivacyPolicyController::class, 'publicShow'])->name('privacy-policy.public');
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [WebAuthController::class, 'dashboard'])->name('dashboard');
+
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Settings
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
     // Language switch
     Route::get('/lang/{locale}', function ($locale) {
@@ -48,7 +76,18 @@ Route::middleware('auth')->group(function () {
         return redirect()->back();
     })->name('lang.switch');
 
+    // Staff Management
+    Route::middleware('role:owner')->group(function () {
+        Route::resource('staff', StaffController::class)->names('staff');
+        Route::post('staff/{user}/assign-role', [StaffController::class, 'assignRole'])->name('staff.assignRole');
+    });
+
     // Products
+    Route::get('products/get-common-product', [WebProductController::class, 'getCommonProduct'])->name('web.products.getCommonProduct');
+    Route::get('products/common-products-list', [WebProductController::class, 'commonProductsList'])->name('web.products.commonProductsList');
+    Route::post('products/add-from-common', [WebProductController::class, 'addFromCommonProducts'])->name('web.products.addFromCommon');
+    Route::get('products-template/download', [WebProductController::class, 'downloadTemplate'])->name('web.products.downloadTemplate');
+    Route::post('products/import', [WebProductController::class, 'import'])->name('web.products.import');
     Route::resource('products', WebProductController::class)->names('web.products');
 
     // Suppliers
@@ -58,13 +97,38 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', WebUserController::class)->parameters(['users' => 'user'])->names('web.users');
     Route::patch('users/{user}/block', [WebUserController::class, 'block'])->name('web.users.block');
     Route::get('users/{user}/seller-report', [WebUserController::class, 'sellerReport'])->name('web.users.sellerReport');
+    Route::get('users/{user}/roles', [WebUserController::class, 'roles'])->name('web.users.roles');
+    Route::post('users/{user}/assign-role', [WebUserController::class, 'assignRole'])->name('web.users.assignRole');
+    Route::delete('users/{userId}/remove-role/{roleId}', [WebUserController::class, 'removeRole'])->name('web.users.removeRole');
+    Route::get('users/{user}/permissions', [WebUserController::class, 'permissions'])->name('web.users.permissions');
+    Route::post('users/{user}/give-permission', [WebUserController::class, 'givePermission'])->name('web.users.givePermission');
+    Route::delete('users/{userId}/revoke-permission/{permissionId}', [WebUserController::class, 'revokePermission'])->name('web.users.revokePermission');
+
+    // Roles Management
+    Route::resource('roles', WebRoleController::class)->parameters(['roles' => 'role'])->names('web.roles');
+
+    // Permissions Management
+    Route::resource('permissions', WebPermissionController::class)->parameters(['permissions' => 'permission'])->names('web.permissions');
+
+    // Privacy Policies
+    Route::resource('privacy-policies', WebPrivacyPolicyController::class)->parameters(['privacy-policies' => 'privacyPolicy'])->names('web.privacy-policies');
 
     // Shops
     Route::resource('shops', WebShopController::class)->names('web.shops');
 
+    // Branches
+    Route::resource('branches', WebBranchController::class)->names('web.branches');
+
     // Sales
     Route::resource('sales', WebSaleController::class)->except(['edit', 'update'])->names('web.sales');
     Route::get('sales/{sale}/receipt', [WebSaleController::class, 'receipt'])->name('web.sales.receipt');
+
+    // POS
+    Route::middleware('auth')->group(function () {
+        Route::get('pos', [WebPosController::class, 'index'])->name('web.pos.index');
+        Route::post('pos', [WebPosController::class, 'store'])->name('web.pos.store');
+        Route::get('pos/receipt/{id}', [WebPosController::class, 'receipt'])->name('web.pos.receipt');
+    });
 
     // Expenses
     Route::resource('expenses', WebExpenseController::class)->names('web.expenses');
@@ -84,5 +148,31 @@ Route::middleware('auth')->group(function () {
 
     // Admin
     Route::get('admin', [WebAdminController::class, 'index'])->name('web.admin.index');
+    Route::post('admin/send-otp', [WebAdminController::class, 'sendOtp'])->name('web.admin.sendOtp');
     Route::post('admin/clear/{table}', [WebAdminController::class, 'clear'])->name('web.admin.clear');
+
+    // Subscription Packages
+    Route::resource('admin/subscription-packages', WebSubscriptionPackageController::class)->names('admin.subscription-packages');
+
+    // Subscriptions
+    Route::resource('admin/subscriptions', WebSubscriptionController::class)->names('admin.subscriptions');
+
+    // Subscription Payments
+    Route::resource('admin/subscription-payments', WebSubscriptionPaymentController::class)->names('admin.subscription-payments');
+
+    // Features
+    Route::resource('admin/features', WebFeatureController::class)->names('admin.features');
+
+    // Audits
+    Route::get('admin/audits', [WebAuditController::class, 'index'])->middleware('permission:view audits')->name('admin.audits.index');
+
+    // Guides
+    Route::resource('admin/guides', WebGuideController::class)->names('admin.guides');
+    Route::get('admin/guides/{guide}/download', [WebGuideController::class, 'download'])->name('admin.guides.download');
+
+    // Common Categories (Superadmin only)
+    Route::resource('superadmin/common-categories', WebCommonCategoryController::class)->names('web.superadmin.common-categories');
+
+    // Common Products (Superadmin only)
+    Route::resource('superadmin/common-products', WebCommonProductController::class)->names('web.superadmin.common-products');
 });

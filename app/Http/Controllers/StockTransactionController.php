@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\StockTransaction;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StockTransactionController extends Controller
 {
@@ -11,7 +12,7 @@ class StockTransactionController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => StockTransaction::with(['product','supplier','user'])
+            'data' => StockTransaction::where('shop_id', Auth::user()->shop_id)->with(['product','supplier','user'])
                 ->orderBy('date','desc')->get(),
             'message' => 'Stock transactions retrieved successfully'
         ]);
@@ -29,6 +30,7 @@ class StockTransactionController extends Controller
         ]);
 
         $data['recorded_by'] = $r->user()->id;
+        $data['shop_id'] = Auth::user()->shop_id;
 
         $product = Product::find($data['product_id']);
 
@@ -59,14 +61,14 @@ class StockTransactionController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => StockTransaction::with(['product','supplier','user'])->findOrFail($id),
+            'data' => StockTransaction::where('shop_id', Auth::user()->shop_id)->with(['product','supplier','user'])->findOrFail($id),
             'message' => 'Stock transaction retrieved successfully'
         ]);
     }
 
     public function destroy($id)
     {
-        $tx = StockTransaction::findOrFail($id);
+        $tx = StockTransaction::where('shop_id', Auth::user()->shop_id)->findOrFail($id);
         $product = $tx->product;
 
         if ($tx->type === 'stock_in' || $tx->type === 'return') {

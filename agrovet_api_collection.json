@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "AgroVet API",
-    "description": "Postman collection for AgroVet API endpoints",
+    "name": "Apex API",
+    "description": "Postman collection for Apex API endpoints with OTP authentication",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -34,6 +34,21 @@
       "key": "end_date",
       "value": "2025-12-07",
       "type": "string"
+    },
+    {
+      "key": "email",
+      "value": "john@example.com",
+      "type": "string"
+    },
+    {
+      "key": "otp_code",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "purpose",
+      "value": "login",
+      "type": "string"
     }
   ],
   "item": [
@@ -52,7 +67,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"role\": \"seller\"\n}"
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"role\": \"owner\",\n  \"shop_name\": \"My Shop\",\n  \"shop_location\": \"Nairobi\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/register",
@@ -62,7 +77,28 @@
           }
         },
         {
-          "name": "Login User",
+          "name": "Login User (Send OTP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
           "event": [
             {
               "listen": "test",
@@ -86,12 +122,75 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp_code\": \"{{otp_code}}\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/login",
+              "raw": "{{base_url}}/verify-otp",
               "host": ["{{base_url}}"],
-              "path": ["login"]
+              "path": ["verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/resend-otp",
+              "host": ["{{base_url}}"],
+              "path": ["resend-otp"]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password (Send Reset OTP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp_code\": \"{{otp_code}}\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["reset-password"]
             }
           }
         },
@@ -662,6 +761,485 @@
               "raw": "{{base_url}}/reports/dashboard",
               "host": ["{{base_url}}"],
               "path": ["reports", "dashboard"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subscriptions",
+      "item": [
+        {
+          "name": "List Subscription Packages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/subscription-packages",
+              "host": ["{{base_url}}"],
+              "path": ["subscription-packages"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Subscription",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/subscription/current",
+              "host": ["{{base_url}}"],
+              "path": ["subscription", "current"]
+            }
+          }
+        },
+        {
+          "name": "Subscribe to Package",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"package_id\": 2,\n  \"shop_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/subscription/subscribe",
+              "host": ["{{base_url}}"],
+              "path": ["subscription", "subscribe"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shop Management",
+      "item": [
+        {
+          "name": "Get Shop Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/shop",
+              "host": ["{{base_url}}"],
+              "path": ["shop"]
+            }
+          }
+        },
+        {
+          "name": "Update Shop Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Shop Name\",\n  \"location\": \"New Location\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/shop",
+              "host": ["{{base_url}}"],
+              "path": ["shop"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "OTP Management",
+      "item": [
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"purpose\": \"{{purpose}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/send",
+              "host": ["{{base_url}}"],
+              "path": ["otp", "send"]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp_code\": \"{{otp_code}}\",\n  \"purpose\": \"{{purpose}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/verify",
+              "host": ["{{base_url}}"],
+              "path": ["otp", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Check OTP Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"purpose\": \"{{purpose}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/status",
+              "host": ["{{base_url}}"],
+              "path": ["otp", "status"]
+            }
+          }
+        },
+        {
+          "name": "Clear OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"purpose\": \"{{purpose}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/clear",
+              "host": ["{{base_url}}"],
+              "path": ["otp", "clear"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Guides Management",
+      "item": [
+        {
+          "name": "List Guides",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/guides?language=en",
+              "host": ["{{base_url}}"],
+              "path": ["guides"],
+              "query": [
+                {
+                  "key": "language",
+                  "value": "en"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Guide (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Getting Started Guide\",\n  \"content\": \"This guide helps you get started with the system.\",\n  \"language\": \"en\",\n  \"target_role\": \"owner\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/guides",
+              "host": ["{{base_url}}"],
+              "path": ["guides"]
+            }
+          }
+        },
+        {
+          "name": "Get Guide",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/guides/{{id}}",
+              "host": ["{{base_url}}"],
+              "path": ["guides", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Guide (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Guide Title\",\n  \"content\": \"Updated guide content.\",\n  \"language\": \"en\",\n  \"target_role\": \"both\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/guides/{{id}}",
+              "host": ["{{base_url}}"],
+              "path": ["guides", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Guide (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/guides/{{id}}",
+              "host": ["{{base_url}}"],
+              "path": ["guides", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Download Guide File",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/guides/{{id}}/download",
+              "host": ["{{base_url}}"],
+              "path": ["guides", "{{id}}", "download"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sellers",
+      "item": [
+        {
+          "name": "List Sellers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sellers",
+              "host": ["{{base_url}}"],
+              "path": ["sellers"]
+            }
+          }
+        },
+        {
+          "name": "Create Seller",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sellers",
+              "host": ["{{base_url}}"],
+              "path": ["sellers"]
+            }
+          }
+        },
+        {
+          "name": "Get Seller",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sellers/{{id}}",
+              "host": ["{{base_url}}"],
+              "path": ["sellers", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Seller",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sellers/{{id}}",
+              "host": ["{{base_url}}"],
+              "path": ["sellers", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Block/Unblock Seller",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sellers/{{id}}/block",
+              "host": ["{{base_url}}"],
+              "path": ["sellers", "{{id}}", "block"]
+            }
+          }
+        },
+        {
+          "name": "Get Seller Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sellers/{{id}}/report?start={{start_date}}&end={{end_date}}",
+              "host": ["{{base_url}}"],
+              "path": ["sellers", "{{id}}", "report"],
+              "query": [
+                {
+                  "key": "start",
+                  "value": "{{start_date}}"
+                },
+                {
+                  "key": "end",
+                  "value": "{{end_date}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Privacy Policy",
+      "item": [
+        {
+          "name": "Get Current Privacy Policy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/privacy-policy",
+              "host": ["{{base_url}}"],
+              "path": ["privacy-policy"]
             }
           }
         }

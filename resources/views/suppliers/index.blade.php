@@ -31,6 +31,7 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 <script>
 $(document).ready(function() {
     $('.dt-responsive').DataTable({
@@ -61,10 +62,10 @@ $(document).ready(function() {
                     return `
                         <a href="{{ url('suppliers') }}/${data}" class="btn btn-sm btn-info">View</a>
                         <a href="{{ url('suppliers') }}/${data}/edit" class="btn btn-sm btn-warning">Edit</a>
-                        <form method="POST" action="{{ url('suppliers') }}/${data}" class="d-inline">
+                        <form method="POST" action="{{ url('suppliers') }}/${data}" class="d-inline" id="delete-form-${data}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(${data})">Delete</button>
                         </form>
                     `;
                 }
@@ -114,5 +115,21 @@ $(document).ready(function() {
         }
     });
 });
+
+function confirmDelete(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d6d6d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
 </script>
 @endsection

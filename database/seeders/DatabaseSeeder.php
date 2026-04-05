@@ -3,13 +3,21 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Seeder;
-use Database\Seeders\ProductSeeder;
-use Database\Seeders\KedrikProductSeeder;
-use Database\Seeders\UserSeeder;
 use Database\Seeders\AboutSeeder;
+use Database\Seeders\BranchSeeder;
+use Database\Seeders\CommonCategorySeeder;
+use Database\Seeders\CommonProductSeeder;
 use Database\Seeders\ContactSeeder;
+use Database\Seeders\CosmeticsProductSeeder;
+use Database\Seeders\FeatureSeeder;
+use Database\Seeders\KedrikProductSeeder;
+use Database\Seeders\ProductSeeder;
+use Database\Seeders\PrivacyPolicySeeder;
+use Database\Seeders\RolePermissionSeeder;
+use Database\Seeders\SubscriptionPackageSeeder;
+use Database\Seeders\UserSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,11 +34,19 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        $this->call(RolePermissionSeeder::class);
         $this->call(UserSeeder::class);
-        $this->call(ProductSeeder::class);
-        $this->call(KedrikProductSeeder::class);
+        $this->call(BranchSeeder::class);
+        $this->call(CommonCategorySeeder::class);
+        $this->call(CommonProductSeeder::class);
+        $this->call(FeatureSeeder::class);
+        $this->call(SubscriptionPackageSeeder::class);
+        // $this->call(ProductSeeder::class);
+        // $this->call(KedrikProductSeeder::class);
+        $this->call(CosmeticsProductSeeder::class);
         $this->call(AboutSeeder::class);
         $this->call(ContactSeeder::class);
+        $this->call(PrivacyPolicySeeder::class);
 
     }
 }

@@ -49,8 +49,9 @@ class WebAuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'role' => 'seller' // default role
         ]);
+
+        $user->assignRole('seller'); // default role
 
         Auth::login($user);
 
@@ -67,6 +68,34 @@ class WebAuthController extends Controller
 
     public function dashboard()
     {
+        $user = auth()->user();
+
+        if ($user->hasRole('seller')) {
+            // Seller-specific dashboard
+            $sellerId = $user->id;
+            $today = today();
+
+            $data = [
+                'today_sales' => Sale::where('seller_id', $sellerId)->whereDate('sale_date', $today)->sum('total'),
+                'today_expenses' => Expense::where('recorded_by', $sellerId)->whereDate('date', $today)->sum('amount'),
+                'month_sales' => Sale::where('seller_id', $sellerId)->whereMonth('sale_date', $today->month)->whereYear('sale_date', $today->year)->sum('total'),
+                'month_expenses' => Expense::where('recorded_by', $sellerId)->whereMonth('date', $today->month)->whereYear('date', $today->year)->sum('amount'),
+                'total_sales_count' => Sale::where('seller_id', $sellerId)->count(),
+                'today_sales_count' => Sale::where('seller_id', $sellerId)->whereDate('sale_date', $today)->count(),
+            ];
+
+            // Recent sales for the seller
+            $recentSales = Sale::with('items.product')
+                ->where('seller_id', $sellerId)
+                ->whereDate('sale_date', $today)
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get();
+
+            return view('dashboard-seller', compact('data', 'recentSales'));
+        }
+
+        // Admin/Owner dashboard
         $data = [
             'total_products'  => Product::count(),
             'total_sales'     => Sale::sum('total'),

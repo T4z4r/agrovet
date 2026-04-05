@@ -9,7 +9,7 @@
             <div class="d-flex align-items-end row">
                 <div class="col-sm-7">
                     <div class="card-body">
-                        <h5 class="card-title text-primary">Welcome to Agrovet! 🎉</h5>
+                        <h5 class="card-title text-primary">Welcome to Apex! 🎉</h5>
                         <p class="mb-4">
                             You have logged in successfully. Manage your products, suppliers, sales, and more.
                         </p>
@@ -116,16 +116,23 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         Highcharts.chart('chart-container', {
+            chart: {
+                backgroundColor: 'transparent'
+            },
             title: {
                 text: 'Sales vs Expenses'
             },
             xAxis: {
-                categories: @json($dates)
+                categories: @json($dates),
+                gridLineWidth: 1,
+                gridLineColor: '#e0e0e0'
             },
             yAxis: {
                 title: {
                     text: 'Amount'
-                }
+                },
+                gridLineWidth: 1,
+                gridLineColor: '#e0e0e0'
             },
             series: [{
                 name: 'Sales',

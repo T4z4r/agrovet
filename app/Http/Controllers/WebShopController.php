@@ -2,35 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sale;
 use App\Models\Shop;
+use App\Models\StockTransaction;
+use App\Models\Supplier;
+use App\Models\SupplierDebt;
 use Illuminate\Http\Request;
 
 class WebShopController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->role !== 'owner') {
-            abort(403, 'Unauthorized');
+
+
+        $query = Shop::with('owner');
+
+        // If user is owner, only show their own shops
+        if (auth()->user()->hasRole('owner')) {
+            $query->where('owner_id', auth()->id());
         }
 
-        $shops = Shop::with('owner')->get();
+        $shops = $query->get();
         return view('shops.index', compact('shops'));
     }
 
     public function create()
     {
-        if (auth()->user()->role !== 'owner') {
-            abort(403, 'Unauthorized');
-        }
+
 
         return view('shops.create');
     }
 
     public function store(Request $request)
     {
-        if (auth()->user()->role !== 'owner') {
-            abort(403, 'Unauthorized');
-        }
+
 
         $data = $request->validate([
             'name' => 'required|string',
@@ -41,47 +46,62 @@ class WebShopController extends Controller
 
         Shop::create($data);
 
-        return redirect()->route('shops.index')->with('success', 'Shop created successfully');
+        return redirect()->route('web.shops.index')->with('success', 'Shop created successfully');
     }
 
     public function show($id)
     {
-        if (auth()->user()->role !== 'owner') {
-            abort(403, 'Unauthorized');
-        }
 
-        $shop = Shop::with('owner')->findOrFail($id);
+
+        $shop = Shop::with('owner', 'branches')->findOrFail($id);
+        if (auth()->user()->hasRole('owner') && $shop->owner_id !== auth()->id()) {
+            abort(403, 'You can only view your own shop.');
+        }
         return view('shops.show', compact('shop'));
     }
 
     public function edit($id)
     {
-        if (auth()->user()->role !== 'owner') {
-            abort(403, 'Unauthorized');
-        }
+
 
         $shop = Shop::findOrFail($id);
+        if (auth()->user()->hasRole('owner') && $shop->owner_id !== auth()->id()) {
+            abort(403, 'You can only edit your own shop.');
+        }
         return view('shops.edit', compact('shop'));
     }
 
     public function update(Request $request, $id)
     {
-        if (auth()->user()->role !== 'owner') {
-            abort(403, 'Unauthorized');
-        }
+
 
         $shop = Shop::findOrFail($id);
+        if (auth()->user()->hasRole('owner') && $shop->owner_id !== auth()->id()) {
+            abort(403, 'You can only update your own shop.');
+        }
         $shop->update($request->all());
-        return redirect()->route('shops.index')->with('success', 'Shop updated successfully');
+        return redirect()->route('web.shops.index')->with('success', 'Shop updated successfully');
     }
 
     public function destroy($id)
     {
-        if (auth()->user()->role !== 'owner') {
-            abort(403, 'Unauthorized');
+
+
+        $shop = Shop::findOrFail($id);
+        if (auth()->user()->hasRole('owner') && $shop->owner_id !== auth()->id()) {
+            abort(403, 'You can only delete your own shop.');
         }
 
-        Shop::findOrFail($id)->delete();
-        return redirect()->route('shops.index')->with('success', 'Shop deleted successfully');
+        // Prevent deletion if shop has linked data
+        if ($shop->products()->exists() || $shop->branches()->exists() ||
+            Supplier::where('shop_id', $shop->id)->exists() ||
+            Sale::where('shop_id', $shop->id)->exists() ||
+            StockTransaction::where('shop_id', $shop->id)->exists() ||
+            SupplierDebt::where('shop_id', $shop->id)->exists()) {
+            return redirect()->route('web.shops.index')->with('error', 'Cannot delete shop with linked data.');
+        }
+
+        $shop->delete();
+        return redirect()->route('web.shops.index')->with('success', 'Shop deleted successfully');
     }
 }

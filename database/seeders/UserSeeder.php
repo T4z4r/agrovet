@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Branch;
+use App\Models\Shop;
+use App\Models\Subscription;
+use App\Models\SubscriptionPackage;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -16,34 +20,109 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
-        User::firstOrCreate(
-            ['email' => 'admin@example.com'],
+        // Get the first branch
+        $branch = Branch::first();
+
+        // Create superadmin user
+        $superadmin = User::firstOrCreate(
+            ['email' => 'superadmin@example.com'],
             [
-                'name' => 'Admin User',
-                'role' => 'admin',
+                'name' => 'Super Admin',
                 'password' => Hash::make('password'),
+                'role'=>'admin',
+                'branch_id' => null, // Superadmin not tied to branch
+
             ]
         );
+        $superadmin->assignRole('superadmin');
 
         // Create owner user
-        User::firstOrCreate(
+        $owner = User::firstOrCreate(
             ['email' => 'owner@example.com'],
             [
                 'name' => 'Shop Owner',
-                'role' => 'owner',
                 'password' => Hash::make('password'),
+                'role'=>'owner',
+                'branch_id' => null, // Owner can access all branches
+
+            ]
+        );
+        $owner->assignRole('owner');
+
+        // Create shop for owner
+        $shop = Shop::firstOrCreate(
+            ['owner_id' => $owner->id],
+            [
+                'name' => 'Sample Shop',
+                'location' => 'Nairobi, Kenya',
             ]
         );
 
+        // Assign shop_id to owner
+        $owner->shop_id = $shop->id;
+        $owner->save();
+
+        // Create default subscription for owner
+        $freePackage = SubscriptionPackage::where('name', 'Free')->first();
+        if ($freePackage) {
+            Subscription::create([
+                'user_id' => $owner->id,
+                'shop_id' => $shop->id,
+                'subscription_package_id' => $freePackage->id,
+                'start_date' => now(),
+                'end_date' => now()->addMonths(12), // Extend for testing
+                'status' => 'active',
+            ]);
+        }
+
         // Create seller user
-        User::firstOrCreate(
+        $seller = User::firstOrCreate(
             ['email' => 'seller@example.com'],
             [
                 'name' => 'Seller User',
-                'role' => 'seller',
                 'password' => Hash::make('password'),
+                'role' => 'seller',
+                'branch_id' => $branch ? $branch->id : null,
+                'shop_id' => $shop->id,
             ]
         );
+        $seller->assignRole('seller');
+
+        // Create subscription for seller
+        if ($freePackage) {
+            Subscription::create([
+                'user_id' => $seller->id,
+                'shop_id' => $shop->id,
+                'subscription_package_id' => $freePackage->id,
+                'start_date' => now(),
+                'end_date' => now()->addMonths(12),
+                'status' => 'active',
+            ]);
+        }
+
+        // Create manager user
+        $manager = User::firstOrCreate(
+            ['email' => 'manager@example.com'],
+            [
+                'name' => 'Manager User',
+                'password' => Hash::make('password'),
+                'role'=>'owner',
+                'branch_id' => null,
+                'shop_id' => $shop->id,
+            ]
+        );
+        $manager->assignRole('manager');
+
+        // Create subscription for manager
+        if ($freePackage) {
+            Subscription::create([
+                'user_id' => $manager->id,
+                'shop_id' => $shop->id,
+                'subscription_package_id' => $freePackage->id,
+                'start_date' => now(),
+                'end_date' => now()->addMonths(12),
+                'status' => 'active',
+            ]);
+        }
     }
 }

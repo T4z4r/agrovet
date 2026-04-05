@@ -3,53 +3,91 @@
 @section('title', 'Edit Product')
 
 @section('content')
-<h1>Edit Product</h1>
-<form method="POST" action="{{ route('web.products.update', $product) }}">
-    @csrf
-    @method('PUT')
-    <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" name="name" value="{{ $product->name }}" required>
-        @error('name')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Edit Product</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ route('web.products.update', $product) }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $product->name }}" required>
+                            @error('name')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <input type="text" class="form-control" id="category" name="category" value="{{ $product->category }}" required>
+                            @error('category')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="unit" class="form-label">Unit</label>
+                            <input type="text" class="form-control" id="unit" name="unit" value="{{ $product->unit }}" required>
+                            @error('unit')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="stock" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="stock" name="stock" value="{{ $product->stock }}" required min="0">
+                            @error('stock')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="minimum_quantity" class="form-label">Minimum Quantity</label>
+                            <input type="number" class="form-control" id="minimum_quantity" name="minimum_quantity" value="{{ $product->minimum_quantity }}" min="0">
+                            @error('minimum_quantity')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="cost_price" class="form-label">Cost Price</label>
+                            <input type="number" class="form-control" id="cost_price" name="cost_price" value="{{ $product->cost_price }}" required min="0" step="0.01">
+                            @error('cost_price')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="selling_price" class="form-label">Selling Price</label>
+                            <input type="number" class="form-control" id="selling_price" name="selling_price" value="{{ $product->selling_price }}" required min="0" step="0.01">
+                            @error('selling_price')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="barcode" class="form-label">Barcode</label>
+                            <input type="text" class="form-control" id="barcode" name="barcode" value="{{ $product->barcode }}">
+                            @error('barcode')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="photo" class="form-label">Photo</label>
+                            @if($product->photo)
+                                <div class="mb-2">
+                                    <img src="{{ asset('storage/' . $product->photo) }}" alt="Current Photo" style="max-width: 200px; max-height: 200px;">
+                                </div>
+                            @endif
+                            <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                            @error('photo')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <a href="{{ route('web.products.index') }}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="category" class="form-label">Category</label>
-        <input type="text" class="form-control" id="category" name="category" value="{{ $product->category }}" required>
-        @error('category')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="mb-3">
-        <label for="unit" class="form-label">Unit</label>
-        <input type="text" class="form-control" id="unit" name="unit" value="{{ $product->unit }}" required>
-        @error('unit')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="mb-3">
-        <label for="stock" class="form-label">Stock</label>
-        <input type="number" class="form-control" id="stock" name="stock" value="{{ $product->stock }}" required min="0">
-        @error('stock')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="mb-3">
-        <label for="cost_price" class="form-label">Cost Price</label>
-        <input type="number" class="form-control" id="cost_price" name="cost_price" value="{{ $product->cost_price }}" required min="0">
-        @error('cost_price')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="mb-3">
-        <label for="selling_price" class="form-label">Selling Price</label>
-        <input type="number" class="form-control" id="selling_price" name="selling_price" value="{{ $product->selling_price }}" required min="0">
-        @error('selling_price')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    <button type="submit" class="btn btn-primary">Update</button>
-    <a href="{{ route('web.products.index') }}" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
 @endsection

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable;
 
-class Shop extends Model
+class Shop extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
+    use Auditable;
+
     protected $fillable = ['name', 'owner_id', 'location'];
     public function owner()
     {
@@ -14,5 +17,10 @@ class Shop extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function branches()
+    {
+        return $this->hasMany(Branch::class);
     }
 }

@@ -17,7 +17,7 @@ class SaleController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => Sale::with('items.product', 'seller')->latest()->get(),
+            'data' => Sale::where('shop_id', Auth::user()->shop_id)->with('items.product', 'seller')->latest()->get(),
             'message' => 'Sales retrieved successfully'
         ]);
     }
@@ -38,6 +38,7 @@ class SaleController extends Controller
             $sale = Sale::create([
                 'seller_id' => Auth::user()->id,
                 'sale_date' => $data['sale_date'],
+                'shop_id' => Auth::user()->shop_id,
                 'total' => 0
             ]);
 
@@ -73,6 +74,7 @@ class SaleController extends Controller
                     'quantity' => $item['quantity'],
                     'supplier_id' => null,
                     'recorded_by' => Auth::user()->id,
+                    'shop_id' => Auth::user()->shop_id,
                     'date' => $data['sale_date'],
                     'remarks' => 'Sold in sale #' . $sale->id
                 ]);
@@ -93,14 +95,14 @@ class SaleController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => Sale::with('items.product', 'seller')->findOrFail($id),
+            'data' => Sale::where('shop_id', Auth::user()->shop_id)->with('items.product', 'seller')->findOrFail($id),
             'message' => 'Sale retrieved successfully'
         ]);
     }
 
     public function receipt($id)
     {
-        $sale = Sale::with('items.product')->findOrFail($id);
+        $sale = Sale::where('shop_id', Auth::user()->shop_id)->with('items.product')->findOrFail($id);
 
         $pdf = PDF::loadView('pdf.receipt', compact('sale'));
         return $pdf->download("receipt_{$sale->id}.pdf");
@@ -115,7 +117,7 @@ class SaleController extends Controller
             ], 403);
         }
 
-        $sale = Sale::with('items.product')->findOrFail($id);
+        $sale = Sale::where('shop_id', Auth::user()->shop_id)->with('items.product')->findOrFail($id);
 
         return DB::transaction(function () use ($sale) {
             // Restore stock and create stock transactions
@@ -129,6 +131,7 @@ class SaleController extends Controller
                     'quantity' => $item->quantity,
                     'supplier_id' => null,
                     'recorded_by' => auth()->id(),
+                    'shop_id' => Auth::user()->shop_id,
                     'date' => $sale->sale_date,
                     'remarks' => 'Restored from deleted sale #' . $sale->id
                 ]);

@@ -74,13 +74,13 @@
               <div class="app-brand justify-content-center">
                 <a href="{{ url('/') }}" class="app-brand-link gap-2">
                   <span class="app-brand-logo demo">
-                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" style="height:80px; width: auto;">
+                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" style="height:100px; width: auto;">
                   </span>
-                  <span class="app-brand-text demo text-body fw-bolder">{{ config('app.name', 'Agrovet') }}</span>
+                  {{-- <span class="app-brand-text demo text-body fw-bolder">{{ config('app.name', 'Agrovet') }}</span> --}}
                 </a>
               </div>
               <!-- /Logo -->
-              <h4 class="mb-2 text-center">{{ __('Welcome to Agrovet! 👋') }}</h4>
+              <h4 class="mb-2 text-center">{{ __('Welcome to Apex! 👋') }}</h4>
 
               <!-- Session Status -->
               @if (session('status'))

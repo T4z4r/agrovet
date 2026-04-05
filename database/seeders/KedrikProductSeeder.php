@@ -5,11 +5,14 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\StockTransaction;
+use App\Models\Shop;
 
 class KedrikProductSeeder extends Seeder
 {
     public function run()
     {
+        $shop = Shop::first(); // Assign to first shop
+
         $products = [
             // DRUS
             ["Bajuton wp", "500g", 5, 9000, 11000, "DRUS"],
@@ -134,6 +137,7 @@ class KedrikProductSeeder extends Seeder
                 'name' => $p[0],
                 'unit' => $p[1],
             ], [
+                'shop_id'       => $shop ? $shop->id : null,
                 'stock'         => $p[2],
                 'cost_price'    => $p[3],
                 'selling_price' => $p[4],
@@ -143,6 +147,7 @@ class KedrikProductSeeder extends Seeder
             // Create stock transaction if stock > 0
             if ($p[2] > 0) {
                 StockTransaction::updateOrCreate([
+                    'shop_id' => $shop ? $shop->id : null,
                     'product_id' => $product->id,
                     'type' => 'stock_in',
                     'quantity' => $p[2],

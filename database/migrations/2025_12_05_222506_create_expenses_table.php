@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('shop_id')->constrained('shops');
+            $table->foreignId('shop_id')->nullable()->constrained('shops');
             $table->foreignId('recorded_by')->constrained('users');
             $table->string('category');
             $table->decimal('amount', 12, 2);

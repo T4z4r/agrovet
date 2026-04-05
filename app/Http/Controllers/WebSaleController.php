@@ -36,20 +36,27 @@ class WebSaleController extends Controller
 
     public function store(Request $r)
     {
+        $user = Auth::user();
         $data = $r->validate([
             'sale_date' => 'required|date',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|integer|min:0'
+            'items.*.price' => 'required|integer|min:0',
+            'shop_id' => 'nullable|exists:shops,id'
         ]);
+
+        if (!$user->hasRole('superadmin')) {
+            $data['shop_id'] = $user->shop_id;
+        }
 
         DB::transaction(function () use ($data) {
 
             $sale = Sale::create([
                 'seller_id' => Auth::user()->id,
                 'sale_date' => $data['sale_date'],
-                'total' => 0
+                'total' => 0,
+                'shop_id' => $data['shop_id']
             ]);
 
             $grand_total = 0;

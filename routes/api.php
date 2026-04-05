@@ -11,6 +11,11 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PrivacyPolicyController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\OtpController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\GuideController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +24,8 @@ use App\Http\Controllers\ContactController;
 */
 Route::get('about', [AboutController::class, 'index']);
 Route::get('contacts', [ContactController::class, 'index']);
+Route::get('privacy-policy', [PrivacyPolicyController::class, 'index']);
+Route::apiResource('privacy-policies', PrivacyPolicyController::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -28,8 +35,24 @@ Route::get('contacts', [ContactController::class, 'index']);
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('resend-otp', [AuthController::class, 'resendOtp']);
+Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
-Route::middleware('auth:sanctum')->group(function () {
+/*
+|--------------------------------------------------------------------------
+| OTP Management
+|--------------------------------------------------------------------------
+*/
+Route::prefix('otp')->group(function () {
+    Route::post('send', [OtpController::class, 'send']);
+    Route::post('verify', [OtpController::class, 'verify']);
+    Route::post('status', [OtpController::class, 'status']);
+    Route::post('clear', [OtpController::class, 'clear']);
+});
+
+Route::middleware(['auth:sanctum', 'subscription'])->group(function () {
 
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
@@ -90,5 +113,30 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('sellers', UserController::class);
     Route::patch('sellers/{id}/block', [UserController::class, 'block']);
     Route::get('sellers/{id}/report', [UserController::class, 'sellerReport']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Subscriptions
+    |--------------------------------------------------------------------------
+    */
+    Route::get('subscription-packages', [SubscriptionController::class, 'indexPackages']);
+    Route::get('subscription/current', [SubscriptionController::class, 'currentSubscription']);
+    Route::post('subscription/subscribe', [SubscriptionController::class, 'subscribe']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Shop Management
+    |--------------------------------------------------------------------------
+    */
+    Route::get('shop', [ShopController::class, 'show']);
+    Route::put('shop', [ShopController::class, 'update']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Guides Management
+    |--------------------------------------------------------------------------
+    */
+    Route::apiResource('guides', GuideController::class);
+    Route::get('guides/{guide}/download', [GuideController::class, 'download']);
 
 });
