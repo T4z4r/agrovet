@@ -4,7 +4,7 @@
                <span class="app-brand-logo demo">
                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" style="height: 25px; width: auto;">
                </span>
-               <span class="app-brand-text demo menu-text fw-bolder ms-2">{{ config('app.name', 'Apex') }}</span>
+               <span class="app-brand-text demo menu-text fw-bolder ms-2">{{ config('app.name', 'Apex Pos') }}</span>
            </a>
 
            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
@@ -106,7 +106,7 @@
            @endcan
 
            @can('view users')
-              <!-- User Management -->
+               <!-- User Management -->
                <li class="menu-item {{ request()->routeIs('web.users.*') ? 'active open' : '' }}">
                    <a href="javascript:void(0);" class="menu-link menu-toggle">
                        <i class="menu-icon tf-icons bx bx-user-check"></i>
@@ -166,7 +166,8 @@
 
            @can('manage subscriptions')
                <!-- Subscriptions -->
-               <li class="menu-item {{ request()->routeIs('admin.subscription-packages.*', 'admin.subscriptions.*', 'admin.subscription-payments.*') ? 'active open' : '' }}">
+               <li
+                   class="menu-item {{ request()->routeIs('admin.subscription-packages.*', 'admin.subscriptions.*', 'admin.subscription-payments.*') ? 'active open' : '' }}">
                    <a href="javascript:void(0);" class="menu-link menu-toggle">
                        <i class="menu-icon tf-icons bx bx-credit-card"></i>
                        <div>{{ __('Subscriptions') }}</div>
@@ -228,13 +229,15 @@
 
            @can('access admin')
                <!-- Common Products -->
-               <li class="menu-item {{ request()->routeIs('web.superadmin.common-products.*', 'web.superadmin.common-categories.*') ? 'active open' : '' }}">
+               <li
+                   class="menu-item {{ request()->routeIs('web.superadmin.common-products.*', 'web.superadmin.common-categories.*') ? 'active open' : '' }}">
                    <a href="javascript:void(0);" class="menu-link menu-toggle">
                        <i class="menu-icon tf-icons bx bx-package"></i>
                        <div>{{ __('Common Products') }}</div>
                    </a>
                    <ul class="menu-sub">
-                       <li class="menu-item {{ request()->routeIs('web.superadmin.common-categories.*') ? 'active' : '' }}">
+                       <li
+                           class="menu-item {{ request()->routeIs('web.superadmin.common-categories.*') ? 'active' : '' }}">
                            <a href="{{ route('web.superadmin.common-categories.index') }}" class="menu-link">
                                <div>{{ __('Categories') }}</div>
                            </a>
