@@ -176,6 +176,66 @@ class WebProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Product deleted successfully');
     }
 
+    public function commonProductsList()
+    {
+        $commonProducts = CommonProduct::where('is_active', true)
+            ->with('commonCategory')
+            ->orderBy('name')
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'category_name' => $product->commonCategory->name ?? null,
+                    'unit' => $product->unit,
+                    'default_cost_price' => $product->default_cost_price,
+                    'default_selling_price' => $product->default_selling_price,
+                ];
+            });
+
+        return response()->json($commonProducts);
+    }
+
+    public function addFromCommonProducts(Request $request)
+    {
+        $request->validate([
+            'common_product_ids' => 'required|array|min:1',
+            'common_product_ids.*' => 'exists:common_products,id',
+        ]);
+
+        $user = Auth::user();
+        $commonProducts = CommonProduct::with('commonCategory')
+            ->whereIn('id', $request->common_product_ids)
+            ->where('is_active', true)
+            ->get();
+
+        $added = 0;
+
+        foreach ($commonProducts as $commonProduct) {
+            $data = [
+                'shop_id' => $user->shop_id,
+                'name' => $commonProduct->name,
+                'unit' => $commonProduct->unit,
+                'category' => $commonProduct->commonCategory->name ?? '',
+                'stock' => 0,
+                'cost_price' => $commonProduct->default_cost_price ?? 0,
+                'selling_price' => $commonProduct->default_selling_price ?? 0,
+                'minimum_quantity' => $commonProduct->default_minimum_quantity ?? 0,
+                'barcode' => $commonProduct->barcode,
+            ];
+
+            if ($user->role !== 'owner' && $user->branch_id) {
+                $data['branch_id'] = $user->branch_id;
+            }
+
+            Product::create($data);
+            $added++;
+        }
+
+        return redirect()->route('web.products.index')
+            ->with('success', $added . ' product(s) added from common products successfully.');
+    }
+
     public function downloadTemplate()
     {
         return Excel::download(new ProductImportTemplate, 'product_import_template.xlsx');
