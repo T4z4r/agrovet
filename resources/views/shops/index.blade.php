@@ -8,7 +8,9 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Shops</h5>
+                @if(!$hasShop)
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createShopModal">Add Shop</button>
+                @endif
             </div>
             <div class="card-body">
                 <div class="table-responsive">

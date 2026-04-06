@@ -23,13 +23,16 @@ class WebShopController extends Controller
         }
 
         $shops = $query->get();
-        return view('shops.index', compact('shops'));
+        $hasShop = auth()->user()->hasRole('owner') && Shop::where('owner_id', auth()->id())->exists();
+        return view('shops.index', compact('shops', 'hasShop'));
     }
 
     public function create()
     {
 
-
+        if (auth()->user()->hasRole('owner') && Shop::where('owner_id', auth()->id())->exists()) {
+            return redirect()->route('web.shops.index')->with('error', 'You can only have one shop.');
+        }
         return view('shops.create');
     }
 
@@ -41,6 +44,10 @@ class WebShopController extends Controller
             'name' => 'required|string',
             'location' => 'required|string',
         ]);
+
+        if (Shop::where('owner_id', auth()->id())->exists()) {
+            return redirect()->route('web.shops.index')->with('error', 'You can only have one shop.');
+        }
 
         $data['owner_id'] = auth()->id();
 
