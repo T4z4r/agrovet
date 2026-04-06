@@ -164,13 +164,8 @@ class AuthController extends Controller
             ], 404);
         }
 
-        // Check if there's an existing OTP and if it's not expired
-        if ($this->otpService->hasValidOtp($user, 'register')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'OTP already sent. Please wait before requesting a new one.'
-            ], 429);
-        }
+        // Clear any existing OTP and send a new one
+        $this->otpService->clearOtp($user, 'register');
 
         try {
             $this->otpService->sendOtp($user, 'register');
