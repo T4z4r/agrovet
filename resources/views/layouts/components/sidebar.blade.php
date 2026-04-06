@@ -105,7 +105,7 @@
                </li>
            @endcan
 
-           @can('view users')
+           @can('manage roles')
                <!-- User Management -->
                <li class="menu-item {{ request()->routeIs('web.users.*') ? 'active open' : '' }}">
                    <a href="javascript:void(0);" class="menu-link menu-toggle">
