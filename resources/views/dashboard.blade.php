@@ -77,7 +77,11 @@
                 <h6>Stock Value</h6>
             </div>
             <div class="card-body">
-                <h4 class="text-primary">{{ number_format($data['stock_value'], 2) }}</h4>
+                <h4 class="text-primary">
+                    <span class="value-hidden">****</span>
+                    <span class="value-visible" style="display: none;">{{ number_format($data['stock_value'], 2) }}</span>
+                    <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="toggleValue(this)">Show</button>
+                </h4>
                 <p>Total value of current stock based on cost prices.</p>
             </div>
         </div>
@@ -89,13 +93,32 @@
             </div>
             <div class="card-body">
                 <h4 class="{{ $data['total_sales'] - $data['total_expenses'] >= 0 ? 'text-success' : 'text-danger' }}">
-                    {{ number_format($data['total_sales'] - $data['total_expenses'], 2) }}
+                    <span class="value-hidden">****</span>
+                    <span class="value-visible" style="display: none;">{{ number_format($data['total_sales'] - $data['total_expenses'], 2) }}</span>
+                    <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="toggleValue(this)">Show</button>
                 </h4>
                 <p>Total sales minus total expenses.</p>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function toggleValue(btn) {
+    const parent = btn.parentElement;
+    const hidden = parent.querySelector('.value-hidden');
+    const visible = parent.querySelector('.value-visible');
+    if (hidden.style.display !== 'none') {
+        hidden.style.display = 'none';
+        visible.style.display = 'inline';
+        btn.textContent = 'Hide';
+    } else {
+        hidden.style.display = 'inline';
+        visible.style.display = 'none';
+        btn.textContent = 'Show';
+    }
+}
+</script>
 
 <div class="row mt-4">
     <div class="col-md-12">

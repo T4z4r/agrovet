@@ -172,7 +172,14 @@ class AuthController extends Controller
             ], 429);
         }
 
-        $this->otpService->sendOtp($user, 'register');
+        try {
+            $this->otpService->sendOtp($user, 'register');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send OTP: ' . $e->getMessage()
+            ], 500);
+        }
 
         return response()->json([
             'success' => true,
