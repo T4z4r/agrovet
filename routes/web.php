@@ -123,7 +123,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('branches', WebBranchController::class)->names('web.branches');
 
     // Sales
-    Route::resource('sales', WebSaleController::class)->except(['edit', 'update'])->names('web.sales');
+    Route::resource('sales', WebSaleController::class)->names('web.sales');
     Route::get('sales/{sale}/receipt', [WebSaleController::class, 'receipt'])->name('web.sales.receipt');
 
     // POS

@@ -96,6 +96,26 @@ class WebSaleController extends Controller
         return view('sales.show', compact('sale'));
     }
 
+    public function edit($id)
+    {
+        $sale = Sale::with('items.product')->findOrFail($id);
+        return view('sales.edit', compact('sale'));
+    }
+
+    public function update(Request $r, $id)
+    {
+        $data = $r->validate([
+            'sale_date' => 'required|date',
+            'payment_method' => 'nullable|string',
+            'customer_name' => 'nullable|string',
+        ]);
+
+        $sale = Sale::findOrFail($id);
+        $sale->update($data);
+
+        return redirect()->route('web.sales.index')->with('success', 'Sale updated successfully');
+    }
+
     public function receipt($id)
     {
         $sale = Sale::with('items.product')->findOrFail($id);

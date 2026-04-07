@@ -120,6 +120,7 @@ $(document).ready(function() {
                 render: function(data, type, row) {
                     return `
                         <a href="{{ url('sales') }}/${data}" class="btn btn-sm btn-info">View</a>
+                        <a href="{{ url('sales') }}/${data}/edit" class="btn btn-sm btn-warning">Edit</a>
                         <a href="{{ url('sales') }}/${data}/receipt" class="btn btn-sm btn-secondary">Receipt</a>
                     `;
                 }

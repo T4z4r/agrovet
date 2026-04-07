@@ -8,7 +8,10 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Sale #{{ $sale->id }}</h5>
-                <a href="{{ route('web.sales.receipt', $sale) }}" class="btn btn-secondary">Download Receipt</a>
+                <div>
+                    <a href="{{ route('web.sales.edit', $sale) }}" class="btn btn-warning me-2">Edit</a>
+                    <a href="{{ route('web.sales.receipt', $sale) }}" class="btn btn-secondary">Download Receipt</a>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row mb-3">
