@@ -144,7 +144,7 @@ class WebProductController extends Controller
         $stockDifference = $newStock - $oldStock;
         if ($stockDifference != 0) {
             StockTransaction::create([
-                'branch_id' => $product->branch_id,
+                // 'branch_id' => $product->branch_id,
                 'product_id' => $product->id,
                 'type' => $stockDifference > 0 ? 'stock_in' : 'stock_out',
                 'quantity' => abs($stockDifference),
