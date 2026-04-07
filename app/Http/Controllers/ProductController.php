@@ -81,16 +81,23 @@ class ProductController extends Controller
         // Create stock transaction if stock changed
         $stockDifference = $newStock - $oldStock;
         if ($stockDifference != 0) {
-            StockTransaction::create([
-                'product_id' => $p->id,
-                'type' => $stockDifference > 0 ? 'stock_in' : 'stock_out',
-                'quantity' => abs($stockDifference),
-                'supplier_id' => null,
-                'recorded_by' => Auth::id(),
-                'shop_id' => Auth::user()->shop_id,
-                'date' => now()->toDateString(),
-                'remarks' => 'Stock adjustment on product update'
-            ]);
+            try {
+                StockTransaction::create([
+                    'product_id' => $p->id,
+                    'type' => $stockDifference > 0 ? 'stock_in' : 'stock_out',
+                    'quantity' => abs($stockDifference),
+                    'supplier_id' => null,
+                    'recorded_by' => Auth::id(),
+                    'shop_id' => Auth::user()->shop_id,
+                    'date' => now()->toDateString(),
+                    'remarks' => 'Stock adjustment on product update'
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Product updated but failed to create stock transaction: ' . $e->getMessage()
+                ], 500);
+            }
         }
 
         return response()->json([
