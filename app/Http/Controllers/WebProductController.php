@@ -137,17 +137,11 @@ class WebProductController extends Controller
             $data['photo'] = $path;
         }
 
-        // Update other fields
-        $product->update(collect($data)->except('stock_change')->toArray());
-
-        // Update stock using the old implementation pattern
-        $product = $product->fresh();
-        $product->stock = ($product->stock ?? 0) + $data['stock_change'];
-        $product->save();
+        $product->update($data);
         $newStock = $product->stock;
 
-        // Create stock transaction
-        $stockDifference = $data['stock_change'];
+        // Create stock transaction if stock changed
+        $stockDifference = $newStock - $oldStock;
         if ($stockDifference != 0) {
             StockTransaction::create([
                 // 'branch_id' => $product->branch_id,
