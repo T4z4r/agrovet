@@ -169,7 +169,7 @@ class CommonCategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            CommonCategory::create($category);
+            CommonCategory::firstOrCreate(['name' => $category['name']], $category);
         }
     }
 }
