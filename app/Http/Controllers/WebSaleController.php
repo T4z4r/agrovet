@@ -115,7 +115,7 @@ class WebSaleController extends Controller
             'items.*.price' => 'required|integer|min:0',
         ]);
 
-        $sale = Sale::with('items')->findOrFail($id);
+        $sale = Sale::with('items')->where('id', $id)->firstOrFail();
 
         DB::transaction(function () use ($data, $sale) {
             $sale->update([
