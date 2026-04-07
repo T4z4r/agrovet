@@ -98,7 +98,7 @@ class WebProductController extends Controller
             ]);
         }
 
-        return redirect()->route('web.products.index')->with('success', 'Product created successfully');
+        return redirect()->route('products.index')->with('success', 'Product created successfully');
     }
 
     public function show($id)
@@ -115,7 +115,7 @@ class WebProductController extends Controller
 
     public function update(Request $request, $id)
     {
-        $product = Product::where('id', $id)->first();
+        $product = Product::findOrFail($id);
         $oldStock = $product->stock;
 
         $data = $request->validate([
@@ -123,7 +123,7 @@ class WebProductController extends Controller
             'name' => 'required',
             'unit' => 'required',
             'category' => 'required',
-            'stock_change' => 'required|numeric',
+            'stock' => 'required',
             'minimum_quantity' => 'nullable',
             'cost_price' => 'required',
             'selling_price' => 'required',
@@ -155,7 +155,7 @@ class WebProductController extends Controller
             ]);
         }
 
-        return redirect()->route('web.products.index')->with('success', 'Product updated successfully');
+        return redirect()->route('products.index')->with('success', 'Product updated successfully');
     }
 
     public function destroy($id)
@@ -164,16 +164,16 @@ class WebProductController extends Controller
 
         // Check if product is linked to sales
         if ($product->saleItems()->exists()) {
-            return redirect()->route('web.products.index')->with('error', 'Cannot delete product that has been sold');
+            return redirect()->route('products.index')->with('error', 'Cannot delete product that has been sold');
         }
 
         // Check if product has stock transactions
         if ($product->stockTransactions()->exists()) {
-            return redirect()->route('web.products.index')->with('error', 'Cannot delete product that has stock transactions');
+            return redirect()->route('products.index')->with('error', 'Cannot delete product that has stock transactions');
         }
 
         $product->delete();
-        return redirect()->route('web.products.index')->with('success', 'Product deleted successfully');
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully');
     }
 
     public function commonProductsList()
@@ -253,9 +253,9 @@ class WebProductController extends Controller
         $errors = $import->getErrors();
 
         if (!empty($errors)) {
-            return redirect()->route('web.products.index')->with('error', 'Import completed with errors: ' . implode(', ', $errors));
+            return redirect()->route('products.index')->with('error', 'Import completed with errors: ' . implode(', ', $errors));
         }
 
-        return redirect()->route('web.products.index')->with('success', 'Products imported successfully');
+        return redirect()->route('products.index')->with('success', 'Products imported successfully');
     }
 }
