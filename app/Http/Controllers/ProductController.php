@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Product;
@@ -20,15 +21,15 @@ class ProductController extends Controller
     public function store(Request $r)
     {
         $data = $r->validate([
-            'name'=>'required',
-            'unit'=>'required',
-            'category'=>'required',
-            'stock'=>'required|min:0',
-            'cost_price'=>'required|min:0',
-            'selling_price'=>'required|min:0',
-            'minimum_quantity'=>'nullable|numeric|min:0',
-            'barcode'=>'nullable|string',
-            'photo'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'name' => 'required',
+            'unit' => 'required',
+            'category' => 'required',
+            'stock' => 'required|min:0',
+            'cost_price' => 'required|min:0',
+            'selling_price' => 'required|min:0',
+            'minimum_quantity' => 'nullable|numeric|min:0',
+            'barcode' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         if ($r->hasFile('photo')) {
@@ -72,20 +73,27 @@ class ProductController extends Controller
 
     public function update(Request $r, $id)
     {
+        /** @var \App\Models\Product $p */
         $p = Product::where('shop_id', Auth::user()->shop_id)->where('id', $id)->first();
         $oldStock = $p->stock;
 
-        $p->update($r->all());
-        $newStock = $p->stock;
+        // Update other fields
+        $p->update($r->only(['shop_id', 'branch_id', 'name', 'unit', 'category', 'cost_price', 'selling_price', 'minimum_quantity', 'barcode', 'photo']));
 
-        // Create stock transaction if stock changed
-        $stockDifference = $newStock - $oldStock;
-        if ($stockDifference != 0) {
+        // Update stock using the old implementation pattern
+        $stockChange = $r->input('stock_change', 0);
+        if ($stockChange != 0) {
+            $p = $p->fresh();
+            $p->stock = ($p->stock ?? 0) + $stockChange;
+            $p->save();
+            $newStock = $p->stock;
+
+            // Create stock transaction
             try {
                 StockTransaction::create([
                     'product_id' => $p->id,
-                    'type' => $stockDifference > 0 ? 'stock_in' : 'stock_out',
-                    'quantity' => abs($stockDifference),
+                    'type' => $stockChange > 0 ? 'stock_in' : 'stock_out',
+                    'quantity' => abs($stockChange),
                     'supplier_id' => null,
                     'recorded_by' => Auth::id(),
                     'shop_id' => Auth::user()->shop_id,
@@ -98,6 +106,8 @@ class ProductController extends Controller
                     'message' => 'Product updated but failed to create stock transaction: ' . $e->getMessage()
                 ], 500);
             }
+        } else {
+            $newStock = $p->stock;
         }
 
         return response()->json([

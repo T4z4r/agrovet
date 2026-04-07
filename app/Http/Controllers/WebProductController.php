@@ -87,7 +87,7 @@ class WebProductController extends Controller
         // Create stock transaction if initial stock > 0
         if ($data['stock'] > 0) {
             StockTransaction::create([
-                'branch_id' => $product->branch_id,
+                // 'branch_id' => $product->branch_id,
                 'product_id' => $product->id,
                 'type' => 'stock_in',
                 'quantity' => $data['stock'],
@@ -123,7 +123,7 @@ class WebProductController extends Controller
             'name' => 'required',
             'unit' => 'required',
             'category' => 'required',
-            'stock' => 'required',
+            'stock_change' => 'required|numeric',
             'minimum_quantity' => 'nullable',
             'cost_price' => 'required',
             'selling_price' => 'required',
@@ -137,11 +137,17 @@ class WebProductController extends Controller
             $data['photo'] = $path;
         }
 
-        $product->update($data);
+        // Update other fields
+        $product->update(collect($data)->except('stock_change')->toArray());
+
+        // Update stock using the old implementation pattern
+        $product = $product->fresh();
+        $product->stock = ($product->stock ?? 0) + $data['stock_change'];
+        $product->save();
         $newStock = $product->stock;
 
-        // Create stock transaction if stock changed
-        $stockDifference = $newStock - $oldStock;
+        // Create stock transaction
+        $stockDifference = $data['stock_change'];
         if ($stockDifference != 0) {
             StockTransaction::create([
                 // 'branch_id' => $product->branch_id,
