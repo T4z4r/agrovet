@@ -10,9 +10,17 @@ use App\Models\Shop;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Expense;
+use App\Services\OtpService;
 
 class WebAuthController extends Controller
 {
+    protected $otpService;
+
+    public function __construct(OtpService $otpService)
+    {
+        $this->otpService = $otpService;
+    }
+
     public function showLogin()
     {
         return view('auth.login');
@@ -24,6 +32,13 @@ class WebAuthController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
+
+        $user = User::where('email', $credentials['email'])->first();
+
+        if ($user && $this->otpService->hasValidOtp($user, 'login')) {
+            $request->session()->put('pending_user_id', $user->id);
+            return redirect()->route('otp.verify');
+        }
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -48,6 +63,17 @@ class WebAuthController extends Controller
             'shop_location'     => 'nullable|string',
         ]);
 
+        $tempData = [
+            'name'     => $data['name'],
+            'email'    => $data['email'],
+            'password' => bcrypt($data['password']),
+            'shop_name' => $data['shop_name'],
+            'shop_location' => $data['shop_location'] ?? null,
+        ];
+
+        $request->session()->put('registration_data', $tempData);
+        $request->session()->put('registration_step', 'otp');
+
         $user = User::create([
             'name'     => $data['name'],
             'email'    => $data['email'],
@@ -55,20 +81,95 @@ class WebAuthController extends Controller
             'role'     => 'owner',
         ]);
 
-        $user->assignRole('owner');
+        $this->otpService->sendOtp($user, 'register');
 
-        $shop = Shop::create([
-            'name'     => $data['shop_name'],
-            'owner_id' => $user->id,
-            'location' => $data['shop_location'] ?? null,
+        return redirect()->route('otp.verify')->with('success', 'OTP sent to your email. Please verify to complete registration.');
+    }
+
+    public function showOtpVerify()
+    {
+        return view('auth.verify-otp');
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp_code' => 'required|digits:6',
         ]);
 
-        $user->shop_id = $shop->id;
-        $user->save();
+        $userId = $request->session()->get('pending_user_id');
+        $registrationData = $request->session()->get('registration_data');
 
-        Auth::login($user);
+        if ($registrationData) {
+            $user = User::where('email', $registrationData['email'])->first();
+            if (!$user) {
+                $request->session()->forget(['registration_data', 'registration_step']);
+                return redirect()->route('register')->with('error', 'Registration session expired.');
+            }
 
-        return redirect()->route('dashboard');
+            if (!$this->otpService->verifyOtp($user, $request->otp_code, 'register')) {
+                return back()->with('error', 'Invalid or expired OTP.');
+            }
+
+            $user->assignRole('owner');
+
+            $shop = Shop::create([
+                'name'     => $registrationData['shop_name'],
+                'owner_id' => $user->id,
+                'location' => $registrationData['shop_location'] ?? null,
+            ]);
+
+            $user->shop_id = $shop->id;
+            $user->save();
+
+            $request->session()->forget(['registration_data', 'registration_step']);
+            Auth::login($user);
+
+            return redirect()->route('dashboard')->with('success', 'Registration completed successfully!');
+        }
+
+        if ($userId) {
+            $user = User::find($userId);
+            if (!$user) {
+                return redirect()->route('login')->with('error', 'Session expired.');
+            }
+
+            if (!$this->otpService->verifyOtp($user, $request->otp_code, 'login')) {
+                return back()->with('error', 'Invalid or expired OTP.');
+            }
+
+            $request->session()->forget('pending_user_id');
+            Auth::login($user);
+            $request->session()->regenerate();
+
+            return redirect()->intended(route('dashboard'));
+        }
+
+        return redirect()->route('login')->with('error', 'Invalid session.');
+    }
+
+    public function resendOtp(Request $request)
+    {
+        $userId = $request->session()->get('pending_user_id');
+        $registrationData = $request->session()->get('registration_data');
+
+        if ($registrationData) {
+            $user = User::where('email', $registrationData['email'])->first();
+            if ($user) {
+                $this->otpService->sendOtp($user, 'register');
+                return back()->with('success', 'OTP resent to your email.');
+            }
+        }
+
+        if ($userId) {
+            $user = User::find($userId);
+            if ($user) {
+                $this->otpService->sendOtp($user, 'login');
+                return back()->with('success', 'OTP resent to your email.');
+            }
+        }
+
+        return back()->with('error', 'Unable to resend OTP.');
     }
 
     public function logout(Request $request)

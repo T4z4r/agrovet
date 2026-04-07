@@ -14,7 +14,7 @@ class KedrikProductSeeder extends Seeder
         $shop = Shop::first(); // Assign to first shop
 
         $products = [
-            // DRUS
+            // DRUGS
             ["Bajuton wp", "500g", 5, 9000, 11000, "DRUS"],
             ["Bajuton wp", "250g", 10, 5000, 6500, "DRUS"],
             ["Bamic 2.0Ee", "100mls", 20, 3500, 5000, "DRUS"],

@@ -50,6 +50,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [WebAuthController::class, 'login']);
     Route::get('/register', [WebAuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [WebAuthController::class, 'register']);
+    Route::get('/otp/verify', [WebAuthController::class, 'showOtpVerify'])->name('otp.verify');
+    Route::post('/otp/verify', [WebAuthController::class, 'verifyOtp']);
+    Route::post('/otp/resend', [WebAuthController::class, 'resendOtp'])->name('otp.resend');
 });
 
 // Public routes

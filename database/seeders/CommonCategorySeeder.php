@@ -146,6 +146,26 @@ class CommonCategorySeeder extends Seeder
                 'description' => 'Furniture and home furnishing items',
                 'is_active' => true,
             ],
+            [
+                'name' => 'Veterinary Medicines',
+                'description' => 'Animal medicines, vaccines, and pharmaceuticals',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Animal Feed & Supplements',
+                'description' => 'Animal feed, vitamins, and nutritional supplements',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Pesticides & Insecticides',
+                'description' => 'Agricultural pesticides and insecticides',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Animal Husbandry Equipment',
+                'description' => 'Equipment for animal farming and husbandry',
+                'is_active' => true,
+            ],
         ];
 
         foreach ($categories as $category) {
