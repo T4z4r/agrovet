@@ -72,7 +72,7 @@ class ProductController extends Controller
 
     public function update(Request $r, $id)
     {
-        $p = Product::where('shop_id', Auth::user()->shop_id)->findOrFail($id);
+        $p = Product::where('shop_id', Auth::user()->shop_id)->where('id', $id)->first();
         $oldStock = $p->stock;
 
         $p->update($r->all());
