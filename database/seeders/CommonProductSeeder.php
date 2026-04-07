@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CommonProduct;
+use Database\Seeders\CommonCategorySeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,6 +16,8 @@ class CommonProductSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(CommonCategorySeeder::class);
+
         $products = [
             // Food & Groceries
             [
