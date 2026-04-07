@@ -23,7 +23,8 @@
                </a>
            </li>
 
-           @can('manage staff')
+           {{-- @can('manage staff') --}}
+           @can('view shops')
                <!-- Staff -->
                <li class="menu-item {{ request()->routeIs('staff.*') ? 'active' : '' }}">
                    <a href="{{ route('staff.index') }}" class="menu-link">
@@ -105,7 +106,7 @@
                </li>
            @endcan
 
-           @can('manage roles')
+           @can('access admin')
                <!-- User Management -->
                <li class="menu-item {{ request()->routeIs('web.users.*') ? 'active open' : '' }}">
                    <a href="javascript:void(0);" class="menu-link menu-toggle">

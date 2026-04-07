@@ -3599,7 +3599,7 @@ class CommonProductSeeder extends Seeder
         ];
 
         foreach ($products as $product) {
-            CommonProduct::firstOrCreate(['barcode' => $product['barcode']], $product);
+            CommonProduct::firstOrCreate(['name' => $product['name']], $product);
         }
     }
 }
