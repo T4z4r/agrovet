@@ -99,7 +99,8 @@ class WebSaleController extends Controller
     public function edit($id)
     {
         $sale = Sale::with('items.product')->findOrFail($id);
-        return view('sales.edit', compact('sale'));
+        $products = Product::orderBy('name')->get();
+        return view('sales.edit', compact('sale', 'products'));
     }
 
     public function update(Request $r, $id)
@@ -108,10 +109,104 @@ class WebSaleController extends Controller
             'sale_date' => 'required|date',
             'payment_method' => 'nullable|string',
             'customer_name' => 'nullable|string',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|integer|min:0',
         ]);
 
-        $sale = Sale::findOrFail($id);
-        $sale->update($data);
+        $sale = Sale::with('items')->findOrFail($id);
+
+        DB::transaction(function () use ($data, $sale) {
+            $sale->update([
+                'sale_date' => $data['sale_date'],
+                'payment_method' => $data['payment_method'],
+                'customer_name' => $data['customer_name'],
+            ]);
+
+            $existingItemIds = $sale->items->pluck('id')->toArray();
+            $submittedItemIds = [];
+
+            $grand_total = 0;
+
+            foreach ($data['items'] as $itemData) {
+                $total = $itemData['quantity'] * $itemData['price'];
+                $grand_total += $total;
+
+                if (isset($itemData['id']) && in_array($itemData['id'], $existingItemIds)) {
+                    // Update existing item
+                    $item = SaleItem::find($itemData['id']);
+                    $oldProduct = $item->product;
+                    $oldQuantity = $item->quantity;
+
+                    $newProduct = Product::find($itemData['product_id']);
+
+                    // Adjust stock
+                    if ($oldProduct->id != $newProduct->id) {
+                        // Product changed
+                        $oldProduct->stock += $oldQuantity;
+                        $oldProduct->save();
+
+                        if ($newProduct->stock < $itemData['quantity']) {
+                            throw new \Exception('Insufficient stock for ' . $newProduct->name);
+                        }
+                        $newProduct->stock -= $itemData['quantity'];
+                        $newProduct->save();
+                    } else {
+                        // Same product, quantity changed
+                        $quantityDiff = $itemData['quantity'] - $oldQuantity;
+                        if ($quantityDiff > 0) {
+                            if ($newProduct->stock < $quantityDiff) {
+                                throw new \Exception('Insufficient stock for ' . $newProduct->name);
+                            }
+                            $newProduct->stock -= $quantityDiff;
+                        } else {
+                            $newProduct->stock += abs($quantityDiff);
+                        }
+                        $newProduct->save();
+                    }
+
+                    $item->update([
+                        'product_id' => $itemData['product_id'],
+                        'quantity' => $itemData['quantity'],
+                        'price' => $itemData['price'],
+                        'total' => $total,
+                    ]);
+
+                    $submittedItemIds[] = $itemData['id'];
+                } else {
+                    // New item
+                    $product = Product::find($itemData['product_id']);
+                    if ($product->stock < $itemData['quantity']) {
+                        throw new \Exception('Insufficient stock for ' . $product->name);
+                    }
+
+                    SaleItem::create([
+                        'sale_id' => $sale->id,
+                        'product_id' => $itemData['product_id'],
+                        'quantity' => $itemData['quantity'],
+                        'price' => $itemData['price'],
+                        'total' => $total,
+                    ]);
+
+                    $product->stock -= $itemData['quantity'];
+                    $product->save();
+                }
+            }
+
+            // Delete removed items
+            $toDelete = array_diff($existingItemIds, $submittedItemIds);
+            foreach ($toDelete as $deleteId) {
+                $item = SaleItem::find($deleteId);
+                $product = $item->product;
+                $product->stock += $item->quantity;
+                $product->save();
+                $item->delete();
+            }
+
+            $sale->total = $grand_total;
+            $sale->save();
+        });
 
         return redirect()->route('web.sales.index')->with('success', 'Sale updated successfully');
     }
