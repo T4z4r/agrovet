@@ -24,7 +24,7 @@ class StaffController extends Controller
             ->whereHas('roles', function ($q) {
                 $q->whereIn('name', ['seller', 'manager']);
             })
-            ->with(['assignedShop', 'branch', 'roles']);
+            ->with(['assignedShop', 'roles']);
 
         // Filters
         if ($request->filled('shop_id')) {
@@ -95,7 +95,7 @@ class StaffController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'shop_id' => $request->shop_id,
-                'branch_id' => $request->branch_id,
+                // 'branch_id' => $request->branch_id,
                 'is_active' => true,
                 'otp_verified' => true, // Assume verified for staff
             ]);
