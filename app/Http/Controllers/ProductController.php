@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\StockTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -42,16 +43,28 @@ class ProductController extends Controller
 
         // Create stock transaction if initial stock > 0
         if ($data['stock'] > 0) {
-            StockTransaction::create([
-                'product_id' => $product->id,
-                'type' => 'stock_in',
-                'quantity' => $data['stock'],
-                'supplier_id' => null,
-                'recorded_by' => Auth::id(),
-                'shop_id' => Auth::user()->shop_id,
-                'date' => now()->toDateString(),
-                'remarks' => 'Initial stock on product creation'
-            ]);
+            try {
+                StockTransaction::create([
+                    'product_id' => $product->id,
+                    'type' => 'stock_in',
+                    'quantity' => $data['stock'],
+                    'supplier_id' => null,
+                    'recorded_by' => Auth::id(),
+                    'shop_id' => Auth::user()->shop_id,
+                    'date' => now()->toDateString(),
+                    'remarks' => 'Initial stock on product creation'
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Failed to create initial stock transaction for new product', [
+                    'product_id' => $product->id,
+                    'stock' => $data['stock'],
+                    'error' => $e->getMessage()
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Product created but failed to create initial stock transaction: ' . $e->getMessage()
+                ], 500);
+            }
         }
 
         return response()->json([
@@ -115,6 +128,13 @@ class ProductController extends Controller
                     'remarks' => 'Stock adjustment on product update'
                 ]);
             } catch (\Exception $e) {
+                Log::error('Failed to create stock transaction for product update', [
+                    'product_id' => $p->id,
+                    'old_stock' => $oldStock,
+                    'new_stock' => $newStock,
+                    'stock_change' => $stockChange,
+                    'error' => $e->getMessage()
+                ]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Product updated but failed to create stock transaction: ' . $e->getMessage()
