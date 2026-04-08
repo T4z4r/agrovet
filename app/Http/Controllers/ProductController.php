@@ -73,22 +73,36 @@ class ProductController extends Controller
 
     public function update(Request $r, $id)
     {
+        $data = $r->validate([
+            'name' => 'required',
+            'unit' => 'required',
+            'category' => 'required',
+            'stock' => 'required|min:0',
+            'cost_price' => 'required|min:0',
+            'selling_price' => 'required|min:0',
+            'minimum_quantity' => 'nullable|numeric|min:0',
+            'barcode' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
         /** @var \App\Models\Product $p */
         $p = Product::where('shop_id', Auth::user()->shop_id)->where('id', $id)->first();
         $oldStock = $p->stock;
 
-        // Update other fields
-        $p->update($r->only(['shop_id', 'branch_id', 'name', 'unit', 'category', 'cost_price', 'selling_price', 'minimum_quantity', 'barcode', 'photo']));
+        if ($r->hasFile('photo')) {
+            $path = $r->file('photo')->store('products', 'public');
+            $data['photo'] = $path;
+        }
 
-        // Update stock using the old implementation pattern
-        $stockChange = $r->input('stock_change', 0);
+        $data['shop_id'] = Auth::user()->shop_id;
+        $p->update($data);
+
+        // Handle stock change
+        $newStock = $data['stock'];
+        $stockChange = $newStock - $oldStock;
+
         if ($stockChange != 0) {
-            $p = $p->fresh();
-            $p->stock = ($p->stock ?? 0) + $stockChange;
-            $p->save();
-            $newStock = $p->stock;
-
-            // Create stock transaction
+            // Create stock transaction for the difference
             try {
                 StockTransaction::create([
                     'product_id' => $p->id,
@@ -106,8 +120,6 @@ class ProductController extends Controller
                     'message' => 'Product updated but failed to create stock transaction: ' . $e->getMessage()
                 ], 500);
             }
-        } else {
-            $newStock = $p->stock;
         }
 
         return response()->json([
