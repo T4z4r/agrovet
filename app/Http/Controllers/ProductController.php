@@ -80,7 +80,7 @@ class ProductController extends Controller
             'stock' => 'required|min:0',
             'cost_price' => 'required|min:0',
             'selling_price' => 'required|min:0',
-            'minimum_quantity' => 'nullable|numeric|min:0',
+            'minimum_quantity' => 'nullable',
             'barcode' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -131,23 +131,13 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = Product::where('shop_id', Auth::user()->shop_id)->findOrFail($id);
+        $product = Product::where('shop_id', Auth::user()->shop_id)->where('id', $id)->first();
 
-        // Check if product is linked to sales
-        if ($product->saleItems()->exists()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Cannot delete product that has been sold'
-            ], 422);
-        }
+        // Delete related sale items
+        $product->saleItems()->delete();
 
-        // Check if product has stock transactions
-        if ($product->stockTransactions()->exists()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Cannot delete product that has stock transactions'
-            ], 422);
-        }
+        // Delete related stock transactions
+        $product->stockTransactions()->delete();
 
         $product->delete();
         return response()->json([
