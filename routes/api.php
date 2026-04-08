@@ -22,6 +22,7 @@ use App\Http\Controllers\GuideController;
 | Public
 |--------------------------------------------------------------------------
 */
+
 Route::get('about', [AboutController::class, 'index']);
 Route::get('contacts', [ContactController::class, 'index']);
 Route::get('privacy-policy', [PrivacyPolicyController::class, 'index']);
@@ -65,8 +66,7 @@ Route::middleware(['auth:sanctum', 'subscription'])->group(function () {
     Route::get('products', [ProductController::class, 'index']);
     Route::post('products', [ProductController::class, 'store']);
     Route::get('products/{id}', [ProductController::class, 'show']);
-    Route::put('products/{id}', [ProductController::class, 'update']);
-    Route::patch('products/{id}', [ProductController::class, 'update']);
+    Route::post('products/update/{id}', [ProductController::class, 'update']);
     Route::delete('products/{id}', [ProductController::class, 'destroy']);
     Route::get('products/barcode/{barcode}', [ProductController::class, 'getByBarcode']);
 
@@ -143,5 +143,4 @@ Route::middleware(['auth:sanctum', 'subscription'])->group(function () {
     */
     Route::apiResource('guides', GuideController::class);
     Route::get('guides/{guide}/download', [GuideController::class, 'download']);
-
 });
