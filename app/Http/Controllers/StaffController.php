@@ -24,7 +24,8 @@ class StaffController extends Controller
             ->whereHas('roles', function ($q) {
                 $q->whereIn('name', ['seller', 'manager']);
             })
-            ->with(['assignedShop', 'roles']);
+            // ->with(['assignedShop', 'roles'])
+        ;
 
         // Filters
         if ($request->filled('shop_id')) {
