@@ -57,6 +57,7 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 <script>
+var isOwner = {{ Auth::user()->hasRole('owner') ? 'true' : 'false' }};
 $(document).ready(function() {
     $('.dt-column-search').DataTable({
         ajax: {
@@ -76,7 +77,7 @@ $(document).ready(function() {
                 orderable: false,
                 searchable: false,
                 render: function(data, type, row) {
-                    return `
+                    let buttons = `
                         <a href="{{ url('products') }}/${data}" class="btn btn-sm btn-info">View</a>
                         <a href="{{ url('products') }}/${data}/edit" class="btn btn-sm btn-warning">Edit</a>
                         <form method="POST" action="{{ url('products') }}/${data}" class="d-inline" id="delete-form-${data}">
@@ -85,6 +86,17 @@ $(document).ready(function() {
                             <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(${data})">Delete</button>
                         </form>
                     `;
+                    if (isOwner) {
+                        buttons += `
+                            <form method="POST" action="{{ url('products') }}/${data}" class="d-inline" id="force-delete-form-${data}">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="force" value="1">
+                                <button type="button" class="btn btn-sm btn-dark" onclick="confirmForceDelete(${data})">Force Delete</button>
+                            </form>
+                        `;
+                    }
+                    return buttons;
                 }
             }
         ],
@@ -105,6 +117,22 @@ function confirmDelete(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+
+function confirmForceDelete(id) {
+    Swal.fire({
+        title: 'Force Delete Product?',
+        text: "This product has sales or stock transactions. Deleting it may affect data integrity. Are you sure?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, force delete!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('force-delete-form-' + id).submit();
         }
     });
 }

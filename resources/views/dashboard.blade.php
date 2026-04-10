@@ -80,9 +80,9 @@
                 <h4 class="text-primary">
                     <span class="value-hidden">****</span>
                     <span class="value-visible" style="display: none;">{{ number_format($data['stock_value'], 2) }}</span>
-                    <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="toggleValue(this)">Show</button>
                 </h4>
                 <p>Total value of current stock based on cost prices.</p>
+                <button type="button" class="btn btn-sm btn-outline-secondary mt-2" onclick="toggleValue(this)">Show</button>
             </div>
         </div>
     </div>
@@ -95,9 +95,9 @@
                 <h4 class="{{ $data['total_sales'] - $data['total_expenses'] >= 0 ? 'text-success' : 'text-danger' }}">
                     <span class="value-hidden">****</span>
                     <span class="value-visible" style="display: none;">{{ number_format($data['total_sales'] - $data['total_expenses'], 2) }}</span>
-                    <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="toggleValue(this)">Show</button>
                 </h4>
                 <p>Total sales minus total expenses.</p>
+                <button type="button" class="btn btn-sm btn-outline-secondary mt-2" onclick="toggleValue(this)">Show</button>
             </div>
         </div>
     </div>

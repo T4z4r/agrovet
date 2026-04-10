@@ -158,18 +158,24 @@ class WebProductController extends Controller
         return redirect()->route('web.products.index')->with('success', 'Product updated successfully');
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $product = Product::findOrFail($id);
+        $user = Auth::user();
 
-        // Check if product is linked to sales
-        if ($product->saleItems()->exists()) {
-            return redirect()->route('web.products.index')->with('error', 'Cannot delete product that has been sold');
-        }
+        $force = $request->input('force', false);
 
-        // Check if product has stock transactions
-        if ($product->stockTransactions()->exists()) {
-            return redirect()->route('web.products.index')->with('error', 'Cannot delete product that has stock transactions');
+        // If not force delete or not owner, check restrictions
+        if (!$force || !$user->hasRole('owner')) {
+            // Check if product is linked to sales
+            if ($product->saleItems()->exists()) {
+                return redirect()->route('web.products.index')->with('error', 'Cannot delete product that has been sold');
+            }
+
+            // Check if product has stock transactions
+            if ($product->stockTransactions()->exists()) {
+                return redirect()->route('web.products.index')->with('error', 'Cannot delete product that has stock transactions');
+            }
         }
 
         $product->delete();
