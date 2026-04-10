@@ -140,10 +140,11 @@ function toggleValue(btn) {
     document.addEventListener('DOMContentLoaded', function () {
         Highcharts.chart('chart-container', {
             chart: {
+                type: 'column',
                 backgroundColor: 'transparent'
             },
             title: {
-                text: 'Sales vs Expenses'
+                text: 'Sales vs Expenses Over Last 30 Days'
             },
             xAxis: {
                 categories: @json($dates),
@@ -152,10 +153,24 @@ function toggleValue(btn) {
             },
             yAxis: {
                 title: {
-                    text: 'Amount'
+                    text: 'Amount (TZS)'
                 },
                 gridLineWidth: 1,
                 gridLineColor: '#e0e0e0'
+            },
+            legend: {
+                enabled: true
+            },
+            tooltip: {
+                shared: true,
+                valuePrefix: 'TZS '
+            },
+            plotOptions: {
+                column: {
+                    dataLabels: {
+                        enabled: false
+                    }
+                }
             },
             series: [{
                 name: 'Sales',
