@@ -12,6 +12,7 @@
                     <a href="{{ route('web.products.downloadTemplate') }}" class="btn btn-info me-2">Download Template</a>
                     <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#importModal">Import Products</button>
                     <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#commonProductsModal">Add from Common Products</button>
+                    <button type="button" class="btn btn-danger me-2" id="showOutOfStock">Out of Stock</button>
                     <a href="{{ route('web.products.create') }}" class="btn btn-primary">Add Product</a>
                 </div>
             </div>
@@ -59,7 +60,7 @@
 <script>
 var isOwner = {{ Auth::user()->hasRole('owner') ? 'true' : 'false' }};
 $(document).ready(function() {
-    $('.dt-column-search').DataTable({
+    var table = $('.dt-column-search').DataTable({
         ajax: {
             url: '{{ route("web.products.index") }}',
             type: 'GET',
@@ -102,6 +103,17 @@ $(document).ready(function() {
         ],
         orderCellsTop: true,
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>'
+    });
+
+    // Out of Stock filter
+    $('#showOutOfStock').on('click', function() {
+        if ($(this).hasClass('active')) {
+            table.search('').columns().search('').draw();
+            $(this).removeClass('active').removeClass('btn-secondary').addClass('btn-danger');
+        } else {
+            table.column(3).search('^0$', true, false).draw();
+            $(this).addClass('active').removeClass('btn-danger').addClass('btn-secondary');
+        }
     });
 });
 
