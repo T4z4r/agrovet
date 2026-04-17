@@ -112,7 +112,7 @@ $(document).ready(function() {
             { data: 'id' },
             { data: 'seller.name' },
             { data: 'total' },
-            { data: 'sale_date' },
+            { data: 'sale_date', render: function(data) { return new Date(data).toLocaleDateString('en-GB'); } },
             {
                 data: 'id',
                 orderable: false,

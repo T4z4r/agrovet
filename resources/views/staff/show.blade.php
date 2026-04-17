@@ -25,9 +25,9 @@
                     <div class="col-md-6 mb-2">
                         <strong>Email:</strong> {{ $user->email }}
                     </div>
-                    <div class="col-md-6 mb-2">
-                        <strong>Role:</strong> {{ $user->roles->pluck('name')->map('ucfirst')->join(', ') }}
-                    </div>
+                     <div class="col-md-6 mb-2">
+                         <strong>Role:</strong> {{ ucfirst($user->role) }}
+                     </div>
                     <div class="col-md-6 mb-2">
                         <strong>Shop:</strong> {{ $user->assignedShop->name ?? '-' }}
                     </div>
@@ -50,22 +50,7 @@
                     </div>
                 </div>
 
-                {{-- Assign Role --}}
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h6 class="mb-0">Assign Role</h6>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('staff.assignRole', $user) }}" class="d-flex gap-2">
-                            @csrf
-                            <select name="role" class="form-select w-auto">
-                                <option value="seller" {{ $user->hasRole('seller') ? 'selected' : '' }}>Seller</option>
-                                <option value="manager" {{ $user->hasRole('manager') ? 'selected' : '' }}>Manager</option>
-                            </select>
-                            <button type="submit" class="btn btn-primary">Assign</button>
-                        </form>
-                    </div>
-                </div>
+
 
                 {{-- Delete --}}
                 <div class="mt-3">

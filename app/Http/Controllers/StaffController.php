@@ -21,10 +21,7 @@ class StaffController extends Controller
 
         // Query staff users in owned shops
         $query = User::whereIn('shop_id', $ownedShopIds)
-            ->whereHas('roles', function ($q) {
-                $q->whereIn('name', ['seller', 'manager']);
-            })
-            // ->with(['assignedShop', 'roles'])
+            ->where('role', 'seller')
         ;
 
         // Filters
@@ -37,9 +34,7 @@ class StaffController extends Controller
         }
 
         if ($request->filled('role')) {
-            $query->whereHas('roles', function ($q) use ($request) {
-                $q->where('name', $request->role);
-            });
+            $query->where('role', $request->role);
         }
 
         if ($request->filled('status')) {
@@ -62,9 +57,8 @@ class StaffController extends Controller
         $owner = auth()->user();
         $shops = $owner->shops;
         $branches = Branch::whereIn('shop_id', $shops->pluck('id'))->get();
-        $roles = Role::whereIn('name', ['seller', 'manager'])->get();
 
-        return view('staff.create', compact('shops', 'branches', 'roles'));
+        return view('staff.create', compact('shops', 'branches'));
     }
 
     public function store(Request $request)
@@ -75,7 +69,6 @@ class StaffController extends Controller
             'password' => 'required|string|min:8',
             'shop_id' => 'required|exists:shops,id',
             'branch_id' => 'nullable|exists:branches,id',
-            'role' => 'required|in:seller,manager',
         ]);
 
         $owner = auth()->user();
@@ -95,13 +88,12 @@ class StaffController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'role' => 'seller',
                 'shop_id' => $request->shop_id,
-                // 'branch_id' => $request->branch_id,
+                'branch_id' => $request->branch_id,
                 'is_active' => true,
                 'otp_verified' => true, // Assume verified for staff
             ]);
-
-            $user->assignRole($request->role);
         });
 
         return redirect()->route('staff.index')->with('success', 'Staff member created successfully.');
@@ -111,11 +103,11 @@ class StaffController extends Controller
     {
         // Check if user is staff in owner's shops
         $owner = auth()->user();
-        if (!$owner->shops()->where('id', $user->shop_id)->exists() || !$user->hasAnyRole(['seller', 'manager'])) {
+        if (!$owner->shops()->where('id', $user->shop_id)->exists() || $user->role !== 'seller') {
             abort(403, 'Unauthorized');
         }
 
-        $user->load(['assignedShop', 'branch', 'roles']);
+        $user->load(['assignedShop', 'branch']);
 
         return view('staff.show', compact('user'));
     }
@@ -124,15 +116,14 @@ class StaffController extends Controller
     {
         // Check if user is staff in owner's shops
         $owner = auth()->user();
-        if (!$owner->shops()->where('id', $user->shop_id)->exists() || !$user->hasAnyRole(['seller', 'manager'])) {
+        if (!$owner->shops()->where('id', $user->shop_id)->exists() || $user->role !== 'seller') {
             abort(403, 'Unauthorized');
         }
 
         $shops = $owner->shops;
         $branches = Branch::whereIn('shop_id', $shops->pluck('id'))->get();
-        $roles = Role::whereIn('name', ['seller', 'manager'])->get();
 
-        return view('staff.edit', compact('user', 'shops', 'branches', 'roles'));
+        return view('staff.edit', compact('user', 'shops', 'branches'));
     }
 
     public function update(Request $request, User $user)
@@ -148,7 +139,6 @@ class StaffController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'shop_id' => 'required|exists:shops,id',
             'branch_id' => 'nullable|exists:branches,id',
-            'role' => 'required|in:seller,manager',
             'is_active' => 'boolean',
         ]);
 
@@ -170,9 +160,6 @@ class StaffController extends Controller
                 'branch_id' => $request->branch_id,
                 'is_active' => $request->is_active ?? true,
             ]);
-
-            // Update role
-            $user->syncRoles([$request->role]);
         });
 
         return redirect()->route('staff.index')->with('success', 'Staff member updated successfully.');
@@ -182,7 +169,7 @@ class StaffController extends Controller
     {
         // Check if user is staff in owner's shops
         $owner = auth()->user();
-        if (!$owner->shops()->where('id', $user->shop_id)->exists() || !$user->hasAnyRole(['seller', 'manager'])) {
+        if (!$owner->shops()->where('id', $user->shop_id)->exists() || $user->role !== 'seller') {
             abort(403, 'Unauthorized');
         }
 
@@ -191,20 +178,5 @@ class StaffController extends Controller
         return redirect()->route('staff.index')->with('success', 'Staff member deleted successfully.');
     }
 
-    public function assignRole(Request $request, User $user)
-    {
-        // Check if user is staff in owner's shops
-        $owner = auth()->user();
-        if (!$owner->shops()->where('id', $user->shop_id)->exists() || !$user->hasAnyRole(['seller', 'manager'])) {
-            abort(403, 'Unauthorized');
-        }
 
-        $request->validate([
-            'role' => 'required|in:seller,manager',
-        ]);
-
-        $user->syncRoles([$request->role]);
-
-        return redirect()->back()->with('success', 'Role assigned successfully.');
-    }
 }
