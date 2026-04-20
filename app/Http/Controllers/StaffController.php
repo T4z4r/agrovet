@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Shop;
 use App\Models\Branch;
+use App\Models\Shop;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class StaffController extends Controller
 {
@@ -16,11 +15,8 @@ class StaffController extends Controller
     {
         $owner = auth()->user();
 
-        // Get shops owned by the current user
-        $ownedShopIds = $owner->shops()->pluck('id');
-
-        // Query staff users in owned shops
-        $query = User::whereIn('shop_id', $ownedShopIds)
+        // Query staff users in the authenticated user's shop
+        $query = User::where('shop_id', $owner->shop_id)
             ->where('role', 'seller');
 
         // Filters
@@ -54,7 +50,7 @@ class StaffController extends Controller
     public function create()
     {
         $owner = auth()->user();
-        $shops = $owner->shops;
+        $shops = collect([$owner->assignedShop]);
         $branches = Branch::whereIn('shop_id', $shops->pluck('id'))->get();
 
         return view('staff.create', compact('shops', 'branches'));
@@ -72,13 +68,13 @@ class StaffController extends Controller
 
         $owner = auth()->user();
 
-        // Ensure the shop is owned by the current user
-        if (!$owner->shops()->where('id', $request->shop_id)->exists()) {
+        // Ensure the shop is the user's shop
+        if ($request->shop_id != $owner->shop_id) {
             abort(403, 'Unauthorized');
         }
 
         // If branch is specified, ensure it belongs to the shop
-        if ($request->branch_id && !Branch::where('id', $request->branch_id)->where('shop_id', $request->shop_id)->exists()) {
+        if ($request->branch_id && ! Branch::where('id', $request->branch_id)->where('shop_id', $request->shop_id)->exists()) {
             abort(403, 'Invalid branch');
         }
 
@@ -102,7 +98,7 @@ class StaffController extends Controller
     {
         // Check if user is staff in owner's shops
         $owner = auth()->user();
-        if (!$owner->shops()->where('id', $user->shop_id)->exists() || $user->role !== 'seller') {
+        if (! $owner->shops()->where('id', $user->shop_id)->exists() || $user->role !== 'seller') {
             abort(403, 'Unauthorized');
         }
 
@@ -113,13 +109,13 @@ class StaffController extends Controller
 
     public function edit(User $user)
     {
-        // Check if user is staff in owner's shops
+        // Check if user is staff in the user's shop
         $owner = auth()->user();
-        if (!$owner->shops()->where('id', $user->shop_id)->exists() || $user->role !== 'seller') {
+        if ($user->shop_id != $owner->shop_id || $user->role !== 'seller') {
             abort(403, 'Unauthorized');
         }
 
-        $shops = $owner->shops;
+        $shops = collect([$owner->assignedShop]);
         $branches = Branch::whereIn('shop_id', $shops->pluck('id'))->get();
 
         return view('staff.edit', compact('user', 'shops', 'branches'));
@@ -127,27 +123,27 @@ class StaffController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // Check if user is staff in owner's shops
+        // Check if user is staff in the user's shop
         $owner = auth()->user();
-        if (!$owner->shops()->where('id', $user->shop_id)->exists() || !$user->hasAnyRole(['seller', 'manager'])) {
+        if ($user->shop_id != $owner->shop_id || $user->role !== 'seller') {
             abort(403, 'Unauthorized');
         }
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
             'shop_id' => 'required|exists:shops,id',
             'branch_id' => 'nullable|exists:branches,id',
             'is_active' => 'boolean',
         ]);
 
-        // Ensure the shop is owned by the current user
-        if (!$owner->shops()->where('id', $request->shop_id)->exists()) {
+        // Ensure the shop is the user's shop
+        if ($request->shop_id != $owner->shop_id) {
             abort(403, 'Unauthorized');
         }
 
         // If branch is specified, ensure it belongs to the shop
-        if ($request->branch_id && !Branch::where('id', $request->branch_id)->where('shop_id', $request->shop_id)->exists()) {
+        if ($request->branch_id && ! Branch::where('id', $request->branch_id)->where('shop_id', $request->shop_id)->exists()) {
             abort(403, 'Invalid branch');
         }
 
@@ -166,9 +162,9 @@ class StaffController extends Controller
 
     public function destroy(User $user)
     {
-        // Check if user is staff in owner's shops
+        // Check if user is staff in the user's shop
         $owner = auth()->user();
-        if (!$owner->shops()->where('id', $user->shop_id)->exists() || $user->role !== 'seller') {
+        if ($user->shop_id != $owner->shop_id || $user->role !== 'seller') {
             abort(403, 'Unauthorized');
         }
 

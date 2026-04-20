@@ -63,47 +63,47 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                     <th>Name</th>
-                                     <th>Email</th>
-                                     <th>Role</th>
-                                     <th>Shop</th>
-                                     <th>Status</th>
-                                     <th>Actions</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Shop</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($staff as $member)
-                                     <tr>
-                                         <td>{{ $member->name }}</td>
-                                         <td>{{ $member->email }}</td>
-                                         <td>{{ ucfirst($member->role) }}</td>
-                                         <td>{{ $member->assignedShop->name ?? '-' }}</td>
-                                         <td>
-                                             @if ($member->is_active)
-                                                 <span class="badge bg-success">Active</span>
-                                             @else
-                                                 <span class="badge bg-secondary">Inactive</span>
-                                             @endif
-                                         </td>
-                                         <td>
-                                             <a href="{{ route('staff.show', $member) }}"
-                                                 class="btn btn-sm btn-info">View</a>
-                                             <a href="{{ route('staff.edit', $member) }}"
-                                                 class="btn btn-sm btn-warning">Edit</a>
-                                             <form method="POST" action="{{ route('staff.destroy', $member) }}"
-                                                 class="d-inline">
-                                                 @csrf
-                                                 @method('DELETE')
-                                                 <button type="submit" class="btn btn-sm btn-danger"
-                                                     onclick="return confirm('Are you sure?')">Delete</button>
-                                             </form>
-                                         </td>
-                                     </tr>
-                                 @empty
-                                     <tr>
-                                         <td colspan="6" class="text-center">No staff members found.</td>
-                                     </tr>
-                                 @endforelse
+                                    <tr>
+                                        <td>{{ $member->name }}</td>
+                                        <td>{{ $member->email }}</td>
+                                        <td>{{ ucfirst($member->role) }}</td>
+                                        <td>{{ $member->assignedShop->name ?? '-' }}</td>
+                                        <td>
+                                            @if ($member->is_active)
+                                                <span class="badge bg-success">Active</span>
+                                            @else
+                                                <span class="badge bg-secondary">Inactive</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('staff.show', $member) }}"
+                                                class="btn btn-sm btn-info">View</a>
+                                            <a href="{{ route('staff.edit', $member) }}"
+                                                class="btn btn-sm btn-warning">Edit</a>
+                                            <form method="POST" action="{{ route('staff.destroy', $member) }}"
+                                                class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Are you sure?')">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center">No staff members found.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
