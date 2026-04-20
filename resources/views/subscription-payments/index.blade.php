@@ -60,7 +60,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="create_amount" class="form-label">Amount</label>
-                        <input type="number" step="0.01" class="form-control" id="create_amount" name="amount" required>
+                        <input type="number" step="0.01" class="form-control" id="create_amount" name="amount" placeholder="0.00" required>
                     </div>
                     <div class="mb-3">
                         <label for="create_payment_date" class="form-label">Payment Date</label>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="create_payment_method" class="form-label">Payment Method</label>
-                        <input type="text" class="form-control" id="create_payment_method" name="payment_method">
+                        <input type="text" class="form-control" id="create_payment_method" name="payment_method" placeholder="e.g. cash, mpesa, card">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -112,7 +112,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="edit_amount" class="form-label">Amount</label>
-                        <input type="number" step="0.01" class="form-control" id="edit_amount" name="amount" required>
+                        <input type="number" step="0.01" class="form-control" id="edit_amount" name="amount" placeholder="0.00" required>
                     </div>
                     <div class="mb-3">
                         <label for="edit_payment_date" class="form-label">Payment Date</label>
@@ -128,7 +128,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="edit_payment_method" class="form-label">Payment Method</label>
-                        <input type="text" class="form-control" id="edit_payment_method" name="payment_method">
+                        <input type="text" class="form-control" id="edit_payment_method" name="payment_method" placeholder="e.g. cash, mpesa, card">
                     </div>
                 </div>
                 <div class="modal-footer">

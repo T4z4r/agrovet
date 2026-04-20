@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity') }}" required min="1">
+                            <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity') }}" placeholder="Enter quantity" required min="1">
                             @error('quantity')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
@@ -66,7 +66,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="remarks" class="form-label">Remarks</label>
-                            <textarea class="form-control" id="remarks" name="remarks">{{ old('remarks') }}</textarea>
+                            <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter remarks (optional)">{{ old('remarks') }}</textarea>
                             @error('remarks')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

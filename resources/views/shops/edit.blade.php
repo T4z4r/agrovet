@@ -16,14 +16,14 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $shop->name) }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $shop->name) }}" placeholder="Enter shop name" required>
                             @error('name')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="location" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="location" name="location" value="{{ old('location', $shop->location) }}" required>
+                            <input type="text" class="form-control" id="location" name="location" value="{{ old('location', $shop->location) }}" placeholder="Enter shop location" required>
                             @error('location')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

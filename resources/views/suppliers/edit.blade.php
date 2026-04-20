@@ -9,19 +9,19 @@
     @method('PUT')
     <div class="mb-3">
         <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" name="name" value="{{ $supplier->name }}" required>
+        <input type="text" class="form-control" id="name" name="name" value="{{ $supplier->name }}" placeholder="Enter supplier name" required>
     </div>
     <div class="mb-3">
         <label for="phone" class="form-label">Phone</label>
-        <input type="text" class="form-control" id="phone" name="phone" value="{{ $supplier->phone }}">
+        <input type="text" class="form-control" id="phone" name="phone" value="{{ $supplier->phone }}" placeholder="Enter phone number">
     </div>
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" value="{{ $supplier->email }}">
+        <input type="email" class="form-control" id="email" name="email" value="{{ $supplier->email }}" placeholder="Enter email address">
     </div>
     <div class="mb-3">
         <label for="address" class="form-label">Address</label>
-        <textarea class="form-control" id="address" name="address">{{ $supplier->address }}</textarea>
+        <textarea class="form-control" id="address" name="address" placeholder="Enter supplier address">{{ $supplier->address }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
     <a href="{{ route('web.suppliers.index') }}" class="btn btn-secondary">Cancel</a>

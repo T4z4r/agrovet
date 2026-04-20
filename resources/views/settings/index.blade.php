@@ -56,7 +56,7 @@
                         <div class="col-md-4 mb-3">
                             <label for="new_password" class="form-label">New Password</label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="new_password" name="new_password">
+                                <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Enter new password">
                                 <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('new_password')">
                                     <i class="bx bx-show" id="new_password_icon"></i>
                                 </button>
@@ -68,7 +68,7 @@
                         <div class="col-md-4 mb-3">
                             <label for="new_password_confirmation" class="form-label">Confirm New Password</label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation">
+                                <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" placeholder="Confirm new password">
                                 <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('new_password_confirmation')">
                                     <i class="bx bx-show" id="new_password_confirmation_icon"></i>
                                 </button>
@@ -83,14 +83,14 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="shop_name" class="form-label">Shop Name</label>
-                            <input type="text" class="form-control" id="shop_name" name="shop_name" value="{{ old('shop_name', $shop->name) }}">
+                            <input type="text" class="form-control" id="shop_name" name="shop_name" value="{{ old('shop_name', $shop->name) }}" placeholder="Enter shop name">
                             @error('shop_name')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="shop_location" class="form-label">Shop Location</label>
-                            <input type="text" class="form-control" id="shop_location" name="shop_location" value="{{ old('shop_location', $shop->location) }}">
+                            <input type="text" class="form-control" id="shop_location" name="shop_location" value="{{ old('shop_location', $shop->location) }}" placeholder="Enter shop location">
                             @error('shop_location')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

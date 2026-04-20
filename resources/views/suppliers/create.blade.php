@@ -15,28 +15,28 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter supplier name" required>
                             @error('name')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="phone" class="form-label">Phone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}">
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Enter phone number">
                             @error('phone')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
+                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="Enter email address">
                             @error('email')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="address" class="form-label">Address</label>
-                            <textarea class="form-control" id="address" name="address">{{ old('address') }}</textarea>
+                            <textarea class="form-control" id="address" name="address" placeholder="Enter supplier address">{{ old('address') }}</textarea>
                             @error('address')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

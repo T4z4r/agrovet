@@ -53,19 +53,19 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="create_name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="create_name" name="name" required>
+                        <input type="text" class="form-control" id="create_name" name="name" placeholder="Enter package name" required>
                     </div>
                     <div class="mb-3">
                         <label for="create_description" class="form-label">Description</label>
-                        <textarea class="form-control" id="create_description" name="description"></textarea>
+                        <textarea class="form-control" id="create_description" name="description" placeholder="Enter package description"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="create_price" class="form-label">Price</label>
-                        <input type="number" step="0.01" class="form-control" id="create_price" name="price" required>
+                        <input type="number" step="0.01" class="form-control" id="create_price" name="price" placeholder="0.00" required>
                     </div>
                     <div class="mb-3">
                         <label for="create_duration_months" class="form-label">Duration (Months)</label>
-                        <input type="number" class="form-control" id="create_duration_months" name="duration_months" required>
+                        <input type="number" class="form-control" id="create_duration_months" name="duration_months" placeholder="e.g. 1, 3, 12" required>
                     </div>
                     <div class="mb-3">
                         <label for="create_feature_ids" class="form-label">Features</label>
@@ -105,19 +105,19 @@
                     <input type="hidden" id="edit_id" name="id">
                     <div class="mb-3">
                         <label for="edit_name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="edit_name" name="name" required>
+                        <input type="text" class="form-control" id="edit_name" name="name" placeholder="Enter package name" required>
                     </div>
                     <div class="mb-3">
                         <label for="edit_description" class="form-label">Description</label>
-                        <textarea class="form-control" id="edit_description" name="description"></textarea>
+                        <textarea class="form-control" id="edit_description" name="description" placeholder="Enter package description"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="edit_price" class="form-label">Price</label>
-                        <input type="number" step="0.01" class="form-control" id="edit_price" name="price" required>
+                        <input type="number" step="0.01" class="form-control" id="edit_price" name="price" placeholder="0.00" required>
                     </div>
                     <div class="mb-3">
                         <label for="edit_duration_months" class="form-label">Duration (Months)</label>
-                        <input type="number" class="form-control" id="edit_duration_months" name="duration_months" required>
+                        <input type="number" class="form-control" id="edit_duration_months" name="duration_months" placeholder="e.g. 1, 3, 12" required>
                     </div>
                     <div class="mb-3">
                         <label for="edit_feature_ids" class="form-label">Features</label>

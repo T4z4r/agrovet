@@ -15,21 +15,21 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter package name" required>
                             @error('name')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="price" class="form-label">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" value="{{ old('price') }}" required min="0" step="0.01">
+                            <input type="number" class="form-control" id="price" name="price" value="{{ old('price') }}" placeholder="0.00" required min="0" step="0.01">
                             @error('price')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="duration_months" class="form-label">Duration (Months)</label>
-                            <input type="number" class="form-control" id="duration_months" name="duration_months" value="{{ old('duration_months') }}" required min="1">
+                            <input type="number" class="form-control" id="duration_months" name="duration_months" value="{{ old('duration_months') }}" placeholder="e.g. 1, 3, 12" required min="1">
                             @error('duration_months')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
@@ -46,7 +46,7 @@
                         </div>
                         <div class="col-md-12 mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3">{{ old('description') }}</textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter package description">{{ old('description') }}</textarea>
                             @error('description')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

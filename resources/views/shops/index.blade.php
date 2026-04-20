@@ -62,11 +62,11 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="create_name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="create_name" name="name" required>
+                            <input type="text" class="form-control" id="create_name" name="name" placeholder="Enter shop name" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="create_location" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="create_location" name="location" required>
+                            <input type="text" class="form-control" id="create_location" name="location" placeholder="Enter shop location" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -94,11 +94,11 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="edit_name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="edit_name" name="name" required>
+                            <input type="text" class="form-control" id="edit_name" name="name" placeholder="Enter shop name" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="edit_location" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="edit_location" name="location" required>
+                            <input type="text" class="form-control" id="edit_location" name="location" placeholder="Enter shop location" required>
                         </div>
                     </div>
                     <div class="modal-footer">
