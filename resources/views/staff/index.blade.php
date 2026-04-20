@@ -24,7 +24,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <select name="branch_id" class="form-select">
                                 <option value="">All Branches</option>
                                 @foreach ($branches as $branch)
@@ -34,7 +34,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="col-md-2">
                             <select name="role" class="form-select">
                                 <option value="">All Roles</option>

@@ -21,17 +21,16 @@ class StaffController extends Controller
 
         // Query staff users in owned shops
         $query = User::whereIn('shop_id', $ownedShopIds)
-            ->where('role', 'seller')
-        ;
+            ->where('role', 'seller');
 
         // Filters
         if ($request->filled('shop_id')) {
             $query->where('shop_id', $request->shop_id);
         }
 
-        if ($request->filled('branch_id')) {
-            $query->where('branch_id', $request->branch_id);
-        }
+        // if ($request->filled('branch_id')) {
+        //     $query->where('branch_id', $request->branch_id);
+        // }
 
         if ($request->filled('role')) {
             $query->where('role', $request->role);
@@ -47,9 +46,9 @@ class StaffController extends Controller
         $shops = $owner->shops;
 
         // Get branches for filter
-        $branches = Branch::whereIn('shop_id', $ownedShopIds)->get();
+        // $branches = Branch::whereIn('shop_id', $ownedShopIds)->get();
 
-        return view('staff.index', compact('staff', 'shops', 'branches'));
+        return view('staff.index', compact('staff', 'shops'));
     }
 
     public function create()
@@ -177,6 +176,4 @@ class StaffController extends Controller
 
         return redirect()->route('staff.index')->with('success', 'Staff member deleted successfully.');
     }
-
-
 }
