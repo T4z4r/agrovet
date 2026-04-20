@@ -179,7 +179,8 @@ function toggleValue(btn) {
             plotOptions: {
                 column: {
                     grouping: true,
-                    pointPadding: 0.1,
+                    pointPadding: 0.05,
+                    groupPadding: 0.1,
                     borderWidth: 0
                 }
             },
