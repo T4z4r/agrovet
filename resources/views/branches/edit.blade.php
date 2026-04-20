@@ -28,14 +28,14 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $branch->name) }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $branch->name) }}" placeholder="Enter branch name" required>
                             @error('name')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="location" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="location" name="location" value="{{ old('location', $branch->location) }}" required>
+                            <input type="text" class="form-control" id="location" name="location" value="{{ old('location', $branch->location) }}" placeholder="Enter branch location" required>
                             @error('location')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
