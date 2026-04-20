@@ -133,6 +133,7 @@ class StaffController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$staff->id,
+            'password' => 'nullable|string|min:8',
             'role' => 'required|in:owner,seller',
             'shop_id' => 'required|exists:shops,id',
             'branch_id' => 'nullable|exists:branches,id',
@@ -150,14 +151,20 @@ class StaffController extends Controller
         }
 
         DB::transaction(function () use ($request, $staff) {
-            $staff->update([
+            $data = [
                 'name' => $request->name,
                 'email' => $request->email,
                 'role' => $request->role,
                 'shop_id' => $request->shop_id,
                 'branch_id' => $request->branch_id,
                 'is_active' => $request->is_active ?? true,
-            ]);
+            ];
+
+            if ($request->filled('password')) {
+                $data['password'] = Hash::make($request->password);
+            }
+
+            $staff->update($data);
         });
 
         return redirect()->route('staff.index')->with('success', 'Staff member updated successfully.');

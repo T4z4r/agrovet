@@ -29,7 +29,12 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password" tabindex="-1">
+                                    <i class="bx bx-hide" id="password-icon"></i>
+                                </button>
+                            </div>
                             @error('password')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
@@ -81,4 +86,21 @@
         </div>
     </div>
 </div>
+@section('scripts')
+<script>
+    document.querySelectorAll('.toggle-password').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var input = document.getElementById(this.getAttribute('data-target'));
+            var icon = this.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('bx-hide', 'bx-show');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('bx-show', 'bx-hide');
+            }
+        });
+    });
+</script>
+@endsection
 @endsection
