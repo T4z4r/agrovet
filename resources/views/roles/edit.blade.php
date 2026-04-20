@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label for="name" class="form-label">Role Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $role->name) }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $role->name) }}" placeholder="Enter role name" required>
                             @error('name')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

@@ -29,6 +29,17 @@
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label for="role" class="form-label">Role</label>
+                            <select class="form-select" id="role" name="role" required>
+                                <option value="">Select Role</option>
+                                <option value="seller" {{ old('role', $user->role) == 'seller' ? 'selected' : '' }}>Seller</option>
+                                <option value="owner" {{ old('role', $user->role) == 'owner' ? 'selected' : '' }}>Owner</option>
+                            </select>
+                            @error('role')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label for="shop_id" class="form-label">Shop</label>
                             <select class="form-select" id="shop_id" name="shop_id" required>
                                 <option value="">Select Shop</option>

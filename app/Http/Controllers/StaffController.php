@@ -17,7 +17,7 @@ class StaffController extends Controller
 
         // Query staff users in the authenticated user's shop
         $query = User::where('shop_id', $owner->shop_id)
-            ->where('role', 'seller');
+            ->whereIn('role', ['owner', 'seller']);
 
         // Filters
         if ($request->filled('shop_id')) {
@@ -62,6 +62,7 @@ class StaffController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'role' => 'required|in:owner,seller',
             'shop_id' => 'required|exists:shops,id',
             'branch_id' => 'nullable|exists:branches,id',
         ]);
@@ -83,7 +84,7 @@ class StaffController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role' => 'seller',
+                'role' => $request->role,
                 'shop_id' => $request->shop_id,
                 'branch_id' => $request->branch_id,
                 'is_active' => true,
@@ -98,7 +99,7 @@ class StaffController extends Controller
     {
         // Check if user is staff in owner's shops
         $owner = auth()->user();
-        if (! $owner->shops()->where('id', $user->shop_id)->exists() || $user->role !== 'seller') {
+        if (! $owner->shops()->where('id', $user->shop_id)->exists() || ! in_array($user->role, ['owner', 'seller'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -111,7 +112,7 @@ class StaffController extends Controller
     {
         // Check if user is staff in the user's shop
         $owner = auth()->user();
-        if ($user->shop_id != $owner->shop_id || $user->role !== 'seller') {
+        if ($user->shop_id != $owner->shop_id || ! in_array($user->role, ['owner', 'seller'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -125,13 +126,14 @@ class StaffController extends Controller
     {
         // Check if user is staff in the user's shop
         $owner = auth()->user();
-        if ($user->shop_id != $owner->shop_id || $user->role !== 'seller') {
+        if ($user->shop_id != $owner->shop_id || ! in_array($user->role, ['owner', 'seller'])) {
             abort(403, 'Unauthorized');
         }
 
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'role' => 'required|in:owner,seller',
             'shop_id' => 'required|exists:shops,id',
             'branch_id' => 'nullable|exists:branches,id',
             'is_active' => 'boolean',
@@ -151,6 +153,7 @@ class StaffController extends Controller
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
+                'role' => $request->role,
                 'shop_id' => $request->shop_id,
                 'branch_id' => $request->branch_id,
                 'is_active' => $request->is_active ?? true,
@@ -164,7 +167,7 @@ class StaffController extends Controller
     {
         // Check if user is staff in the user's shop
         $owner = auth()->user();
-        if ($user->shop_id != $owner->shop_id || $user->role !== 'seller') {
+        if ($user->shop_id != $owner->shop_id || ! in_array($user->role, ['owner', 'seller'])) {
             abort(403, 'Unauthorized');
         }
 

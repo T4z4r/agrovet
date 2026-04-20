@@ -47,11 +47,11 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="create_name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="create_name" name="name" required>
+                        <input type="text" class="form-control" id="create_name" name="name" placeholder="Enter feature name" required>
                     </div>
                     <div class="mb-3">
                         <label for="create_description" class="form-label">Description</label>
-                        <textarea class="form-control" id="create_description" name="description"></textarea>
+                        <textarea class="form-control" id="create_description" name="description" placeholder="Enter feature description"></textarea>
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="create_is_active" name="is_active" checked>
@@ -82,11 +82,11 @@
                     <input type="hidden" id="edit_id" name="id">
                     <div class="mb-3">
                         <label for="edit_name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="edit_name" name="name" required>
+                        <input type="text" class="form-control" id="edit_name" name="name" placeholder="Enter feature name" required>
                     </div>
                     <div class="mb-3">
                         <label for="edit_description" class="form-label">Description</label>
-                        <textarea class="form-control" id="edit_description" name="description"></textarea>
+                        <textarea class="form-control" id="edit_description" name="description" placeholder="Enter feature description"></textarea>
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="edit_is_active" name="is_active">

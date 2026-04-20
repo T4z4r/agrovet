@@ -15,14 +15,14 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" placeholder="Enter policy title" required>
                             @error('title')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-12 mb-3">
                             <label for="content" class="form-label">Content</label>
-                            <textarea class="form-control" id="content" name="content" rows="10" required>{{ old('content') }}</textarea>
+                            <textarea class="form-control" id="content" name="content" rows="10" placeholder="Enter policy content" required>{{ old('content') }}</textarea>
                             @error('content')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

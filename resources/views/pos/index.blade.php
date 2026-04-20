@@ -71,7 +71,7 @@
                     </div>
                     <div class="mt-3">
                         <label for="customer_name" class="form-label">Customer Name (Optional)</label>
-                        <input type="text" class="form-control" id="customer_name" name="customer_name">
+                        <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="Enter customer name">
                     </div>
                     <button type="submit" class="btn btn-success w-100 mt-3" id="checkout-btn" disabled>Checkout</button>
                 </form>
