@@ -76,7 +76,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="barcode" class="form-label">Barcode</label>
-                            <input type="text" class="form-control" id="barcode" name="barcode" value="{{ old('barcode') }}">
+                            <input type="text" class="form-control" id="barcode" name="barcode" value="{{ old('barcode') }}" placeholder="Enter barcode">
                             @error('barcode')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

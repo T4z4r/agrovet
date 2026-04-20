@@ -16,14 +16,14 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ $product->name }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $product->name }}" placeholder="Enter product name" required>
                             @error('name')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="category" class="form-label">Category</label>
-                            <input type="text" class="form-control" id="category" name="category" value="{{ $product->category }}" required>
+                            <input type="text" class="form-control" id="category" name="category" value="{{ $product->category }}" placeholder="Enter product category" required>
                             @error('category')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
