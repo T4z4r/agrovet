@@ -111,7 +111,7 @@ class StaffController extends Controller
     public function edit(User $user)
     {
         // Check if user is staff in the user's shop
-        // $owner = auth()->user();
+        $owner = auth()->user();
         // if ($user->shop_id != $owner->shop_id || ! in_array($user->role, ['owner', 'seller'])) {
         //     abort(403, 'Unauthorized');
         // }
@@ -132,7 +132,7 @@ class StaffController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'role' => 'required|in:owner,seller',
             'shop_id' => 'required|exists:shops,id',
             'branch_id' => 'nullable|exists:branches,id',

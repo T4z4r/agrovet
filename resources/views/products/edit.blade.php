@@ -37,7 +37,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="stock" class="form-label">Stock</label>
-                            <input type="number" class="form-control" id="stock" name="stock" value="{{ $product->stock }}" required min="0">
+                            <input type="number" class="form-control" id="stock" name="stock" value="{{ $product->stock }}" placeholder="0" required min="0">
                             @error('stock')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

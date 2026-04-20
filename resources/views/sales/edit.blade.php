@@ -30,7 +30,7 @@ foreach($products as $product) {
                         </div>
                         <div class="col-md-6">
                             <label for="payment_method" class="form-label">Payment Method</label>
-                            <input type="text" class="form-control" id="payment_method" name="payment_method" value="{{ old('payment_method', $sale->payment_method) }}">
+                            <input type="text" class="form-control" id="payment_method" name="payment_method" value="{{ old('payment_method', $sale->payment_method) }}" placeholder="e.g. cash, mpesa, card">
                             @error('payment_method')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
@@ -38,7 +38,7 @@ foreach($products as $product) {
                     </div>
                     <div class="mb-3">
                         <label for="customer_name" class="form-label">Customer Name</label>
-                        <input type="text" class="form-control" id="customer_name" name="customer_name" value="{{ old('customer_name', $sale->customer_name) }}">
+                        <input type="text" class="form-control" id="customer_name" name="customer_name" value="{{ old('customer_name', $sale->customer_name) }}" placeholder="Enter customer name">
                         @error('customer_name')
                             <div class="text-danger small">{{ $message }}</div>
                         @enderror
@@ -60,11 +60,11 @@ foreach($products as $product) {
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Quantity</label>
-                                <input type="number" class="form-control quantity-input" name="items[{{ $index }}][quantity]" value="{{ $item->quantity }}" min="1" required>
+                                <input type="number" class="form-control quantity-input" name="items[{{ $index }}][quantity]" value="{{ $item->quantity }}" min="1" placeholder="1" required>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Price</label>
-                                <input type="number" class="form-control price-input" name="items[{{ $index }}][price]" value="{{ $item->price }}" min="0" step="0.01" required>
+                                <input type="number" class="form-control price-input" name="items[{{ $index }}][price]" value="{{ $item->price }}" min="0" step="0.01" placeholder="0.00" required>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">&nbsp;</label>
@@ -105,11 +105,11 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="col-md-3">
                 <label class="form-label">Quantity</label>
-                <input type="number" class="form-control quantity-input" name="items[${itemIndex}][quantity]" min="1" required>
+                <input type="number" class="form-control quantity-input" name="items[${itemIndex}][quantity]" min="1" placeholder="1" required>
             </div>
             <div class="col-md-3">
                 <label class="form-label">Price</label>
-                <input type="number" class="form-control price-input" name="items[${itemIndex}][price]" min="0" step="0.01" required>
+                <input type="number" class="form-control price-input" name="items[${itemIndex}][price]" min="0" step="0.01" placeholder="0.00" required>
             </div>
             <div class="col-md-2">
                 <label class="form-label">&nbsp;</label>
