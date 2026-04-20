@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="unit" class="form-label">Unit</label>
-                            <input type="text" class="form-control" id="unit" name="unit" value="{{ $product->unit }}" required>
+                            <input type="text" class="form-control" id="unit" name="unit" value="{{ $product->unit }}" placeholder="e.g. kg, pcs, litre" required>
                             @error('unit')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
@@ -44,28 +44,28 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="minimum_quantity" class="form-label">Minimum Quantity</label>
-                            <input type="number" class="form-control" id="minimum_quantity" name="minimum_quantity" value="{{ $product->minimum_quantity }}" min="0">
+                            <input type="number" class="form-control" id="minimum_quantity" name="minimum_quantity" value="{{ $product->minimum_quantity }}" placeholder="0" min="0">
                             @error('minimum_quantity')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="cost_price" class="form-label">Cost Price</label>
-                            <input type="number" class="form-control" id="cost_price" name="cost_price" value="{{ $product->cost_price }}" required min="0" step="0.01">
+                            <input type="number" class="form-control" id="cost_price" name="cost_price" value="{{ $product->cost_price }}" placeholder="0.00" required min="0" step="0.01">
                             @error('cost_price')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="selling_price" class="form-label">Selling Price</label>
-                            <input type="number" class="form-control" id="selling_price" name="selling_price" value="{{ $product->selling_price }}" required min="0" step="0.01">
+                            <input type="number" class="form-control" id="selling_price" name="selling_price" value="{{ $product->selling_price }}" placeholder="0.00" required min="0" step="0.01">
                             @error('selling_price')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="barcode" class="form-label">Barcode</label>
-                            <input type="text" class="form-control" id="barcode" name="barcode" value="{{ $product->barcode }}">
+                            <input type="text" class="form-control" id="barcode" name="barcode" value="{{ $product->barcode }}" placeholder="Enter barcode">
                             @error('barcode')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

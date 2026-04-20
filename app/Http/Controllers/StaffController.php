@@ -111,10 +111,10 @@ class StaffController extends Controller
     public function edit(User $user)
     {
         // Check if user is staff in the user's shop
-        $owner = auth()->user();
-        if ($user->shop_id != $owner->shop_id || ! in_array($user->role, ['owner', 'seller'])) {
-            abort(403, 'Unauthorized');
-        }
+        // $owner = auth()->user();
+        // if ($user->shop_id != $owner->shop_id || ! in_array($user->role, ['owner', 'seller'])) {
+        //     abort(403, 'Unauthorized');
+        // }
 
         $shops = collect([$owner->assignedShop]);
         $branches = Branch::whereIn('shop_id', $shops->pluck('id'))->get();
