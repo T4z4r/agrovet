@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expense;
+use App\Models\Product;
+use App\Models\Sale;
+use App\Models\Shop;
+use App\Models\User;
+use App\Services\OtpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use App\Models\Shop;
-use App\Models\Product;
-use App\Models\Sale;
-use App\Models\Expense;
-use App\Services\OtpService;
 
 class WebAuthController extends Controller
 {
@@ -30,18 +30,20 @@ class WebAuthController extends Controller
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
         $user = User::where('email', $credentials['email'])->first();
 
         if ($user && $this->otpService->hasValidOtp($user, 'login')) {
             $request->session()->put('pending_user_id', $user->id);
+
             return redirect()->route('otp.verify');
         }
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
             return redirect()->intended(route('dashboard'));
         }
 
@@ -56,16 +58,16 @@ class WebAuthController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'name'              => 'required|string',
-            'email'             => 'required|email|unique:users,email',
-            'password'          => 'required|min:6|confirmed',
-            'shop_name'         => 'required|string',
-            'shop_location'     => 'nullable|string',
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed',
+            'shop_name' => 'required|string',
+            'shop_location' => 'nullable|string',
         ]);
 
         $tempData = [
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'shop_name' => $data['shop_name'],
             'shop_location' => $data['shop_location'] ?? null,
@@ -75,10 +77,10 @@ class WebAuthController extends Controller
         $request->session()->put('registration_step', 'otp');
 
         $user = User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'role'     => 'owner',
+            'role' => 'owner',
         ]);
 
         $this->otpService->sendOtp($user, 'register');
@@ -102,19 +104,20 @@ class WebAuthController extends Controller
 
         if ($registrationData) {
             $user = User::where('email', $registrationData['email'])->first();
-            if (!$user) {
+            if (! $user) {
                 $request->session()->forget(['registration_data', 'registration_step']);
+
                 return redirect()->route('register')->with('error', 'Registration session expired.');
             }
 
-            if (!$this->otpService->verifyOtp($user, $request->otp_code, 'register')) {
+            if (! $this->otpService->verifyOtp($user, $request->otp_code, 'register')) {
                 return back()->with('error', 'Invalid or expired OTP.');
             }
 
             $user->assignRole('owner');
 
             $shop = Shop::create([
-                'name'     => $registrationData['shop_name'],
+                'name' => $registrationData['shop_name'],
                 'owner_id' => $user->id,
                 'location' => $registrationData['shop_location'] ?? null,
             ]);
@@ -130,11 +133,11 @@ class WebAuthController extends Controller
 
         if ($userId) {
             $user = User::find($userId);
-            if (!$user) {
+            if (! $user) {
                 return redirect()->route('login')->with('error', 'Session expired.');
             }
 
-            if (!$this->otpService->verifyOtp($user, $request->otp_code, 'login')) {
+            if (! $this->otpService->verifyOtp($user, $request->otp_code, 'login')) {
                 return back()->with('error', 'Invalid or expired OTP.');
             }
 
@@ -157,6 +160,7 @@ class WebAuthController extends Controller
             $user = User::where('email', $registrationData['email'])->first();
             if ($user) {
                 $this->otpService->sendOtp($user, 'register');
+
                 return back()->with('success', 'OTP resent to your email.');
             }
         }
@@ -165,6 +169,7 @@ class WebAuthController extends Controller
             $user = User::find($userId);
             if ($user) {
                 $this->otpService->sendOtp($user, 'login');
+
                 return back()->with('success', 'OTP resent to your email.');
             }
         }
@@ -177,6 +182,7 @@ class WebAuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/');
     }
 
@@ -209,24 +215,26 @@ class WebAuthController extends Controller
             return view('dashboard-seller', compact('data', 'recentSales'));
         }
 
-        // Admin/Owner dashboard
+        // Admin/Owner dashboard — scope everything to this owner's shop
+        $shopId = $user->shop_id;
+
         $data = [
-            'total_products'  => Product::count(),
-            'total_sales'     => Sale::sum('total'),
-            'total_expenses'  => Expense::sum('amount'),
-            'today_sales'     => Sale::whereDate('sale_date', today())->sum('total'),
-            'stock_value'     => Product::sum(DB::raw('cost_price * stock')),
+            'total_products' => Product::where('shop_id', $shopId)->count(),
+            'total_sales' => Sale::where('shop_id', $shopId)->sum('total'),
+            'total_expenses' => Expense::where('shop_id', $shopId)->sum('amount'),
+            'today_sales' => Sale::where('shop_id', $shopId)->whereDate('sale_date', today())->sum('total'),
+            'stock_value' => Product::where('shop_id', $shopId)->sum(DB::raw('cost_price * stock')),
         ];
 
-        // Data for charts - last 30 days
+        // Data for charts - last 30 days (scoped to this shop)
         $dates = [];
         $salesData = [];
         $expensesData = [];
         for ($i = 29; $i >= 0; $i--) {
             $date = now()->subDays($i)->toDateString();
             $dates[] = now()->subDays($i)->format('M d');
-            $salesData[] = Sale::whereDate('sale_date', $date)->sum('total');
-            $expensesData[] = Expense::whereDate('date', $date)->sum('amount');
+            $salesData[] = (float) Sale::where('shop_id', $shopId)->whereDate('sale_date', $date)->sum('total');
+            $expensesData[] = (float) Expense::where('shop_id', $shopId)->whereDate('date', $date)->sum('amount');
         }
 
         return view('dashboard', compact('data', 'dates', 'salesData', 'expensesData'));

@@ -138,47 +138,58 @@ function toggleValue(btn) {
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        var salesData    = @json(array_values($salesData));
+        var expensesData = @json(array_values($expensesData));
+        var dates        = @json(array_values($dates));
+
+        // Ensure all values are numbers
+        salesData    = salesData.map(function (v) { return parseFloat(v) || 0; });
+        expensesData = expensesData.map(function (v) { return parseFloat(v) || 0; });
+
         Highcharts.chart('chart-container', {
             chart: {
                 type: 'column',
                 backgroundColor: 'transparent'
             },
             title: {
-                text: 'Sales vs Expenses Over Last 30 Days'
+                text: 'Sales vs Expenses — Last 30 Days'
             },
             xAxis: {
-                categories: @json($dates),
-                gridLineWidth: 1,
-                gridLineColor: '#e0e0e0'
+                categories: dates,
+                crosshair: true,
+                labels: { rotation: -45, style: { fontSize: '11px' } }
             },
             yAxis: {
-                title: {
-                    text: 'Amount (TZS)'
-                },
-                gridLineWidth: 1,
+                min: 0,
+                title: { text: 'Amount (TZS)' },
                 gridLineColor: '#e0e0e0'
             },
-            legend: {
-                enabled: true
-            },
+            legend: { enabled: true },
             tooltip: {
                 shared: true,
-                valuePrefix: 'TZS '
+                formatter: function () {
+                    var s = '<b>' + this.x + '</b>';
+                    this.points.forEach(function (p) {
+                        s += '<br/>' + p.series.name + ': TZS ' +
+                            Highcharts.numberFormat(p.y, 2, '.', ',');
+                    });
+                    return s;
+                }
             },
             plotOptions: {
                 column: {
-                    dataLabels: {
-                        enabled: false
-                    }
+                    grouping: true,
+                    pointPadding: 0.1,
+                    borderWidth: 0
                 }
             },
             series: [{
                 name: 'Sales',
-                data: @json($salesData),
+                data: salesData,
                 color: '#28a745'
             }, {
                 name: 'Expenses',
-                data: @json($expensesData),
+                data: expensesData,
                 color: '#dc3545'
             }]
         });
