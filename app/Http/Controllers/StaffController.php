@@ -95,44 +95,44 @@ class StaffController extends Controller
         return redirect()->route('staff.index')->with('success', 'Staff member created successfully.');
     }
 
-    public function show(User $user)
+    public function show(User $staff)
     {
         // Check if user is staff in owner's shops
         $owner = auth()->user();
-        if (! $owner->shops()->where('id', $user->shop_id)->exists() || ! in_array($user->role, ['owner', 'seller'])) {
+        if (! $owner->shops()->where('id', $staff->shop_id)->exists() || ! in_array($staff->role, ['owner', 'seller'])) {
             abort(403, 'Unauthorized');
         }
 
-        $user->load(['assignedShop', 'branch']);
+        $staff->load(['assignedShop', 'branch']);
 
-        return view('staff.show', compact('user'));
+        return view('staff.show', ['user' => $staff]);
     }
 
-    public function edit(User $user)
+    public function edit(User $staff)
     {
         // Check if user is staff in the user's shop
         $owner = auth()->user();
-        // if ($user->shop_id != $owner->shop_id || ! in_array($user->role, ['owner', 'seller'])) {
-        //     abort(403, 'Unauthorized');
-        // }
+        if ($staff->shop_id != $owner->shop_id || ! in_array($staff->role, ['owner', 'seller'])) {
+            abort(403, 'Unauthorized');
+        }
 
         $shops = collect([$owner->assignedShop]);
         $branches = Branch::whereIn('shop_id', $shops->pluck('id'))->get();
 
-        return view('staff.edit', compact('user', 'shops', 'branches'));
+        return view('staff.edit', ['user' => $staff, 'shops' => $shops, 'branches' => $branches]);
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $staff)
     {
         // Check if user is staff in the user's shop
         $owner = auth()->user();
-        if ($user->shop_id != $owner->shop_id || ! in_array($user->role, ['owner', 'seller'])) {
+        if ($staff->shop_id != $owner->shop_id || ! in_array($staff->role, ['owner', 'seller'])) {
             abort(403, 'Unauthorized');
         }
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,'.$staff->id,
             'role' => 'required|in:owner,seller',
             'shop_id' => 'required|exists:shops,id',
             'branch_id' => 'nullable|exists:branches,id',
@@ -149,8 +149,8 @@ class StaffController extends Controller
             abort(403, 'Invalid branch');
         }
 
-        DB::transaction(function () use ($request, $user) {
-            $user->update([
+        DB::transaction(function () use ($request, $staff) {
+            $staff->update([
                 'name' => $request->name,
                 'email' => $request->email,
                 'role' => $request->role,
@@ -163,15 +163,15 @@ class StaffController extends Controller
         return redirect()->route('staff.index')->with('success', 'Staff member updated successfully.');
     }
 
-    public function destroy(User $user)
+    public function destroy(User $staff)
     {
         // Check if user is staff in the user's shop
         $owner = auth()->user();
-        if ($user->shop_id != $owner->shop_id || ! in_array($user->role, ['owner', 'seller'])) {
+        if ($staff->shop_id != $owner->shop_id || ! in_array($staff->role, ['owner', 'seller'])) {
             abort(403, 'Unauthorized');
         }
 
-        $user->delete(); // Soft delete
+        $staff->delete(); // Soft delete
 
         return redirect()->route('staff.index')->with('success', 'Staff member deleted successfully.');
     }
