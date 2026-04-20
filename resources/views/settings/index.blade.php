@@ -23,14 +23,14 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" placeholder="Enter your name" required>
                             @error('name')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" placeholder="Enter your email" required>
                             @error('email')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
@@ -44,7 +44,7 @@
                         <div class="col-md-4 mb-3">
                             <label for="current_password" class="form-label">Current Password</label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="current_password" name="current_password">
+                                <input type="password" class="form-control" id="current_password" name="current_password" placeholder="Enter current password">
                                 <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('current_password')">
                                     <i class="bx bx-show" id="current_password_icon"></i>
                                 </button>
