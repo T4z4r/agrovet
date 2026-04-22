@@ -419,7 +419,7 @@
             tooltipClass: 'agrovet-tour-tooltip',
             nextLabel: 'Next',
             prevLabel: 'Back',
-            skipLabel: 'Skip tour',
+            skipLabel: 'Skip',
             doneLabel: 'Finish'
           });
 
