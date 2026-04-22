@@ -31,6 +31,7 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
         'otp_verified',
         'otp_code',
         'otp_expires_at',
+        'tour_completed_at',
     ];
 
     /**
@@ -57,6 +58,7 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
             'otp_expires_at'    => 'datetime',
             'otp_verified'      => 'boolean',
             'is_active'         => 'boolean',
+            'tour_completed_at' => 'datetime',
         ];
     }
 
@@ -128,6 +130,16 @@ class User extends Authenticatable implements \OwenIt\Auditing\Contracts\Auditab
     public function isOtpExpired(): bool
     {
         return $this->otp_expires_at !== null && $this->otp_expires_at->isPast();
+    }
+
+    public function hasCompletedOnboardingTour(): bool
+    {
+        return $this->tour_completed_at !== null;
+    }
+
+    public function markOnboardingTourCompleted(): void
+    {
+        $this->forceFill(['tour_completed_at' => now()])->saveQuietly();
     }
 
     // ────────────────────────────────────────────────

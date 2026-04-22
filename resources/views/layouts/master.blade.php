@@ -14,6 +14,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <title>@section('title')</title>
 
@@ -46,6 +47,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/introjs.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Summernote CSS -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
@@ -84,13 +86,13 @@
             id="layout-navbar"
           >
             <div class="navbar-nav align-items-center">
-              <a class="nav-link style-switcher-toggle hide-arrow" href="javascript:void(0);">
+              <a class="nav-link style-switcher-toggle hide-arrow" href="javascript:void(0);" id="tour-navbar-style-switcher">
                 <i class="bx bx-sm"></i>
               </a>
             </div>
 
             <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-              <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+              <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)" id="tour-navbar-menu-toggle">
                 <i class="bx bx-menu bx-sm"></i>
               </a>
             </div>
@@ -99,7 +101,7 @@
               <ul class="navbar-nav flex-row align-items-center ms-auto">
                 <!-- User -->
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" id="tour-navbar-user-toggle">
                     <div class="avatar avatar-online">
                       {{-- <img src="../../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" /> --}}
                       <div class="bg-light w-px-40 h-px-40 rounded-circle shadow-sm border-2 border-white d-flex align-items-center justify-content-center">
@@ -109,7 +111,7 @@
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="#" id="tour-navbar-profile-summary">
                         <div class="d-flex">
                           <div class="flex-shrink-0 me-3">
                             <div class="avatar avatar-online">
@@ -133,7 +135,7 @@
                       </a>
                     </li> --}}
                     <li>
-                      <a class="dropdown-item" href="{{ route('settings.index') }}">
+                      <a class="dropdown-item" href="{{ route('settings.index') }}" id="tour-navbar-settings-link">
                         <i class="bx bx-cog me-2"></i>
                         <span class="align-middle">Settings</span>
                       </a>
@@ -151,7 +153,7 @@
                       <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                      <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal" id="tour-navbar-logout-link">
                         <i class="bx bx-power-off me-2"></i>
                         <span class="align-middle">Log Out</span>
                       </a>
@@ -256,6 +258,7 @@
     <!-- endbuild -->
 
     <!-- Vendors JS -->
+    <script src="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/intro.min.js"></script>
     <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/flatpickr/flatpickr.js') }}"></script>
@@ -264,6 +267,168 @@
 
     <!-- Main JS -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
+
+    @php
+      $shouldRunTour = auth()->check() && ! auth()->user()->hasCompletedOnboardingTour();
+    @endphp
+
+    @if ($shouldRunTour)
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          if (typeof introJs !== 'function') {
+            return;
+          }
+
+          const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+          const tourCompleteUrl = @json(route('tour.complete'));
+          const sidebarParentToggles = [
+            '#tour-sidebar-user-management-toggle',
+            '#tour-sidebar-subscriptions-toggle',
+            '#tour-sidebar-common-products-toggle'
+          ];
+          const openedSidebarParents = [];
+          const userDropdownToggle = document.querySelector('#tour-navbar-user-toggle');
+          let openedUserDropdown = false;
+          let savedTourCompletion = false;
+          const isVisible = (element) => Boolean(element && element.getClientRects().length > 0);
+
+          sidebarParentToggles.forEach((selector) => {
+            const toggle = document.querySelector(selector);
+            const parent = toggle?.closest('.menu-item');
+
+            if (toggle && parent && !parent.classList.contains('open')) {
+              toggle.click();
+              openedSidebarParents.push(toggle);
+            }
+          });
+
+          if (userDropdownToggle) {
+            const dropdown = userDropdownToggle.closest('.dropdown');
+
+            if (dropdown && !dropdown.classList.contains('show')) {
+              userDropdownToggle.click();
+              openedUserDropdown = true;
+            }
+          }
+
+          const stepDefinitions = [
+            { selector: '#tour-welcome-card', intro: 'This is your dashboard overview. It gives you a quick feel for what is happening right now.' },
+            { selector: '#tour-sidebar-dashboard-link', intro: 'Start here anytime to return to the dashboard.' },
+            { selector: '#tour-sidebar-staff-link', intro: 'Manage staff members from this menu if your role allows it.' },
+            { selector: '#tour-sidebar-pos-link', intro: 'Use POS to make new sales quickly.' },
+            { selector: '#tour-sidebar-products-link', intro: 'Add and manage products from here.' },
+            { selector: '#tour-sidebar-suppliers-link', intro: 'Keep supplier records organized in this section.' },
+            { selector: '#tour-sidebar-sales-link', intro: 'Review sales history and transactions here.' },
+            { selector: '#tour-sidebar-expenses-link', intro: 'Track business expenses from this menu.' },
+            { selector: '#tour-sidebar-stock-transactions-link', intro: 'Follow stock movement and inventory changes here.' },
+            { selector: '#tour-sidebar-reports-link', intro: 'Open reports for deeper analysis and summaries.' },
+            { selector: '#tour-sidebar-user-management-toggle', intro: 'Some menus expand to reveal more options. This one groups user management tools.' },
+            { selector: '#tour-sidebar-users-link', intro: 'View and manage users from here.' },
+            { selector: '#tour-sidebar-roles-toggle', intro: 'This submenu holds role and permission tools.' },
+            { selector: '#tour-sidebar-roles-link', intro: 'Roles help control access levels in the system.' },
+            { selector: '#tour-sidebar-permissions-link', intro: 'Permissions let you fine-tune access rules.' },
+            { selector: '#tour-sidebar-privacy-policies-link', intro: 'Manage privacy policy content from this section.' },
+            { selector: '#tour-sidebar-shops-link', intro: 'Shop settings and records live here.' },
+            { selector: '#tour-sidebar-subscriptions-toggle', intro: 'Subscription tools are grouped together here.' },
+            { selector: '#tour-sidebar-subscription-packages-link', intro: 'Create or manage subscription packages.' },
+            { selector: '#tour-sidebar-subscriptions-link', intro: 'Review active subscriptions here.' },
+            { selector: '#tour-sidebar-subscription-payments-link', intro: 'Track subscription payments from this screen.' },
+            { selector: '#tour-sidebar-features-link', intro: 'Manage subscription features here.' },
+            { selector: '#tour-sidebar-database-admin-link', intro: 'Administrative database tools are available here.' },
+            { selector: '#tour-sidebar-audits-link', intro: 'System activity logs are stored here.' },
+            { selector: '#tour-sidebar-guides-link', intro: 'Use guides for help and training material.' },
+            { selector: '#tour-sidebar-common-products-toggle', intro: 'Common product templates are grouped here for quick setup.' },
+            { selector: '#tour-sidebar-common-categories-link', intro: 'Browse standardized product categories here.' },
+            { selector: '#tour-sidebar-common-products-link', intro: 'Browse standardized product templates here.' },
+            { selector: '#tour-navbar-style-switcher', intro: 'This button lets you switch the visual style or theme controls.' },
+            { selector: '#tour-navbar-menu-toggle', intro: 'Use this to collapse or expand the sidebar on smaller screens.' },
+            { selector: '#tour-navbar-user-toggle', intro: 'Open this menu to access your account options.' },
+            { selector: '#tour-navbar-settings-link', intro: 'From here you can open your settings.' },
+            { selector: '#tour-navbar-logout-link', intro: 'Use this to log out when you are finished.' },
+            { selector: '#tour-total-products-card', intro: 'This card shows your total product count.' },
+            { selector: '#tour-total-sales-card', intro: 'This card summarizes total sales.' },
+            { selector: '#tour-total-expenses-card', intro: 'This card shows total expenses.' },
+            { selector: '#tour-today-sales-card', intro: 'Here you can see today’s sales performance.' },
+            { selector: '#tour-stock-value-card', intro: 'This card shows the current stock value.' },
+            { selector: '#tour-net-position-card', intro: 'This card shows your overall net position.' },
+            { selector: '#tour-sales-expenses-chart', intro: 'This chart compares sales and expenses over the last 30 days.' },
+            { selector: '#tour-today-expenses-card', intro: 'This card shows today’s expenses.' },
+            { selector: '#tour-monthly-sales-card', intro: 'This card shows monthly sales performance.' },
+            { selector: '#tour-total-sales-count-card', intro: 'This card counts all sales transactions.' },
+            { selector: '#tour-today-net-performance-card', intro: 'This card shows today’s net performance.' },
+            { selector: '#tour-monthly-net-performance-card', intro: 'This card shows your monthly net performance.' },
+            { selector: '#tour-recent-sales-table', intro: 'Recent sales appear here for quick review.' },
+            { selector: '#tour-start-selling-button', intro: 'Use this button to jump straight into POS and start selling.' }
+          ];
+
+          const steps = stepDefinitions
+            .map((step) => {
+              const element = document.querySelector(step.selector);
+              return isVisible(element) ? { element, intro: step.intro } : null;
+            })
+            .filter(Boolean);
+
+          if (!steps.length) {
+            return;
+          }
+
+          const saveTourCompletion = async () => {
+            if (savedTourCompletion) {
+              return;
+            }
+
+            savedTourCompletion = true;
+
+            if (csrfToken) {
+              try {
+                await fetch(tourCompleteUrl, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                  },
+                  credentials: 'same-origin',
+                  body: JSON.stringify({ completed: true })
+                });
+              } catch (error) {
+                console.warn('Unable to save onboarding tour completion.', error);
+              }
+            }
+
+            if (openedUserDropdown && userDropdownToggle) {
+              userDropdownToggle.click();
+            }
+
+            openedSidebarParents.forEach((toggle) => {
+              const parent = toggle.closest('.menu-item');
+              if (parent && parent.classList.contains('open')) {
+                toggle.click();
+              }
+            });
+          };
+
+          const tour = introJs();
+          tour.setOptions({
+            steps,
+            showProgress: true,
+            showBullets: false,
+            exitOnOverlayClick: false,
+            exitOnEsc: true,
+            scrollToElement: true,
+            nextLabel: 'Next',
+            prevLabel: 'Back',
+            skipLabel: 'Skip tour',
+            doneLabel: 'Finish'
+          });
+
+          tour.oncomplete(saveTourCompletion);
+          tour.onexit(saveTourCompletion);
+          tour.start();
+        });
+      </script>
+    @endif
+
     @yield('scripts')
     <!-- Page JS -->
 

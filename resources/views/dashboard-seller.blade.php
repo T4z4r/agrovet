@@ -5,7 +5,7 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 mb-4 order-0">
-        <div class="card">
+        <div class="card" id="tour-welcome-card">
             <div class="d-flex align-items-end row">
                 <div class="col-sm-7">
                     <div class="card-body">
@@ -13,7 +13,7 @@
                         <p class="mb-4">
                             Here's your performance summary for today. Keep up the great work!
                         </p>
-                        <a href="{{ route('web.pos.index') }}" class="btn btn-primary">Start Selling</a>
+                        <a href="{{ route('web.pos.index') }}" class="btn btn-primary" id="tour-start-selling-button">Start Selling</a>
                     </div>
                 </div>
                 <div class="col-sm-5 text-center text-sm-left">
@@ -34,7 +34,7 @@
 
 <div class="row">
     <div class="col-md-3 mb-4">
-        <div class="card bg-success text-white">
+        <div class="card bg-success text-white" id="tour-today-sales-card">
             <div class="card-body text-center">
                 <i class="bx bx-trending-up bx-lg mb-2"></i>
                 <h5 class="text-white">Today's Sales</h5>
@@ -44,7 +44,7 @@
         </div>
     </div>
     <div class="col-md-3 mb-4">
-        <div class="card bg-warning text-white">
+        <div class="card bg-warning text-white" id="tour-today-expenses-card">
             <div class="card-body text-center">
                 <i class="bx bx-money bx-lg mb-2"></i>
                 <h5 class="text-white">Today's Expenses</h5>
@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="col-md-3 mb-4">
-        <div class="card bg-info text-white">
+        <div class="card bg-info text-white" id="tour-monthly-sales-card">
             <div class="card-body text-center">
                 <i class="bx bx-calendar bx-lg mb-2"></i>
                 <h5 class="text-white">Monthly Sales</h5>
@@ -62,7 +62,7 @@
         </div>
     </div>
     <div class="col-md-3 mb-4">
-        <div class="card bg-secondary text-white">
+        <div class="card bg-secondary text-white" id="tour-total-sales-count-card">
             <div class="card-body text-center">
                 <i class="bx bx-package bx-lg mb-2"></i>
                 <h5 class="text-white">Total Sales</h5>
@@ -75,7 +75,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card" id="tour-today-net-performance-card">
             <div class="card-header">
                 <h6>Today's Net Performance</h6>
             </div>
@@ -88,7 +88,7 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card">
+        <div class="card" id="tour-monthly-net-performance-card">
             <div class="card-header">
                 <h6>Monthly Net Performance</h6>
             </div>
@@ -105,7 +105,7 @@
 @if($recentSales->count() > 0)
 <div class="row mt-4">
     <div class="col-md-12">
-        <div class="card">
+        <div class="card" id="tour-recent-sales-table">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6>Recent Sales Today</h6>
                 <a href="{{ route('web.pos.index') }}" class="btn btn-sm btn-primary">Make New Sale</a>

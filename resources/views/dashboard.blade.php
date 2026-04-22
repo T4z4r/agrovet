@@ -5,7 +5,7 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 mb-4 order-0">
-        <div class="card">
+        <div class="card" id="tour-welcome-card">
             <div class="d-flex align-items-end row">
                 <div class="col-sm-7">
                     <div class="card-body">
@@ -33,7 +33,7 @@
 
 <div class="row">
     <div class="col-md-3 mb-4">
-        <div class="card bg-primary text-white">
+        <div class="card bg-primary text-white" id="tour-total-products-card">
             <div class="card-body text-center">
                 <i class="bx bx-package bx-lg mb-2"></i>
                 <h5 class="text-white">Total Products</h5>
@@ -42,7 +42,7 @@
         </div>
     </div>
     <div class="col-md-3 mb-4">
-        <div class="card bg-primary text-white">
+        <div class="card bg-primary text-white" id="tour-total-sales-card">
             <div class="card-body text-center">
                 <i class="bx bx-money bx-lg mb-2"></i>
                 <h5 class="text-white">Total Sales</h5>
@@ -51,7 +51,7 @@
         </div>
     </div>
     <div class="col-md-3 mb-4">
-        <div class="card bg-danger text-white">
+        <div class="card bg-danger text-white" id="tour-total-expenses-card">
             <div class="card-body text-center">
                 <i class="bx bx-trending-down bx-lg mb-2"></i>
                 <h5 class="text-white">Total Expenses</h5>
@@ -60,7 +60,7 @@
         </div>
     </div>
     <div class="col-md-3 mb-4">
-        <div class="card bg-primary text-white">
+        <div class="card bg-primary text-white" id="tour-today-sales-card">
             <div class="card-body text-center">
                 <i class="bx bx-calendar bx-lg mb-2"></i>
                 <h5 class="text-white">Today Sales</h5>
@@ -72,7 +72,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card" id="tour-stock-value-card">
             <div class="card-header">
                 <h6>Stock Value</h6>
             </div>
@@ -87,7 +87,7 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card">
+        <div class="card" id="tour-net-position-card">
             <div class="card-header">
                 <h6>Net Position</h6>
             </div>
@@ -122,7 +122,7 @@ function toggleValue(btn) {
 
 <div class="row mt-4">
     <div class="col-md-12">
-        <div class="card">
+        <div class="card" id="tour-sales-expenses-chart">
             <div class="card-header">
                 <h6>Sales and Expenses Over Last 30 Days</h6>
             </div>

@@ -26,6 +26,7 @@ use App\Http\Controllers\WebAuditController;
 use App\Http\Controllers\WebGuideController;
 use App\Http\Controllers\WebCommonCategoryController;
 use App\Http\Controllers\WebCommonProductController;
+use App\Http\Controllers\OnboardingTourController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StaffController;
@@ -61,6 +62,7 @@ Route::get('/privacy-policy', [WebPrivacyPolicyController::class, 'publicShow'])
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [WebAuthController::class, 'dashboard'])->name('dashboard');
+    Route::post('/onboarding-tour/complete', [OnboardingTourController::class, 'complete'])->name('tour.complete');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
