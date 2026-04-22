@@ -416,6 +416,7 @@
             exitOnOverlayClick: false,
             exitOnEsc: true,
             scrollToElement: true,
+            tooltipClass: 'agrovet-tour-tooltip',
             nextLabel: 'Next',
             prevLabel: 'Back',
             skipLabel: 'Skip tour',

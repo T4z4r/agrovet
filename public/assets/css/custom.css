@@ -245,3 +245,93 @@ a.page-link {
     border-color: #851b2d !important;
     color: white !important;
 }
+
+/* Intro.js onboarding tour */
+.agrovet-tour-tooltip.introjs-tooltip {
+    max-width: 380px !important;
+    padding: 1.1rem 1.1rem 0.9rem !important;
+    border: 1px solid rgba(116, 18, 34, 0.14) !important;
+    border-radius: 18px !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fff8f8 100%) !important;
+    box-shadow: 0 18px 50px rgba(43, 43, 43, 0.16) !important;
+}
+
+.agrovet-tour-tooltip .introjs-tooltiptext {
+    color: #3b2a2a !important;
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 0.9rem !important;
+}
+
+.agrovet-tour-tooltip .introjs-tooltip-title,
+.agrovet-tour-tooltip .introjs-tooltipheader {
+    color: #741222 !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em !important;
+}
+
+.agrovet-tour-tooltip .introjs-tooltipbuttons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding-top: 0.2rem !important;
+}
+
+.agrovet-tour-tooltip .introjs-button {
+    border: 0 !important;
+    border-radius: 999px !important;
+    padding: 0.6rem 1rem !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    font-weight: 600 !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease !important;
+}
+
+.agrovet-tour-tooltip .introjs-button:hover {
+    transform: translateY(-1px) !important;
+}
+
+.agrovet-tour-tooltip .introjs-nextbutton,
+.agrovet-tour-tooltip .introjs-donebutton {
+    background: #741222 !important;
+    color: #ffffff !important;
+}
+
+.agrovet-tour-tooltip .introjs-nextbutton:hover,
+.agrovet-tour-tooltip .introjs-donebutton:hover {
+    background: #5a0f1a !important;
+}
+
+.agrovet-tour-tooltip .introjs-prevbutton {
+    background: rgba(116, 18, 34, 0.08) !important;
+    color: #741222 !important;
+}
+
+.agrovet-tour-tooltip .introjs-skipbutton {
+    margin-right: auto !important;
+    padding: 0.45rem 0.85rem !important;
+    border-radius: 999px !important;
+    background: rgba(43, 43, 43, 0.08) !important;
+    color: #2b2b2b !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+}
+
+.agrovet-tour-tooltip .introjs-skipbutton:hover {
+    background: rgba(116, 18, 34, 0.12) !important;
+    color: #741222 !important;
+}
+
+.agrovet-tour-tooltip .introjs-progress {
+    background: rgba(116, 18, 34, 0.12) !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+}
+
+.agrovet-tour-tooltip .introjs-progressbar {
+    background: linear-gradient(90deg, #741222 0%, #a62a3c 100%) !important;
+}
+
+.introjs-overlay {
+    background: rgba(18, 18, 18, 0.52) !important;
+}
