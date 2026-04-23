@@ -13,6 +13,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/boxicons.css') }}">
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
@@ -26,5 +27,38 @@
                 {{ $slot }}
             </div>
         </div>
+
+        <script>
+            document.addEventListener('click', function (event) {
+                const button = event.target.closest('.toggle-password');
+                if (!button) {
+                    return;
+                }
+
+                const input = document.getElementById(button.dataset.target);
+                if (!input) {
+                    return;
+                }
+
+                const icon = button.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    if (icon) {
+                        icon.classList.remove('bx-hide');
+                        icon.classList.add('bx-show');
+                    } else {
+                        button.textContent = 'Hide';
+                    }
+                } else {
+                    input.type = 'password';
+                    if (icon) {
+                        icon.classList.remove('bx-show');
+                        icon.classList.add('bx-hide');
+                    } else {
+                        button.textContent = 'Show';
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

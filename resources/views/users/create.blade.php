@@ -29,14 +29,24 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password" aria-label="Show password">
+                                    <i class="bx bx-hide"></i>
+                                </button>
+                            </div>
                             @error('password')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="password_confirmation" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm password" required>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm password" required>
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password_confirmation" aria-label="Show password">
+                                    <i class="bx bx-hide"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Create</button>

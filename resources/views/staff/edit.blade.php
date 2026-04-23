@@ -104,21 +104,4 @@
             </div>
         </div>
     </div>
-@section('scripts')
-    <script>
-        document.querySelectorAll('.toggle-password').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var input = document.getElementById(this.getAttribute('data-target'));
-                var icon = this.querySelector('i');
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.classList.replace('bx-hide', 'bx-show');
-                } else {
-                    input.type = 'password';
-                    icon.classList.replace('bx-show', 'bx-hide');
-                }
-            });
-        });
-    </script>
-@endsection
 @endsection

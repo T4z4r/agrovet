@@ -15,19 +15,34 @@
 
         <div>
             <x-input-label for="update_password_current_password" :value="__('Current Password')" />
-            <x-text-input id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
+            <div class="mt-1 flex gap-2">
+                <x-text-input id="update_password_current_password" name="current_password" type="password" class="block flex-1 w-full" autocomplete="current-password" />
+                <button class="inline-flex items-center rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 toggle-password" type="button" data-target="update_password_current_password" aria-label="Show password">
+                    <i class="bx bx-hide"></i>
+                </button>
+            </div>
             <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
         </div>
 
         <div>
             <x-input-label for="update_password_password" :value="__('New Password')" />
-            <x-text-input id="update_password_password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
+            <div class="mt-1 flex gap-2">
+                <x-text-input id="update_password_password" name="password" type="password" class="block flex-1 w-full" autocomplete="new-password" />
+                <button class="inline-flex items-center rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 toggle-password" type="button" data-target="update_password_password" aria-label="Show password">
+                    <i class="bx bx-hide"></i>
+                </button>
+            </div>
             <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
         </div>
 
         <div>
             <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
+            <div class="mt-1 flex gap-2">
+                <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="block flex-1 w-full" autocomplete="new-password" />
+                <button class="inline-flex items-center rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 toggle-password" type="button" data-target="update_password_password_confirmation" aria-label="Show password">
+                    <i class="bx bx-hide"></i>
+                </button>
+            </div>
             <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
         </div>
 

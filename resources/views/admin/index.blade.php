@@ -58,7 +58,12 @@
                                 <p>Please confirm your password and type <strong>"CONFIRM"</strong> to proceed:</p>
                                 <div class="mb-3">
                                     <label for="passwordInput" class="form-label">Password</label>
-                                    <input type="password" id="passwordInput" class="form-control" placeholder="Enter your password">
+                                    <div class="input-group">
+                                        <input type="password" id="passwordInput" class="form-control" placeholder="Enter your password">
+                                        <button class="btn btn-outline-secondary toggle-password" type="button" data-target="passwordInput" aria-label="Show password">
+                                            <i class="bx bx-hide"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="otpInput" class="form-label">OTP Code</label>

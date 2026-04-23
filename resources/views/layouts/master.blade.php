@@ -433,6 +433,39 @@
     @yield('scripts')
     <!-- Page JS -->
 
+    <script>
+      document.addEventListener('click', function (event) {
+        const button = event.target.closest('.toggle-password');
+        if (!button) {
+          return;
+        }
+
+        const input = document.getElementById(button.dataset.target);
+        if (!input) {
+          return;
+        }
+
+        const icon = button.querySelector('i');
+        if (input.type === 'password') {
+          input.type = 'text';
+          if (icon) {
+            icon.classList.remove('bx-hide');
+            icon.classList.add('bx-show');
+          } else {
+            button.textContent = 'Hide';
+          }
+        } else {
+          input.type = 'password';
+          if (icon) {
+            icon.classList.remove('bx-show');
+            icon.classList.add('bx-hide');
+          } else {
+            button.textContent = 'Show';
+          }
+        }
+      });
+    </script>
+
     <!-- Logout Confirmation Modal -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">

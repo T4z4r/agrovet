@@ -30,13 +30,18 @@
             <div class="mt-6">
                 <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
 
-                <x-text-input
-                    id="password"
-                    name="password"
-                    type="password"
-                    class="mt-1 block w-3/4"
-                    placeholder="{{ __('Password') }}"
-                />
+                <div class="mt-1 flex gap-2">
+                    <x-text-input
+                        id="password"
+                        name="password"
+                        type="password"
+                        class="block flex-1 w-full"
+                        placeholder="{{ __('Password') }}"
+                    />
+                    <button class="inline-flex items-center rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 toggle-password" type="button" data-target="password" aria-label="Show password">
+                        <i class="bx bx-hide"></i>
+                    </button>
+                </div>
 
                 <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
             </div>

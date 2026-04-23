@@ -122,7 +122,9 @@
                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                       aria-describedby="password"
                     />
-                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                    <button class="input-group-text cursor-pointer toggle-password" type="button" data-target="password" aria-label="Show password">
+                      <i class="bx bx-hide"></i>
+                    </button>
                   </div>
                   @error('password')
                       <div class="text-danger small mt-1">{{ $message }}</div>

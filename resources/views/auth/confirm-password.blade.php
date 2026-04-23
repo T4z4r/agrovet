@@ -10,10 +10,15 @@
         <div>
             <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            <div class="mt-1 flex gap-2">
+                <x-text-input id="password" class="block flex-1 w-full"
+                                type="password"
+                                name="password"
+                                required autocomplete="current-password" />
+                <button class="inline-flex items-center rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 toggle-password" type="button" data-target="password" aria-label="Show password">
+                    <i class="bx bx-hide"></i>
+                </button>
+            </div>
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
