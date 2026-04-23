@@ -35,7 +35,7 @@ class WebPosController extends Controller
         $validator = \Illuminate\Support\Facades\Validator::make(['items' => $items], [
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.quantity' => 'required|numeric|min:0.01',
             'items.*.price' => 'required|numeric|min:0',
         ]);
 
@@ -46,41 +46,45 @@ class WebPosController extends Controller
         $data['items'] = $items;
 
         $sale = null;
-        DB::transaction(function () use ($data, &$sale) {
-            $sale = Sale::create([
-                'seller_id' => Auth::user()->id,
-                'sale_date' => now(),
-                'total' => 0,
-                'payment_method' => $data['payment_method'] ?? null,
-                'customer_name' => $data['customer_name'] ?? null
-            ]);
-
-            $grand_total = 0;
-
-            foreach ($data['items'] as $item) {
-                $total = $item['quantity'] * $item['price'];
-                $grand_total += $total;
-
-                SaleItem::create([
-                    'sale_id' => $sale->id,
-                    'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price'],
-                    'total' => $total
+        try {
+            DB::transaction(function () use ($data, &$sale) {
+                $sale = Sale::create([
+                    'seller_id' => Auth::user()->id,
+                    'sale_date' => now(),
+                    'total' => 0,
+                    'payment_method' => $data['payment_method'] ?? null,
+                    'customer_name' => $data['customer_name'] ?? null
                 ]);
 
-                $product = Product::find($item['product_id']);
-                if ($product->stock < $item['quantity']) {
-                    throw new \Exception('Insufficient stock for ' . $product->name);
+                $grand_total = 0;
+
+                foreach ($data['items'] as $item) {
+                    $total = round($item['quantity'] * $item['price'], 2);
+                    $grand_total = round($grand_total + $total, 2);
+
+                    SaleItem::create([
+                        'sale_id' => $sale->id,
+                        'product_id' => $item['product_id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price'],
+                        'total' => $total
+                    ]);
+
+                    $product = Product::find($item['product_id']);
+                    if ($product->stock < $item['quantity']) {
+                        throw new \Exception('Insufficient stock for ' . $product->name);
+                    }
+
+                    $product->stock -= $item['quantity'];
+                    $product->save();
                 }
 
-                $product->stock -= $item['quantity'];
-                $product->save();
-            }
-
-            $sale->total = $grand_total;
-            $sale->save();
-        });
+                $sale->total = $grand_total;
+                $sale->save();
+            });
+        } catch (\Throwable $e) {
+            return back()->withErrors(['items' => $e->getMessage()])->withInput();
+        }
 
         return redirect()->route('web.pos.receipt', $sale->id);
     }

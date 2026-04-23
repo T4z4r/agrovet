@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity', $transaction->quantity) }}" placeholder="Enter quantity" required min="1">
+                            <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity', $transaction->quantity) }}" placeholder="Enter quantity" required min="0.01" step="0.01">
                             @error('quantity')
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror

@@ -23,7 +23,7 @@ class StockTransactionController extends Controller
         $data = $r->validate([
             'product_id'=>'required|exists:products,id',
             'type'=>'required|in:stock_in,stock_out,damage,return',
-            'quantity'=>'required|integer|min:1',
+            'quantity'=>'required|numeric|min:0.01',
             'supplier_id'=>'nullable|exists:suppliers,id',
             'date'=>'required|date',
             'remarks'=>'nullable|string'

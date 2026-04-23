@@ -9,6 +9,10 @@ class StockTransaction extends Model implements \OwenIt\Auditing\Contracts\Audit
 {
     use Auditable;
 
+    protected $casts = [
+        'quantity' => 'decimal:2',
+    ];
+
     protected $fillable = [
         'branch_id',
         'product_id',

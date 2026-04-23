@@ -29,66 +29,70 @@ class SaleController extends Controller
             'sale_date' => 'required|date',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|integer|min:0'
+            'items.*.quantity' => 'required|numeric|min:0.01',
+            'items.*.price' => 'required|numeric|min:0'
         ]);
 
-        return DB::transaction(function () use ($data) {
+        try {
+            return DB::transaction(function () use ($data) {
 
-            $sale = Sale::create([
-                'seller_id' => Auth::user()->id,
-                'sale_date' => $data['sale_date'],
-                'shop_id' => Auth::user()->shop_id,
-                'total' => 0
-            ]);
-
-            $grand_total = 0;
-
-            foreach ($data['items'] as $item) {
-
-                $total = $item['quantity'] * $item['price'];
-                $grand_total += $total;
-
-                SaleItem::create([
-                    'sale_id' => $sale->id,
-                    'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price'],
-                    'total' => $total
+                $sale = Sale::create([
+                    'seller_id' => Auth::user()->id,
+                    'sale_date' => $data['sale_date'],
+                    'shop_id' => Auth::user()->shop_id,
+                    'total' => 0
                 ]);
 
-                $p = Product::find($item['product_id']);
-                if ($p->stock < $item['quantity']) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Insufficient stock for ' . $p->name
-                    ], 422);
+                $grand_total = 0;
+
+                foreach ($data['items'] as $item) {
+
+                    $total = round($item['quantity'] * $item['price'], 2);
+                    $grand_total = round($grand_total + $total, 2);
+
+                    SaleItem::create([
+                        'sale_id' => $sale->id,
+                        'product_id' => $item['product_id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price'],
+                        'total' => $total
+                    ]);
+
+                    $p = Product::find($item['product_id']);
+                    if ($p->stock < $item['quantity']) {
+                        throw new \RuntimeException('Insufficient stock for ' . $p->name);
+                    }
+
+                    $p->stock -= $item['quantity'];
+                    $p->save();
+
+                    StockTransaction::create([
+                        'product_id' => $item['product_id'],
+                        'type' => 'stock_out',
+                        'quantity' => $item['quantity'],
+                        'supplier_id' => null,
+                        'recorded_by' => Auth::user()->id,
+                        'shop_id' => Auth::user()->shop_id,
+                        'date' => $data['sale_date'],
+                        'remarks' => 'Sold in sale #' . $sale->id
+                    ]);
                 }
 
-                $p->stock -= $item['quantity'];
-                $p->save();
+                $sale->total = $grand_total;
+                $sale->save();
 
-                StockTransaction::create([
-                    'product_id' => $item['product_id'],
-                    'type' => 'stock_out',
-                    'quantity' => $item['quantity'],
-                    'supplier_id' => null,
-                    'recorded_by' => Auth::user()->id,
-                    'shop_id' => Auth::user()->shop_id,
-                    'date' => $data['sale_date'],
-                    'remarks' => 'Sold in sale #' . $sale->id
+                return response()->json([
+                    'success' => true,
+                    'data' => $sale->load('items.product'),
+                    'message' => 'Sale created successfully'
                 ]);
-            }
-
-            $sale->total = $grand_total;
-            $sale->save();
-
+            });
+        } catch (\Throwable $e) {
             return response()->json([
-                'success' => true,
-                'data' => $sale->load('items.product'),
-                'message' => 'Sale created successfully'
-            ]);
-        });
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 422);
+        }
     }
 
     public function show($id)

@@ -8,6 +8,12 @@ class SaleItem extends Model implements \OwenIt\Auditing\Contracts\Auditable
 {
     use Auditable;
 
+    protected $casts = [
+        'quantity' => 'decimal:2',
+        'price' => 'decimal:2',
+        'total' => 'decimal:2',
+    ];
+
     protected $fillable = [
         'sale_id','product_id','quantity','price','total'
     ];

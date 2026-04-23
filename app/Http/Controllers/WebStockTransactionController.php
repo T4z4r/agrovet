@@ -47,7 +47,7 @@ class WebStockTransactionController extends Controller
         $data = $request->validate([
             'product_id' => 'required|exists:products,id',
             'type' => 'required|in:stock_in,stock_out,damage,return',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|numeric|min:0.01',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'date' => 'required|date',
             'remarks' => 'nullable|string'
@@ -113,7 +113,7 @@ class WebStockTransactionController extends Controller
         }
         $data = $request->validate([
             'type' => 'nullable|in:stock_in,stock_out,damage,return',
-            'quantity' => 'nullable|integer|min:1',
+            'quantity' => 'nullable|numeric|min:0.01',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'date' => 'nullable|date',
             'remarks' => 'nullable|string',

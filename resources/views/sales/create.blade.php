@@ -34,7 +34,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Quantity</label>
-                                <input type="number" class="form-control quantity-input" name="items[0][quantity]" min="1" placeholder="1" required>
+                                <input type="number" class="form-control quantity-input" name="items[0][quantity]" min="0.01" step="0.01" placeholder="0.00" required>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Price</label>
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="col-md-3">
                 <label class="form-label">Quantity</label>
-                <input type="number" class="form-control quantity-input" name="items[${itemIndex}][quantity]" min="1" placeholder="1" required>
+                <input type="number" class="form-control quantity-input" name="items[${itemIndex}][quantity]" min="0.01" step="0.01" placeholder="0.00" required>
             </div>
             <div class="col-md-3">
                 <label class="form-label">Price</label>

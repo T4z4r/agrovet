@@ -41,8 +41,8 @@ class WebSaleController extends Controller
             'sale_date' => 'required|date',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|integer|min:0',
+            'items.*.quantity' => 'required|numeric|min:0.01',
+            'items.*.price' => 'required|numeric|min:0',
             'shop_id' => 'nullable|exists:shops,id'
         ]);
 
@@ -50,42 +50,46 @@ class WebSaleController extends Controller
             $data['shop_id'] = $user->shop_id;
         }
 
-        DB::transaction(function () use ($data) {
+        try {
+            DB::transaction(function () use ($data) {
 
-            $sale = Sale::create([
-                'seller_id' => Auth::user()->id,
-                'sale_date' => $data['sale_date'],
-                'total' => 0,
-                'shop_id' => $data['shop_id']
-            ]);
-
-            $grand_total = 0;
-
-            foreach ($data['items'] as $item) {
-
-                $total = $item['quantity'] * $item['price'];
-                $grand_total += $total;
-
-                SaleItem::create([
-                    'sale_id' => $sale->id,
-                    'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price'],
-                    'total' => $total
+                $sale = Sale::create([
+                    'seller_id' => Auth::user()->id,
+                    'sale_date' => $data['sale_date'],
+                    'total' => 0,
+                    'shop_id' => $data['shop_id']
                 ]);
 
-                $p = Product::find($item['product_id']);
-                if ($p->stock < $item['quantity']) {
-                    throw new \Exception('Insufficient stock for ' . $p->name);
+                $grand_total = 0;
+
+                foreach ($data['items'] as $item) {
+
+                    $total = round($item['quantity'] * $item['price'], 2);
+                    $grand_total = round($grand_total + $total, 2);
+
+                    SaleItem::create([
+                        'sale_id' => $sale->id,
+                        'product_id' => $item['product_id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price'],
+                        'total' => $total
+                    ]);
+
+                    $p = Product::find($item['product_id']);
+                    if ($p->stock < $item['quantity']) {
+                        throw new \Exception('Insufficient stock for ' . $p->name);
+                    }
+
+                    $p->stock -= $item['quantity'];
+                    $p->save();
                 }
 
-                $p->stock -= $item['quantity'];
-                $p->save();
-            }
-
-            $sale->total = $grand_total;
-            $sale->save();
-        });
+                $sale->total = $grand_total;
+                $sale->save();
+            });
+        } catch (\Throwable $e) {
+            return back()->withInput()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('sales.index')->with('success', 'Sale created successfully');
     }
@@ -111,8 +115,8 @@ class WebSaleController extends Controller
             'customer_name' => 'nullable|string',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required',
-            'items.*.price' => 'required',
+            'items.*.quantity' => 'required|numeric|min:0.01',
+            'items.*.price' => 'required|numeric|min:0',
         ]);
 
         $sale = Sale::with('items')->where('id', $id)->first();
@@ -131,8 +135,8 @@ class WebSaleController extends Controller
                 $grand_total = 0;
 
                 foreach ($data['items'] as $itemData) {
-                    $total = $itemData['quantity'] * $itemData['price'];
-                    $grand_total += $total;
+                    $total = round($itemData['quantity'] * $itemData['price'], 2);
+                    $grand_total = round($grand_total + $total, 2);
 
                     if (isset($itemData['id']) && in_array($itemData['id'], $existingItemIds)) {
                         // Update existing item
