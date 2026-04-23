@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -18,9 +19,9 @@ class Sale extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'shop_id'
     ];
 
-    protected $casts = [
-        'sale_date' => 'date',
-    ];
+    // protected $casts = [
+    //     'sale_date' => 'date',
+    // ];
 
     public function seller()
     {
