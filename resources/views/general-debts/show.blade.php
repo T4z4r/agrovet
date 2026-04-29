@@ -87,7 +87,7 @@
                         @csrf
                         <div class="mb-3">
                             <label for="amount" class="form-label">Amount</label>
-                            <input type="number" class="form-control" id="amount" name="amount" min="0.01" max="{{ $debt->balance }}" step="0.01" value="{{ old('amount') }}" required>
+                            <input type="number" class="form-control" id="amount" name="amount" min="0.01" max="{{ $debt->balance }}" step="0.01" value="{{ old('amount') }}" placeholder="0.00" required>
                             @error('amount')<div class="text-danger small">{{ $message }}</div>@enderror
                         </div>
                         <div class="mb-3">
@@ -97,12 +97,12 @@
                         </div>
                         <div class="mb-3">
                             <label for="payment_method" class="form-label">Payment Method</label>
-                            <input type="text" class="form-control" id="payment_method" name="payment_method" value="{{ old('payment_method') }}">
+                            <input type="text" class="form-control" id="payment_method" name="payment_method" value="{{ old('payment_method') }}" placeholder="e.g. Cash, M-Pesa, Bank transfer">
                             @error('payment_method')<div class="text-danger small">{{ $message }}</div>@enderror
                         </div>
                         <div class="mb-3">
                             <label for="notes" class="form-label">Notes</label>
-                            <textarea class="form-control" id="notes" name="notes">{{ old('notes') }}</textarea>
+                            <textarea class="form-control" id="notes" name="notes" placeholder="Add payment reference or notes">{{ old('notes') }}</textarea>
                             @error('notes')<div class="text-danger small">{{ $message }}</div>@enderror
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Record Payment</button>

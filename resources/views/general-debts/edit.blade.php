@@ -26,22 +26,22 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="debtor_name" class="form-label">Debtor Name</label>
-                            <input type="text" class="form-control" id="debtor_name" name="debtor_name" value="{{ old('debtor_name', $debt->debtor_name) }}" required>
+                            <input type="text" class="form-control" id="debtor_name" name="debtor_name" value="{{ old('debtor_name', $debt->debtor_name) }}" placeholder="Enter debtor or customer name" required>
                             @error('debtor_name')<div class="text-danger small">{{ $message }}</div>@enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="debtor_phone" class="form-label">Phone</label>
-                            <input type="text" class="form-control" id="debtor_phone" name="debtor_phone" value="{{ old('debtor_phone', $debt->debtor_phone) }}">
+                            <input type="text" class="form-control" id="debtor_phone" name="debtor_phone" value="{{ old('debtor_phone', $debt->debtor_phone) }}" placeholder="e.g. 0712 345 678">
                             @error('debtor_phone')<div class="text-danger small">{{ $message }}</div>@enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="debtor_email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="debtor_email" name="debtor_email" value="{{ old('debtor_email', $debt->debtor_email) }}">
+                            <input type="email" class="form-control" id="debtor_email" name="debtor_email" value="{{ old('debtor_email', $debt->debtor_email) }}" placeholder="e.g. customer@example.com">
                             @error('debtor_email')<div class="text-danger small">{{ $message }}</div>@enderror
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="amount" class="form-label">Amount</label>
-                            <input type="number" class="form-control" id="amount" name="amount" value="{{ old('amount', $debt->amount) }}" min="{{ $debt->amount_paid ?: '0.01' }}" step="0.01" required>
+                            <input type="number" class="form-control" id="amount" name="amount" value="{{ old('amount', $debt->amount) }}" min="{{ $debt->amount_paid ?: '0.01' }}" step="0.01" placeholder="0.00" required>
                             @error('amount')<div class="text-danger small">{{ $message }}</div>@enderror
                         </div>
                         <div class="col-md-4 mb-3">
@@ -56,7 +56,7 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" name="description">{{ old('description', $debt->description) }}</textarea>
+                            <textarea class="form-control" id="description" name="description" placeholder="Enter what this debt is for">{{ old('description', $debt->description) }}</textarea>
                             @error('description')<div class="text-danger small">{{ $message }}</div>@enderror
                         </div>
                     </div>
