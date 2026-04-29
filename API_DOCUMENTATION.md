@@ -774,6 +774,85 @@ The OTP (One-Time Password) system provides secure verification for various purp
   }
   ```
 
+## General Debts
+
+General debts are shop-scoped receivables that are not tied to a supplier purchase. Payments update `amount_paid`, `balance`, and `status` automatically.
+
+### List General Debts
+- **Method**: GET
+- **Endpoint**: `/api/general-debts`
+- **Description**: Get all general debts for the authenticated user's shop
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "id": 1,
+        "debtor_name": "Jane Customer",
+        "amount": "1000.00",
+        "amount_paid": "250.00",
+        "balance": 750,
+        "status": "partial",
+        "payments": [...]
+      }
+    ],
+    "message": "General debts retrieved successfully"
+  }
+  ```
+
+### Create General Debt
+- **Method**: POST
+- **Endpoint**: `/api/general-debts`
+- **Description**: Create a new general debt
+- **Request Body**:
+  ```json
+  {
+    "debtor_name": "string (required)",
+    "debtor_phone": "string (optional)",
+    "debtor_email": "email (optional)",
+    "description": "string (optional)",
+    "amount": "numeric (required, min:0.01)",
+    "debt_date": "date (required, YYYY-MM-DD)",
+    "due_date": "date (optional, same or after debt_date)"
+  }
+  ```
+
+### Get General Debt
+- **Method**: GET
+- **Endpoint**: `/api/general-debts/{id}`
+- **Description**: Get a specific general debt with payment history
+
+### Update General Debt
+- **Method**: PUT
+- **Endpoint**: `/api/general-debts/{id}`
+- **Description**: Update a general debt. The amount cannot be lower than payments already recorded.
+- **Request Body**: Same as create
+
+### Delete General Debt
+- **Method**: DELETE
+- **Endpoint**: `/api/general-debts/{id}`
+- **Description**: Delete a general debt and its payment history
+
+### Record General Debt Payment
+- **Method**: POST
+- **Endpoint**: `/api/general-debts/{id}/payments`
+- **Description**: Record a payment against a general debt
+- **Request Body**:
+  ```json
+  {
+    "amount": "numeric (required, min:0.01, max:current balance)",
+    "payment_date": "date (required, YYYY-MM-DD)",
+    "payment_method": "string (optional)",
+    "notes": "string (optional)"
+  }
+  ```
+
+### Delete General Debt Payment
+- **Method**: DELETE
+- **Endpoint**: `/api/general-debts/{id}/payments/{payment_id}`
+- **Description**: Delete a payment and recalculate the debt balance/status
+
 ## Reports
 
 ### Daily Report

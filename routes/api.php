@@ -16,6 +16,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\GuideController;
+use App\Http\Controllers\GeneralDebtController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +99,15 @@ Route::middleware(['auth:sanctum', 'subscription'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::apiResource('expenses', ExpenseController::class);
+
+    /*
+    |--------------------------------------------------------------------------
+    | General Debts
+    |--------------------------------------------------------------------------
+    */
+    Route::apiResource('general-debts', GeneralDebtController::class);
+    Route::post('general-debts/{generalDebt}/payments', [GeneralDebtController::class, 'storePayment']);
+    Route::delete('general-debts/{generalDebt}/payments/{payment}', [GeneralDebtController::class, 'destroyPayment']);
 
     /*
     |--------------------------------------------------------------------------

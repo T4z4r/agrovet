@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sale;
+use App\Models\GeneralDebt;
 use App\Models\Shop;
 use App\Models\StockTransaction;
 use App\Models\Supplier;
@@ -104,6 +105,7 @@ class WebShopController extends Controller
             Supplier::where('shop_id', $shop->id)->exists() ||
             Sale::where('shop_id', $shop->id)->exists() ||
             StockTransaction::where('shop_id', $shop->id)->exists() ||
+            GeneralDebt::where('shop_id', $shop->id)->exists() ||
             SupplierDebt::where('shop_id', $shop->id)->exists()) {
             return redirect()->route('web.shops.index')->with('error', 'Cannot delete shop with linked data.');
         }

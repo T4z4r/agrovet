@@ -11,6 +11,7 @@ use App\Http\Controllers\WebSaleController;
 use App\Http\Controllers\WebExpenseController;
 use App\Http\Controllers\WebStockTransactionController;
 use App\Http\Controllers\WebSupplierDebtController;
+use App\Http\Controllers\WebGeneralDebtController;
 use App\Http\Controllers\WebReportController;
 use App\Http\Controllers\WebAdminController;
 use App\Http\Controllers\WebBrandController;
@@ -143,6 +144,11 @@ Route::middleware('auth')->group(function () {
 
     // Supplier Debts
     Route::resource('supplier-debts', WebSupplierDebtController::class)->parameters(['supplier-debts' => 'supplierDebt'])->names('web.supplier-debts');
+
+    // General Debts
+    Route::resource('general-debts', WebGeneralDebtController::class)->parameters(['general-debts' => 'generalDebt'])->names('web.general-debts');
+    Route::post('general-debts/{generalDebt}/payments', [WebGeneralDebtController::class, 'storePayment'])->name('web.general-debts.payments.store');
+    Route::delete('general-debts/{generalDebt}/payments/{payment}', [WebGeneralDebtController::class, 'destroyPayment'])->name('web.general-debts.payments.destroy');
 
     // Reports
     Route::get('reports', [WebReportController::class, 'index'])->name('web.reports.index');

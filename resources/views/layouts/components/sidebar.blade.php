@@ -85,6 +85,16 @@
                </li>
            @endcan
 
+           @can('view general debts')
+               <!-- General Debts -->
+               <li class="menu-item {{ request()->routeIs('web.general-debts.*') ? 'active' : '' }}">
+                   <a href="{{ route('web.general-debts.index') }}" class="menu-link" id="tour-sidebar-general-debts-link">
+                       <i class="menu-icon tf-icons bx bx-receipt"></i>
+                       <div>{{ __('General Debts') }}</div>
+                   </a>
+               </li>
+           @endcan
+
            @can('view products')
                {{-- Assuming stock transactions relate to products --}}
                <!-- Stock Transactions -->
