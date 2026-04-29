@@ -90,7 +90,7 @@
                <li class="menu-item {{ request()->routeIs('web.general-debts.*') ? 'active' : '' }}">
                    <a href="{{ route('web.general-debts.index') }}" class="menu-link" id="tour-sidebar-general-debts-link">
                        <i class="menu-icon tf-icons bx bx-receipt"></i>
-                       <div>{{ __('General Debts') }}</div>
+                       <div>{{ __('Debts') }}</div>
                    </a>
                </li>
            @endcan
@@ -99,7 +99,8 @@
                {{-- Assuming stock transactions relate to products --}}
                <!-- Stock Transactions -->
                <li class="menu-item {{ request()->routeIs('web.stock-transactions.*') ? 'active' : '' }}">
-                   <a href="{{ route('web.stock-transactions.index') }}" class="menu-link" id="tour-sidebar-stock-transactions-link">
+                   <a href="{{ route('web.stock-transactions.index') }}" class="menu-link"
+                       id="tour-sidebar-stock-transactions-link">
                        <i class="menu-icon tf-icons bx bx-transfer"></i>
                        <div>{{ __('Stock Transactions') }}</div>
                    </a>
@@ -143,7 +144,8 @@
                                        </a>
                                    </li>
                                    <li class="menu-item {{ request()->routeIs('web.permissions.*') ? 'active' : '' }}">
-                                       <a href="{{ route('web.permissions.index') }}" class="menu-link" id="tour-sidebar-permissions-link">
+                                       <a href="{{ route('web.permissions.index') }}" class="menu-link"
+                                           id="tour-sidebar-permissions-link">
                                            <div>{{ __('Permissions') }}</div>
                                        </a>
                                    </li>
@@ -158,7 +160,8 @@
            @can('view privacy policies')
                <!-- Privacy Policies -->
                <li class="menu-item {{ request()->routeIs('web.privacy-policies.*') ? 'active' : '' }}">
-                   <a href="{{ route('web.privacy-policies.index') }}" class="menu-link" id="tour-sidebar-privacy-policies-link">
+                   <a href="{{ route('web.privacy-policies.index') }}" class="menu-link"
+                       id="tour-sidebar-privacy-policies-link">
                        <i class="menu-icon tf-icons bx bx-shield"></i>
                        <div>{{ __('Privacy Policies') }}</div>
                    </a>
@@ -185,22 +188,26 @@
                    </a>
                    <ul class="menu-sub">
                        <li class="menu-item {{ request()->routeIs('admin.subscription-packages.*') ? 'active' : '' }}">
-                           <a href="{{ route('admin.subscription-packages.index') }}" class="menu-link" id="tour-sidebar-subscription-packages-link">
+                           <a href="{{ route('admin.subscription-packages.index') }}" class="menu-link"
+                               id="tour-sidebar-subscription-packages-link">
                                <div>{{ __('Packages') }}</div>
                            </a>
                        </li>
                        <li class="menu-item {{ request()->routeIs('admin.subscriptions.*') ? 'active' : '' }}">
-                           <a href="{{ route('admin.subscriptions.index') }}" class="menu-link" id="tour-sidebar-subscriptions-link">
+                           <a href="{{ route('admin.subscriptions.index') }}" class="menu-link"
+                               id="tour-sidebar-subscriptions-link">
                                <div>{{ __('Subscriptions') }}</div>
                            </a>
                        </li>
                        <li class="menu-item {{ request()->routeIs('admin.subscription-payments.*') ? 'active' : '' }}">
-                           <a href="{{ route('admin.subscription-payments.index') }}" class="menu-link" id="tour-sidebar-subscription-payments-link">
+                           <a href="{{ route('admin.subscription-payments.index') }}" class="menu-link"
+                               id="tour-sidebar-subscription-payments-link">
                                <div>{{ __('Payments') }}</div>
                            </a>
                        </li>
                        <li class="menu-item {{ request()->routeIs('admin.features.*') ? 'active' : '' }}">
-                           <a href="{{ route('admin.features.index') }}" class="menu-link" id="tour-sidebar-features-link">
+                           <a href="{{ route('admin.features.index') }}" class="menu-link"
+                               id="tour-sidebar-features-link">
                                <div>{{ __('Features') }}</div>
                            </a>
                        </li>
@@ -249,12 +256,14 @@
                    <ul class="menu-sub">
                        <li
                            class="menu-item {{ request()->routeIs('web.superadmin.common-categories.*') ? 'active' : '' }}">
-                           <a href="{{ route('web.superadmin.common-categories.index') }}" class="menu-link" id="tour-sidebar-common-categories-link">
+                           <a href="{{ route('web.superadmin.common-categories.index') }}" class="menu-link"
+                               id="tour-sidebar-common-categories-link">
                                <div>{{ __('Categories') }}</div>
                            </a>
                        </li>
                        <li class="menu-item {{ request()->routeIs('web.superadmin.common-products.*') ? 'active' : '' }}">
-                           <a href="{{ route('web.superadmin.common-products.index') }}" class="menu-link" id="tour-sidebar-common-products-link">
+                           <a href="{{ route('web.superadmin.common-products.index') }}" class="menu-link"
+                               id="tour-sidebar-common-products-link">
                                <div>{{ __('Products') }}</div>
                            </a>
                        </li>
